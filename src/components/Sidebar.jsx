@@ -1,6 +1,7 @@
 import { useContext } from "react";
 import AppContext from "../context/AppContext";
 import { User } from "lucide-react";
+import { SIDE_BAR_DATA } from "../assets/assets";
 
 const Sidebar = () => {
     const {user} = useContext(AppContext);
@@ -17,6 +18,12 @@ const Sidebar = () => {
                     {user.fullName || ""}
                 </h5>
             </div>
+            {SIDE_BAR_DATA.map((item, index) => (
+                <button key={`menu_${index}`} className="w-full flex items-centere gap-4 text-[15px] py-3 px-6 rounded-lg mb-3">
+                    <item.icon className="text-xl" />
+                    {item.label}
+                </button>
+            ))}
         </div>
     )
 }
