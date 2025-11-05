@@ -6,10 +6,12 @@ import Filter from "./pages/Filter";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Home from "./pages/Home";
+import { Toaster } from "react-hot-toast";
 
 const App = () => {
   return (
     <>
+      <Toaster />
       <BrowserRouter>
         <Routes>
           <Route path="/dashboard" element={<Home/>} />

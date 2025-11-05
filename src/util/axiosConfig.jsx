@@ -15,7 +15,7 @@ const excludeEndpoint = ["/login", "/register", "/status", "/activate", "health"
 //Request Interceptor
 axiosConfig.interceptors.request.use((config) => {
     const shouldSkipToken = excludeEndpoint.some((endpoint) => {
-        config.url?.includes(endpoint)
+        return config.url?.includes(endpoint)
     });
 
     if (!shouldSkipToken) {
@@ -44,4 +44,6 @@ axiosConfig.interceptors.response.use((response) => {
         console.error("Request timeout. Please try again.");
     }
     return Promise.reject(error);
-});
+})
+
+export default axiosConfig;
