@@ -28,7 +28,6 @@ const Category = () => {
     try {
         const response = await axiosConfig.get(API_ENDPOINTS.GET_ALL_CATEGORIES);
         if (response.status === 200) {
-            console.log("Categories", response.data);
             setCategoryData(response.data);
         }
     } catch (error) {
@@ -42,6 +41,36 @@ const Category = () => {
   useEffect(() => {
     fetchCategoryDetails();
   }, []);
+
+  const handleAddCategory = async (category) => {
+    const {name, type, icon} = category;
+
+    if (!name.trim()) {
+      toast.error("Category name is required")
+      return;
+    }
+
+    const isDuplicate = categoryData.some((category) => {
+      return category.name.toLowerCase() === name.trim().toLowerCase();
+    })
+
+    if(isDuplicate) {
+      toast.error("Category name already exists");
+      return;
+    }
+
+    try {
+      const response = await axiosConfig.post(API_ENDPOINTS.ADD_CATEGORY, {name, type, icon});
+      if (response.status === 201) {
+        toast.success("Category added successfully");
+        setOpenAddCategoryModal(false);
+        fetchCategoryDetails();
+      }
+    } catch (error) {
+      console.error("Error adding category", error);
+      toast.error(error.response?.data?.message || "Failed to add category");
+    }
+  }
 
   return (
     <Dashboard activeMenu="Category">
@@ -61,7 +90,9 @@ const Category = () => {
             isOpen={openAddCategoryModal}
             onClose={() => setOpenAddCategoryModal(false)}
         >
-            <AddCategoryForm />
+            <AddCategoryForm 
+              onAddCategory={handleAddCategory}
+            />
         </Modal>
       </div>
     </Dashboard>

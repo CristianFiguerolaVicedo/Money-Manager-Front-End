@@ -5,6 +5,11 @@ import { useState } from "react";
 const EmojiPickerPopup = ({icon, onSelect}) => {
     const [isOpen, setIsOpen] = useState(false);
 
+    const handleEmojiClick = (emoji) => {
+        onSelect(emoji?.imageUrl || "");
+        setIsOpen(false);
+    }
+
     return(
         <div className="flex flex-col md:flex-row items-start gap-5 mb-6">
             <div onClick={() => setIsOpen(true)} className="flex items-center gap-4 cursor-pointer">
@@ -14,9 +19,10 @@ const EmojiPickerPopup = ({icon, onSelect}) => {
                     ) : (
                         <Image />
                     )}
-
-                    <p>{icon ? "Change Icon" : "Pick Icon"}</p>
                 </div>
+                <p>{icon ? "Change Icon" : "Pick Icon"}</p>
+            </div>
+
 
                 {isOpen && (
                     <div className="relative">
@@ -25,11 +31,10 @@ const EmojiPickerPopup = ({icon, onSelect}) => {
                         </button>
                         <EmojiPicker 
                             open={isOpen}
-                            onEmojiClick={(emoji) => onSelect(emoji?.imageUrl || "")}
+                            onEmojiClick={handleEmojiClick}
                         />
                     </div>
                 )}
-            </div>
         </div>
     )
 }

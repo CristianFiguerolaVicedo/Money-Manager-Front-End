@@ -1,13 +1,16 @@
 import { useState } from "react"
 import Input from "./Input";
 import EmojiPickerPopup from "./EmojiPickerPopup";
+import { LoaderCircle } from "lucide-react";
 
-const AddCategoryForm = () => {
+const AddCategoryForm = ({onAddCategory}) => {
     const [category, setCategory] = useState({
         name: "",
         type: "income",
         icon: ""
     });
+
+    const [loading, setLoading] = useState(false);
 
     const categoryTypeOptions = [
         {value: "income", label: "Income"},
@@ -16,6 +19,16 @@ const AddCategoryForm = () => {
 
     const handleChange = (key, value) => {
         setCategory({...category, [key]: value})
+    }
+
+    const handleSubmit = async () => {
+        setLoading(true);
+
+        try {
+            await onAddCategory(category);
+        } finally {
+            setLoading(false);
+        }
     }
 
     return(
@@ -41,6 +54,21 @@ const AddCategoryForm = () => {
                 isSelect={true}
                 options={categoryTypeOptions}
             />
+
+            <div className="flex justify-end mt-6">
+                <button disabled={loading} onClick={() => handleSubmit(category)} type="button" className="flex items-center gap-1 bg-purple-800 text-white px-3 py-2 rounded-lg hover:bg-purple-500 font-semibold hover:cursor-pointer">
+                    {loading ? (
+                        <>
+                            <LoaderCircle className="w-4 h-4 animate-spin"/>
+                            Adding...
+                        </>
+                    ) : (
+                        <>
+                            Add Category
+                        </>
+                    )}
+                </button>
+            </div>
         </div>
     )
 }
