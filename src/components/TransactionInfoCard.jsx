@@ -1,4 +1,5 @@
-import { Trash, Trash2, UtensilsCrossed } from "lucide-react";
+import { Trash, Trash2, TrendingDown, TrendingUp, UtensilsCrossed } from "lucide-react";
+import { addThousandSeparator } from "../util/util";
 
 const TransactionInfoCard = ({icon, title, date, amount, type, hideDeleteBtn, onDelete}) => {
     const getAmountStyles = () => type === 'income' ? 'bg-green-50 text-green-800' : 'bg-red-50 text-red-800';
@@ -34,6 +35,11 @@ const TransactionInfoCard = ({icon, title, date, amount, type, hideDeleteBtn, on
                         <h6 className="text-xs font-medium">
                             {type === 'income' ? '+' : '-'} ${addThousandSeparator(amount)}
                         </h6>
+                        {type === 'income' ? (
+                            <TrendingUp size={15}/>
+                        ) : (
+                            <TrendingDown size={15}/>
+                        )}
                     </div>
                 </div>
             </div>

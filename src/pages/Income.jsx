@@ -49,7 +49,10 @@ const Income = () => {
 
                     </div>    
 
-                    <IncomeList transactions={incomeData} onDelete={(id) => console.log("Deleting the income", id)}/>
+                    <IncomeList 
+                    transactions={incomeData} 
+                    onDelete={(id) => console.log("Deleting the income", id)}
+                    />
                 </div>    
             </div>  
         </Dashboard>
