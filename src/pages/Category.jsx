@@ -72,6 +72,36 @@ const Category = () => {
     }
   }
 
+  const handleEditCategory = (categoryToEdit) => {
+    setSelectedCategory(categoryToEdit);
+    setOpenEditCategoryModal(true);
+  }
+
+  const handleUpdateCategory = async (updatedCategory) => {
+    const {id, name, type, icon} = updatedCategory;
+
+    if (!name.trim()) {
+      toast.error("Category name is required");
+      return;
+    }
+
+    if (!id) {
+      toast.error("Category id is missing for update");
+      return;
+    }
+
+    try {
+      await axiosConfig.put(API_ENDPOINTS.UPDATE_CATEGORY(id), {name, type, icon});
+      setOpenEditCategoryModal(false);
+      setSelectedCategory(null);
+      toast.success("Category updated successfully");
+      fetchCategoryDetails();
+    } catch (error) {
+      console.error("Error updating thee category", error.response?.data?.meessage || error.message);
+      toast.error(error.response?.data?.meessage || "Failed to update the category");
+    }
+  }
+
   return (
     <Dashboard activeMenu="Category">
       <div className="my-5 mx-auto">
@@ -83,7 +113,7 @@ const Category = () => {
           </button>
         </div>
 
-        <CategoryList categories={categoryData} />
+        <CategoryList categories={categoryData} onEditCategory={handleEditCategory}/>
 
         <Modal
             title="Add Category"
@@ -93,6 +123,18 @@ const Category = () => {
             <AddCategoryForm 
               onAddCategory={handleAddCategory}
             />
+        </Modal>
+
+        <Modal
+          title="Update Category"
+          isOpen={openEditCategoryModal}
+          onClose={() => {setOpenEditCategoryModal(false); setSelectedCategory(null);}}
+        >
+          <AddCategoryForm 
+            onAddCategory={handleUpdateCategory}
+            isEditing={true}
+            initialCategoryData={selectedCategory}
+          />
         </Modal>
       </div>
     </Dashboard>
