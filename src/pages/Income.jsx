@@ -116,6 +116,37 @@ const Income = () => {
         }
     }
 
+    const handleDownloadIncomeDetails = async () => {
+        try {
+            const response = await axiosConfig.get(API_ENDPOINTS.DOWNLOAD_INCOME_DETAILS, {responseType: "blob"});
+            let filename = "income_details.xlsx";
+            const url = window.URL.createObjectURL(new Blob([response.data]));
+            const link = document.createElement("a");
+            link.href = url;
+            link.setAttribute("download", filename);
+            document.body.appendChild(link);
+            link.click();
+            link.parentNode.removeChild(link);
+            window.URL.revokeObjectURL(url);
+            toast.success("Income details downloaded successfully");
+        } catch (error) {
+            console.error("Error downloading income details", error);
+            toast.error(error.respose?.data?.message || "Failed to download income details");
+        }
+    }
+
+    const handleEmailIncomeDetails = async () => {
+        try {
+            const response = await axiosConfig.get(API_ENDPOINTS.EMAIL_INCOME_DETAILS);
+            if (response.status === 200) {
+                toast.success("Income details email successfully sended");
+            }
+        } catch (error) {
+            console.error("Failed to send income details", error);
+            toast.error(error.respose?.data?.message || "Failed to email income details")
+        }
+    }
+
     useEffect(() => {
         fetchIncomeDetails();
         fetchIncomeCategories();
@@ -126,17 +157,17 @@ const Income = () => {
             <div className="my-5 mx-auto">
                 <div className="grid grid-cols-1 gap-6">
                     <div>
-                        <button onClick={() => setOpenAddIncomeModal(true)} className="flex items-center gap-1 bg-green-500/20 text-green-800 px-3 py-2 rounded-lg hover:bg-green-500/30 font-semibold hover:cursor-pointer">
-                            <Plus size={15} className="text-lg"/> Add Income
-                        </button>
                         <IncomeOverview 
                             transactions={incomeData}
+                            onAddIncome={() => setOpenAddIncomeModal(true)}
                         />
                     </div>    
 
                     <IncomeList 
-                    transactions={incomeData} 
-                    onDelete={(id) => setOpenDeleteAlert({show: true, data: id})}
+                        transactions={incomeData} 
+                        onDelete={(id) => setOpenDeleteAlert({show: true, data: id})}
+                        onDownload={handleDownloadIncomeDetails}
+                        onEmail={handleEmailIncomeDetails}
                     />
 
                     <Modal 
