@@ -8,6 +8,7 @@ import IncomeList from "../components/IncomeList";
 import Modal from "../components/Modal";
 import { Plus } from "lucide-react";
 import AddIncomeForm from "../components/AddIncomeForm";
+import DeleteAlert from "../components/DeleteAlert";
 
 const Income = () => {
     useUser();
@@ -102,6 +103,18 @@ const Income = () => {
         }
     }
 
+    const deleteIncome = async (id) => {
+        try {
+            await axiosConfig.delete(API_ENDPOINTS.DELETE_INCOME(id));
+            setOpenDeleteAlert({show: false, data: null});
+            toast.success("Income deleted successfully");
+            fetchIncomeDetails();
+        } catch (error) {
+            console.error("Error deleting the income", error);
+            toast.error(error.response?.data?.message || "Failed to delete income");
+        }
+    }
+
     useEffect(() => {
         fetchIncomeDetails();
         fetchIncomeCategories();
@@ -119,7 +132,7 @@ const Income = () => {
 
                     <IncomeList 
                     transactions={incomeData} 
-                    onDelete={(id) => console.log("Deleting the income", id)}
+                    onDelete={(id) => setOpenDeleteAlert({show: true, data: id})}
                     />
 
                     <Modal 
@@ -130,6 +143,17 @@ const Income = () => {
                         <AddIncomeForm 
                             onAddIncome={(income) => handleAddIncome(income)}
                             categories={categories}
+                        />
+                    </Modal>
+
+                    <Modal 
+                        isOpen={openDeleteAlert.show}
+                        onClose={() => setOpenDeleteAlert({show: false, data: null})}
+                        title="Delete Income"
+                    >
+                        <DeleteAlert 
+                            content="Are you sure you want to delete this income?"
+                            onDelete={() => deleteIncome(openDeleteAlert.data)}
                         />
                     </Modal>
                 </div>    
