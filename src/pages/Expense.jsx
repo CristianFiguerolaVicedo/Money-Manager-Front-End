@@ -1,4 +1,3 @@
-import { useNavigate } from "react-router-dom";
 import Dashboard from "../components/Dashboard";
 import useUser from "../hooks/useUser";
 import { useEffect, useState } from "react";
@@ -14,7 +13,6 @@ import DeleteAlert from "../components/DeleteAlert";
 const Expense = () => {
     useUser();
 
-    const navigate = useNavigate();
     const [expenseData, setExpenseData] = useState([]);
     const [categories, setCategories] = useState([]);
     const [loading, setLoading] = useState(false);
