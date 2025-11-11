@@ -16,7 +16,7 @@ const IncomeList = ({ transactions, onDelete, onDownload, onEmail }) => {
   }
 
   const handleDownload = async () => {
-     setLoading(true);
+    setLoading(true);
     try {
       await onDownload();
     } finally {
@@ -33,11 +33,11 @@ const IncomeList = ({ transactions, onDelete, onDownload, onEmail }) => {
             disabled={loading}
             onClick={handleEmail}
             className="flex items-center gap-2 px-4 py-2 text-sm font-medium 
-                   text-gray-700 bg-gray-100 border border-gray-300 
-                   rounded-xl shadow-sm transition-all duration-200 
-                   ease-in-out hover:bg-purple-500/10 hover:shadow-md 
-                   active:bg-gray-300 active:scale-95 focus:outline-none 
-                   focus:ring-2 focus:ring-blue-300 focus:ring-offset-1 hover:cursor-pointer hover:text-purple-800"
+                  text-gray-700 bg-gray-100 border border-gray-300 
+                  rounded-xl shadow-sm transition-all duration-200 
+                  ease-in-out hover:bg-purple-500/10 hover:shadow-md 
+                  active:bg-gray-300 active:scale-95 focus:outline-none 
+                  focus:ring-2 focus:ring-blue-300 focus:ring-offset-1 hover:cursor-pointer hover:text-purple-800"
           >
             {loading ? (
               <>
@@ -55,13 +55,13 @@ const IncomeList = ({ transactions, onDelete, onDownload, onEmail }) => {
             disabled={loading}
             onClick={handleDownload}
             className="flex items-center gap-2 px-4 py-2 text-sm font-medium 
-                   text-gray-700 bg-gray-100 border border-gray-300 
-                   rounded-xl shadow-sm transition-all duration-200 
-                   ease-in-out hover:bg-purple-500/10 hover:shadow-md 
-                   active:bg-gray-300 active:scale-95 focus:outline-none 
-                   focus:ring-2 focus:ring-blue-300 focus:ring-offset-1 hover:cursor-pointer hover:text-purple-800"
+                  text-gray-700 bg-gray-100 border border-gray-300 
+                  rounded-xl shadow-sm transition-all duration-200 
+                  ease-in-out hover:bg-purple-500/10 hover:shadow-md 
+                  active:bg-gray-300 active:scale-95 focus:outline-none 
+                  focus:ring-2 focus:ring-blue-300 focus:ring-offset-1 hover:cursor-pointer hover:text-purple-800"
           >
-           {loading ? (
+          {loading ? (
               <>
                 <LoaderCircle className="w-4 h-4 animate-spin"/>
                 Downloading...
