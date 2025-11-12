@@ -35,6 +35,10 @@ const Menubar = ({activeMenu}) => {
     }
   }, [showDropdown]);
 
+  useEffect(() => {
+    document.body.style.overflow = openSideMenu ? "hidden" : "auto";
+  }, [openSideMenu]);
+
   return (
     <div className="flex items-center justify-between gap-5 bg-white border border-b border-gray-200/50 backdrop-blur-[2px] py-4 px-4 sm:px-7 sticky top-0 z-30">
       <div className="flex items-center gap-5">
@@ -92,8 +96,8 @@ const Menubar = ({activeMenu}) => {
       </div>
 
       {openSideMenu && (
-        <div className="fixed left-0 right-0 bg-white border-b border-gray-200 lg:hidden z-20 top-[73px]">
-          <Sidebar activeMenu={activeMenu}/>
+        <div className="fixed inset-x-0 top-[73px] bottom-0 bg-white border-b border-gray-200 lg:hidden z-20 overflow-y-auto">
+          <Sidebar activeMenu={activeMenu} />
         </div>
       )}
     </div>
