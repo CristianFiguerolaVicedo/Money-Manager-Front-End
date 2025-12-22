@@ -67,6 +67,7 @@ The sales money is automatically imported from the sales page.
 
 ## Style Sheet
 
+
 This app uses a palette of green and white using the following colors:
 
 <span style="display:inline-flex;align-items:center;">
