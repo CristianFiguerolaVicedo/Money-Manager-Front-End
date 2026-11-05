@@ -10,12 +10,12 @@ const axiosConfig = axios.create({
 });
 
 //List of endpoint that dont require authorization
-const excludeEndpoint = ["/login", "/register", "/status", "/activate", "health"];
+const excludeEndpoint = ["/login", "/register", "/status", "/activate", "/health"];
 
 //Request Interceptor
 axiosConfig.interceptors.request.use((config) => {
     const shouldSkipToken = excludeEndpoint.some((endpoint) => {
-        return config.url?.includes(endpoint)
+        return config.url === endpoint || config.url?.startsWith(`${endpoint}?`);
     });
 
     if (!shouldSkipToken) {
@@ -36,11 +36,15 @@ axiosConfig.interceptors.response.use((response) => {
 }, (error) => {
     if (error.response) {
         if (error.response.status === 401) {
-            window.location.href = "/login";
+            // Expired/invalid session: drop the token so "/" doesn't bounce back to the dashboard
+            localStorage.removeItem("token");
+            if (window.location.pathname !== "/login") {
+                window.location.href = "/login";
+            }
         } else if (error.response.status === 500) {
             console.error("Server error. Please try again later.");
         }
-    } else if (error.code === "ECONNECTIONABORTED") {
+    } else if (error.code === "ECONNABORTED") {
         console.error("Request timeout. Please try again.");
     }
     return Promise.reject(error);

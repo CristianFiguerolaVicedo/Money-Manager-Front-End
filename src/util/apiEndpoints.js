@@ -1,5 +1,5 @@
-//export const BASE_URL = "https://money-manager-t0yw.onrender.com/api/v1.0";
-export const BASE_URL = "http://localhost:8080/api/v1.0";
+// Set VITE_API_BASE_URL in a .env file (e.g. https://money-manager-t0yw.onrender.com/api/v1.0 in production)
+export const BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:8080/api/v1.0";
 const CLOUDINARY_CLOUD_NAME = "drsuueqhd";
 
 export const API_ENDPOINTS = {
@@ -18,7 +18,7 @@ export const API_ENDPOINTS = {
     GET_ALL_EXPENSES: "/expenses",
     ADD_EXPENSE: "/expenses",
     DELETE_EXPENSE: (expenseId) => `/expenses/${expenseId}`,
-    DOWNLOAD_EXPENSE_DETAILS: "excel/download/expense",
+    DOWNLOAD_EXPENSE_DETAILS: "/excel/download/expense",
     EMAIL_EXPENSE_DETAILS: "/email/expense-excel",
     APPLY_FILTER: "/filter",
     FETCH_DASHBOARD_DATA: "/dashboard",

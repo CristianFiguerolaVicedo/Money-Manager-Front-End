@@ -14,9 +14,9 @@ const AddCategoryForm = ({onAddCategory, initialCategoryData, isEditing}) => {
 
     useEffect(() => {
         if (isEditing && initialCategoryData) {
-            setCategory(initialCategoryData);
+            setCategory({...initialCategoryData, type: initialCategoryData.type?.toLowerCase() || "income"});
         } else {
-            setCategory({name: "", type: "Income", icon: ""});
+            setCategory({name: "", type: "income", icon: ""});
         }
     }, [isEditing, initialCategoryData]);
 
@@ -61,10 +61,11 @@ const AddCategoryForm = ({onAddCategory, initialCategoryData, isEditing}) => {
                 label="Category Type"
                 isSelect={true}
                 options={categoryTypeOptions}
+                disabled={isEditing}
             />
 
             <div className="flex justify-end mt-6">
-                <button disabled={loading} onClick={() => handleSubmit(category)} type="button" className="flex items-center gap-1 bg-purple-800 text-white px-3 py-2 rounded-lg hover:bg-purple-500 font-semibold hover:cursor-pointer">
+                <button disabled={loading} onClick={handleSubmit} type="button" className="flex items-center gap-1 bg-purple-800 text-white px-3 py-2 rounded-lg hover:bg-purple-500 font-semibold hover:cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed">
                     {loading ? (
                         <>
                             <LoaderCircle className="w-4 h-4 animate-spin"/>

@@ -20,8 +20,8 @@ const IncomeOverview = ({transactions, onAddIncome}) => {
                     <h5 className="text-lg">
                         Income Overview
                     </h5>
-                    <p className="text-xs text-gray-400 mt-0 5">
-                        Track your earnings over time and analise your income trends
+                    <p className="text-xs text-gray-400 mt-0.5">
+                        Track your earnings over time and analyse your income trends
                     </p>
                 </div>
                 <button onClick={onAddIncome} className="flex items-center gap-1 bg-green-500/20 text-green-800 px-3 py-2 rounded-lg hover:bg-green-500/30 font-semibold hover:cursor-pointer">

@@ -9,6 +9,7 @@ import { toast } from "react-hot-toast";
 import { LoaderCircle } from "lucide-react";
 import ProfileImageSelector from "../components/ProfileImageSelector.jsx";
 import uploadProfileImage from "../util/uploadProfileImage.js";
+import { getErrorMessage } from "../util/util.js";
 
 const Signup = () => {
   const [fullName, setFullName] = useState("");
@@ -55,25 +56,25 @@ const Signup = () => {
       }
 
       const response = await axiosConfig.post(API_ENDPOINTS.REGISTER, {
-        fullName,
-        email,
+        fullName: fullName.trim(),
+        email: email.trim(),
         password,
         profileImageUrl,
       });
       if (response.status === 201) {
-        toast.success("Profile created successfully");
+        toast.success("Account created! Check your email to activate it before logging in.", { duration: 6000 });
         navigate("/login");
       }
     } catch (err) {
       console.error("Something went wrong", err);
-      setError(err.message);
+      setError(getErrorMessage(err, err.message));
     } finally {
       setIsLoading(false);
     }
   };
 
   return (
-    <div className="h-screen w-full relative flex items-center justify-center overflow">
+    <div className="h-screen w-full relative flex items-center justify-center overflow-hidden">
       <img
         src={assets.login_bg}
         alt="Background"

@@ -78,9 +78,9 @@ const Menubar = ({activeMenu}) => {
                 </div>
                 <div className="flex-1 min-w-0">
                   <p className="text-sm font-medium text-gray-800 truncate">
-                    {user.fullName}
+                    {user?.fullName}
                   </p>
-                  <p className="text-xs text-gray-500 truncate">{user.email}</p>
+                  <p className="text-xs text-gray-500 truncate">{user?.email}</p>
                 </div>
               </div>
             </div>

@@ -4,23 +4,25 @@ import moment from "moment";
 import { useState } from "react";
 
 const IncomeList = ({ transactions, onDelete, onDownload, onEmail }) => {
-  const [loading, setLoading] = useState(false);
+  const [emailLoading, setEmailLoading] = useState(false);
+  const [downloadLoading, setDownloadLoading] = useState(false);
+  const loading = emailLoading || downloadLoading;
 
   const handleEmail = async () => {
-    setLoading(true);
+    setEmailLoading(true);
     try {
       await onEmail();
     } finally {
-      setLoading(false);
+      setEmailLoading(false);
     }
   }
 
   const handleDownload = async () => {
-    setLoading(true);
+    setDownloadLoading(true);
     try {
       await onDownload();
     } finally {
-      setLoading(false);
+      setDownloadLoading(false);
     }
   }
 
@@ -39,7 +41,7 @@ const IncomeList = ({ transactions, onDelete, onDownload, onEmail }) => {
                   active:bg-gray-300 active:scale-95 focus:outline-none 
                   focus:ring-2 focus:ring-blue-300 focus:ring-offset-1 hover:cursor-pointer hover:text-purple-800"
           >
-            {loading ? (
+            {emailLoading ? (
               <>
                 <LoaderCircle className="w-4 h-4 animate-spin"/>
                 Emailing...
@@ -61,7 +63,7 @@ const IncomeList = ({ transactions, onDelete, onDownload, onEmail }) => {
                   active:bg-gray-300 active:scale-95 focus:outline-none 
                   focus:ring-2 focus:ring-blue-300 focus:ring-offset-1 hover:cursor-pointer hover:text-purple-800"
           >
-          {loading ? (
+          {downloadLoading ? (
               <>
                 <LoaderCircle className="w-4 h-4 animate-spin"/>
                 Downloading...

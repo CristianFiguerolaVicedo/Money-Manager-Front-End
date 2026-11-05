@@ -5,7 +5,8 @@ const FinanceOverview = ({totalBalance, totalIncome, totalExpense}) => {
     const COLORS = ["#59168B", "#B22222", "#006400"];
 
     const balanceData = [
-        {name: "Total Balance", amount: totalBalance},
+        // A pie slice cannot be negative, so a negative balance is drawn as 0 (the label still shows the real value)
+        {name: "Total Balance", amount: Math.max(Number(totalBalance) || 0, 0)},
         {name: "Total Expense", amount: totalExpense},
         {name: "Total Income", amount: totalIncome},
     ];
@@ -21,7 +22,7 @@ const FinanceOverview = ({totalBalance, totalIncome, totalExpense}) => {
             <CustomPieChart 
                 data={balanceData}
                 label="Total Balance"
-                totalAmount={`$${addThousandSeparator(totalBalance)}`}
+                totalAmount={`${Number(totalBalance) < 0 ? "-" : ""}$${addThousandSeparator(Math.abs(Number(totalBalance) || 0))}`}
                 colors={COLORS}
                 showTextAnchor
             />
