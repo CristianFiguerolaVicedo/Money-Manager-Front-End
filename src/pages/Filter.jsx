@@ -7,6 +7,7 @@ import { API_ENDPOINTS } from "../util/apiEndpoints";
 import toast from "react-hot-toast";
 import TransactionInfoCard from "../components/TransactionInfoCard";
 import moment from "moment";
+import { getErrorMessage } from "../util/util";
 
 const Filter = () => {
     useUser();
@@ -18,28 +19,37 @@ const Filter = () => {
     const [sortField, setSortField] = useState("date");
     const [sortOrder, setSortOrder] = useState("asc");
     const [transactions, setTransactions] = useState([]);
+    // Type of the results currently shown (may differ from the select until the next search)
+    const [resultType, setResultType] = useState("income");
+    const [hasSearched, setHasSearched] = useState(false);
     const [loading, setLoading] = useState(false);
 
     const handleSearch = async (e) => {
         e.preventDefault();
+
+        if (startDate && endDate && startDate > endDate) {
+            toast.error("Start date must be before end date");
+            return;
+        }
+
         setLoading(true);
 
         try {
             const response = await axiosConfig.post(API_ENDPOINTS.APPLY_FILTER, {
                 type,
-                startDate,
-                endDate,
+                startDate: startDate || null,
+                endDate: endDate || null,
                 keyword,
                 sortField,
                 sortOrder
             });
 
-            console.log(response.data);
-
-            setTransactions(response.data)
+            setTransactions(response.data || []);
+            setResultType(type);
+            setHasSearched(true);
         } catch (error) {
             console.error("Failed to fetch transactions", error);
-            toast.error(error.message || "Failed to fetch transactions. Please try again");
+            toast.error(getErrorMessage(error, "Failed to fetch transactions. Please try again"));
         } finally {
             setLoading(false);
         }
@@ -61,7 +71,7 @@ const Filter = () => {
                         </h5>
                     </div>
 
-                    <form className="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-6 gap-4">
+                    <form onSubmit={handleSearch} className="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-6 gap-4">
                         <div>
                             <label htmlFor="type" className="block text-sm font-medium mb-1">
                                 Type
@@ -88,9 +98,10 @@ const Filter = () => {
                             <label htmlFor="sortField" className="block text-sm font-medium mb-1">
                                 Sort Field
                             </label>
-                            <select value={sortField} id="sortOrder" className="w-full border rounded px-3 py-2" onChange={e => setSortField(e.target.value)}>
+                            <select value={sortField} id="sortField" className="w-full border rounded px-3 py-2" onChange={e => setSortField(e.target.value)}>
                                 <option value="date">Date</option>
                                 <option value="amount">Amount</option>
+                                <option value="name">Name</option>
                                 <option value="category">Category</option>
                             </select>
                         </div>
@@ -111,20 +122,22 @@ const Filter = () => {
                                 </label>
                                 <input value={keyword} id="keyword" type="text" placeholder="Search..." className="w-full border rounded px-3 py-2" onChange={e => setKeyword(e.target.value)}/>
                             </div>
-                            <button onClick={handleSearch} className="ml-2 mb-1 p-2 bg-purple-800 hover:bg-purple-800 text-white rounded flex items-center justify-center cursor-pointer">
+                            <button type="submit" disabled={loading} className="ml-2 mb-1 p-2 bg-purple-800 hover:bg-purple-800 text-white rounded flex items-center justify-center cursor-pointer">
                                 <Search size={20}/>
                             </button>
                         </div>
                     </form>
                 </div>
 
-                <div className="p-4 p-4 bg-white rounded-xl shadow-sm border border-gray-200">
+                <div className="p-4 bg-white rounded-xl shadow-sm border border-gray-200">
                     <h5 className="text-lg font-semibold">
                         Transactions
                     </h5>
                     {transactions.length === 0 && !loading ? (
                         <p className="text-gray-500">
-                            Select the filters and click apply to filter the transactions
+                            {hasSearched
+                                ? "No transactions match these filters"
+                                : "Select the filters and click search to filter the transactions"}
                         </p>
                     ) : (
                         ""
@@ -136,14 +149,14 @@ const Filter = () => {
                     ) : (
                         ""
                     )}
-                    {transactions.map((transaction) => (
+                    {!loading && transactions.map((transaction) => (
                         <TransactionInfoCard 
                             key={transaction.id}
                             title={transaction.name}
                             icon={transaction.icon}
                             date={moment(transaction.date).format('Do MMM YYYY')}
                             amount={transaction.amount}
-                            type={type}
+                            type={resultType}
                             hideDeleteBtn
                         />
                     ))}

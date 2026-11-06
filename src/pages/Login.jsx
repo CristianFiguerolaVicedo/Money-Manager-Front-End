@@ -40,7 +40,7 @@ const Login = () => {
 
     try {
       const response = await axiosConfig.post(API_ENDPOINTS.LOGIN, {
-        email,
+        email: email.trim(),
         password,
       });
       const { token, user } = response.data;
@@ -62,7 +62,7 @@ const Login = () => {
   };
 
   return (
-    <div className="h-screen w-full relative flex items-center justify-center overflow">
+    <div className="h-screen w-full relative flex items-center justify-center overflow-hidden">
       <img
         src={assets.login_bg}
         alt="Background"

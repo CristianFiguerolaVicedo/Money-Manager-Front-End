@@ -9,6 +9,7 @@ import ExpenseList from "../components/ExpenseList";
 import Modal from "../components/Modal";
 import AddExpenseForm from "../components/AddExpenseForm";
 import DeleteAlert from "../components/DeleteAlert";
+import { getErrorMessage, getTodayLocalDate } from "../util/util";
 
 const Expense = () => {
     useUser();
@@ -34,7 +35,7 @@ const Expense = () => {
             }
         } catch (error) {
             console.error("Failed to fetch expense details", error);
-            toast.error("Failed to fetch expense details");
+            toast.error(getErrorMessage(error, "Failed to fetch expense details"));
         } finally {
             setLoading(false);
         }
@@ -75,8 +76,7 @@ const Expense = () => {
             return;
         }
 
-        const today = new Date().toISOString().split('T')[0];
-        if (date > today) {
+        if (date > getTodayLocalDate()) {
             toast.error("Date cannot be in the future");
             return;
         }
@@ -93,7 +93,6 @@ const Expense = () => {
             setOpenAddExpenseModal(false);
             toast.success("Expense added successfully");
             fetchExpenseDetails();
-            fetchExpenseCategories();
         } catch (error) {
             console.error("Error adding expense", error.response?.data?.message || "Failed to add expense");
             toast.error(error.response?.data?.message || "Failed to add expense");
@@ -130,7 +129,7 @@ const Expense = () => {
             toast.success("Expense details downloaded successfully");
         } catch (error) {
             console.error("Error downloading expense details", error);
-            toast.error("Failed to download expense details. Please try again");
+            toast.error(getErrorMessage(error, "Failed to download expense details. Please try again"));
         }
     };
 
@@ -138,11 +137,11 @@ const Expense = () => {
         try {
             const response = await axiosConfig.get(API_ENDPOINTS.EMAIL_EXPENSE_DETAILS);
             if (response.status === 200) {
-                toast.success("Expense details email successfully sended");
+                toast.success("Expense details sent to your email");
             }
         } catch (error) {
             console.error("Error emailing expense details", error);
-            toast.error("Failed to email expense details. Please try again");
+            toast.error(getErrorMessage(error, "Failed to email expense details. Please try again"));
         }
     }
 

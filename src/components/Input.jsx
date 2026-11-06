@@ -9,6 +9,7 @@ const Input = ({
   type,
   isSelect,
   options,
+  disabled = false,
 }) => {
   const [showPassword, setShowPassword] = useState(false);
   const toggleShowPassword = () => {
@@ -23,7 +24,8 @@ const Input = ({
           <select
             value={value}
             onChange={(e) => onChange(e)}
-            className="w-full bg-tranparent outline-none border border-gray-300 rounded-md py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:border-blue-500"
+            disabled={disabled}
+            className="w-full bg-transparent outline-none border border-gray-300 rounded-md py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:border-blue-500 disabled:bg-gray-100 disabled:cursor-not-allowed"
           >
             {options.map((option) => (
               <option key={option.value} value={option.value}>
@@ -40,6 +42,7 @@ const Input = ({
             placeholder={placeholder}
             value={value}
             onChange={(e) => onChange(e)}
+            disabled={disabled}
           />
         )}
 

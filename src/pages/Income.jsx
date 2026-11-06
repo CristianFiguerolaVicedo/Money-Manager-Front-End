@@ -9,6 +9,7 @@ import Modal from "../components/Modal";
 import AddIncomeForm from "../components/AddIncomeForm";
 import DeleteAlert from "../components/DeleteAlert";
 import IncomeOverview from "../components/IncomeOverview";
+import { getErrorMessage, getTodayLocalDate } from "../util/util";
 
 const Income = () => {
     useUser();
@@ -49,7 +50,7 @@ const Income = () => {
             }
         } catch (error) {
             console.log("Failed to fetch income categories", error);
-            toast.error(error.data?.message || "Failed to fetch income categories");
+            toast.error(getErrorMessage(error, "Failed to fetch income categories"));
         }
     }
 
@@ -67,13 +68,12 @@ const Income = () => {
         }
 
         if (!date) {
-            toast.error("Please seleect a date");
+            toast.error("Please select a date");
             return;
         }
 
-        const todayDate = new Date().toISOString().split('T')[0];
-        if (date > todayDate) {
-            toast.error("Date cannot be future");
+        if (date > getTodayLocalDate()) {
+            toast.error("Date cannot be in the future");
             return;
         }
 
@@ -95,11 +95,10 @@ const Income = () => {
                 setOpenAddIncomeModal(false);
                 toast.success("Income added successfully");
                 fetchIncomeDetails();
-                fetchIncomeCategories();
             }
         } catch (error) {
             console.error('Error adding income', error);
-            toast.error(error.responsee?.data?.message || "Failed to add income");
+            toast.error(getErrorMessage(error, "Failed to add income"));
         }
     }
 
@@ -130,7 +129,7 @@ const Income = () => {
             toast.success("Income details downloaded successfully");
         } catch (error) {
             console.error("Error downloading income details", error);
-            toast.error(error.respose?.data?.message || "Failed to download income details");
+            toast.error(getErrorMessage(error, "Failed to download income details"));
         }
     }
 
@@ -138,11 +137,11 @@ const Income = () => {
         try {
             const response = await axiosConfig.get(API_ENDPOINTS.EMAIL_INCOME_DETAILS);
             if (response.status === 200) {
-                toast.success("Income details email successfully sended");
+                toast.success("Income details sent to your email");
             }
         } catch (error) {
             console.error("Failed to send income details", error);
-            toast.error(error.respose?.data?.message || "Failed to email income details")
+            toast.error(getErrorMessage(error, "Failed to email income details"));
         }
     }
 

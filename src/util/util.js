@@ -21,7 +21,7 @@ export const prepareIncomeLineChartData = (data = []) => {
       };
     }
 
-    acc[dateKey].totalAmount += item.amount;
+    acc[dateKey].totalAmount += Number(item.amount) || 0;
     acc[dateKey].items.push(item);
     return acc;
   }, {});
@@ -37,3 +37,11 @@ export const prepareIncomeLineChartData = (data = []) => {
 
   return chartData;
 }
+
+// Today's date as YYYY-MM-DD in the user's local timezone.
+// (new Date().toISOString() is UTC, which is the wrong day around midnight in Spain.)
+export const getTodayLocalDate = () => moment().format("YYYY-MM-DD");
+
+// Best human-readable message from an axios error
+export const getErrorMessage = (error, fallback = "Something went wrong. Please try again") =>
+  error?.response?.data?.message || fallback;

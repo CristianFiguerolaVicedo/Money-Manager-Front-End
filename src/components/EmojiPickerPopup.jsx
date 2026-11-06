@@ -15,7 +15,7 @@ const EmojiPickerPopup = ({icon, onSelect}) => {
             <div onClick={() => setIsOpen(true)} className="flex items-center gap-4 cursor-pointer">
                 <div className="w-12 h-12 flex items-center justify-center text-2xl bg-purple-50 text-purple-500 rounded-lg">
                     {icon ? (
-                        <img src={icon} alt="Icon" className="ww-12 h-12" />
+                        <img src={icon} alt="Icon" className="w-12 h-12" />
                     ) : (
                         <Image />
                     )}
@@ -26,7 +26,7 @@ const EmojiPickerPopup = ({icon, onSelect}) => {
 
                 {isOpen && (
                     <div className="relative">
-                        <button onClick={() => setIsOpen(false)} className="w-7 h-7 flex items-center justify-center bg-white border border-gray-200 rounded-full absolute -top-2 -right-2 z-10 cursor-pointer">
+                        <button type="button" onClick={() => setIsOpen(false)} className="w-7 h-7 flex items-center justify-center bg-white border border-gray-200 rounded-full absolute -top-2 -right-2 z-10 cursor-pointer">
                             <X />
                         </button>
                         <EmojiPicker 

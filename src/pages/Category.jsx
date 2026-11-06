@@ -8,6 +8,7 @@ import { API_ENDPOINTS } from "../util/apiEndpoints";
 import toast from "react-hot-toast";
 import Modal from "../components/Modal";
 import AddCategoryForm from "../components/AddCategoryForm";
+import { getErrorMessage } from "../util/util";
 
 const Category = () => {
   useUser();
@@ -32,7 +33,7 @@ const Category = () => {
         }
     } catch (error) {
         console.error("Something went wrong. Please try again.", error);
-        toast.error(error.message);
+        toast.error(getErrorMessage(error, "Failed to fetch categories"));
     } finally {
         setLoading(false);
     }
@@ -50,8 +51,8 @@ const Category = () => {
       return;
     }
 
-    const isDuplicate = categoryData.some((category) => {
-      return category.name.toLowerCase() === name.trim().toLowerCase();
+    const isDuplicate = categoryData.some((existing) => {
+      return existing.name.toLowerCase() === name.trim().toLowerCase();
     })
 
     if(isDuplicate) {
@@ -60,7 +61,7 @@ const Category = () => {
     }
 
     try {
-      const response = await axiosConfig.post(API_ENDPOINTS.ADD_CATEGORY, {name, type, icon});
+      const response = await axiosConfig.post(API_ENDPOINTS.ADD_CATEGORY, {name: name.trim(), type, icon});
       if (response.status === 201) {
         toast.success("Category added successfully");
         setOpenAddCategoryModal(false);
@@ -68,7 +69,7 @@ const Category = () => {
       }
     } catch (error) {
       console.error("Error adding category", error);
-      toast.error(error.response?.data?.message || "Failed to add category");
+      toast.error(getErrorMessage(error, "Failed to add category"));
     }
   }
 
@@ -90,15 +91,24 @@ const Category = () => {
       return;
     }
 
+    const isDuplicate = categoryData.some((existing) => {
+      return existing.id !== id && existing.name.toLowerCase() === name.trim().toLowerCase();
+    });
+
+    if (isDuplicate) {
+      toast.error("Category name already exists");
+      return;
+    }
+
     try {
-      await axiosConfig.put(API_ENDPOINTS.UPDATE_CATEGORY(id), {name, type, icon});
+      await axiosConfig.put(API_ENDPOINTS.UPDATE_CATEGORY(id), {name: name.trim(), type, icon});
       setOpenEditCategoryModal(false);
       setSelectedCategory(null);
       toast.success("Category updated successfully");
       fetchCategoryDetails();
     } catch (error) {
-      console.error("Error updating thee category", error.response?.data?.meessage || error.message);
-      toast.error(error.response?.data?.meessage || "Failed to update the category");
+      console.error("Error updating the category", error);
+      toast.error(getErrorMessage(error, "Failed to update the category"));
     }
   }
 
