@@ -1,5 +1,6 @@
 import { useContext, useState } from "react";
 import AuthLayout from "../components/AuthLayout.jsx";
+import ResendActivationButton from "../components/ResendActivationButton.jsx";
 import Input from "../components/Input.jsx";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { validateEmail } from "../util/validation.js";
@@ -13,6 +14,7 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [notActivated, setNotActivated] = useState(false);
 
   const { setUser } = useContext(AppContext);
 
@@ -38,6 +40,7 @@ const Login = () => {
     }
 
     setError("");
+    setNotActivated(false);
 
     try {
       const response = await axiosConfig.post(API_ENDPOINTS.LOGIN, {
@@ -55,6 +58,7 @@ const Login = () => {
     } catch (err) {
       if (err.response && err.response.data.message) {
         setError(err.response.data.message);
+        setNotActivated(err.response.data.code === "ACCOUNT_NOT_ACTIVE");
       } else {
         console.error("Something went wrong", err);
         setError("No se ha podido conectar con el servidor. Inténtalo de nuevo.");
@@ -91,6 +95,7 @@ const Login = () => {
         {error && (
           <p className="text-red-800 text-sm text-center bg-red-50 p-2 rounded">{error}</p>
         )}
+        {notActivated && <ResendActivationButton email={email} />}
 
         <button
           disabled={isLoading}

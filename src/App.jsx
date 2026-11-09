@@ -8,6 +8,7 @@ import Signup from "./pages/Signup";
 import Home from "./pages/Home";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
+import Activate from "./pages/Activate";
 import { Toaster } from "react-hot-toast";
 import { ProtectedRoute, PublicOnlyRoute } from "./components/ProtectedRoute";
 import { hasValidSession } from "./util/auth";
@@ -36,6 +37,7 @@ const App = () => {
 
           {/* Reachable from the email link whether or not someone is logged in */}
           <Route path="/reset-password" element={<ResetPassword />} />
+          <Route path="/activate" element={<Activate />} />
 
           <Route path="*" element={<Root />} />
         </Routes>
