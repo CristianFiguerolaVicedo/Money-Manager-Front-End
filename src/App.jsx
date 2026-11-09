@@ -7,6 +7,8 @@ import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Home from "./pages/Home";
 import { Toaster } from "react-hot-toast";
+import { ProtectedRoute, PublicOnlyRoute } from "./components/ProtectedRoute";
+import { hasValidSession } from "./util/auth";
 
 const App = () => {
   return (
@@ -15,25 +17,33 @@ const App = () => {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Root />} />
-          <Route path="/dashboard" element={<Home/>} />
-          <Route path="/income" element={<Income />} />
-          <Route path="/expense" element={<Expense />} />
-          <Route path="/category" element={<Category />} />
-          <Route path="/filter" element={<Filter />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<Signup />} />
+
+          <Route element={<ProtectedRoute />}>
+            <Route path="/dashboard" element={<Home />} />
+            <Route path="/income" element={<Income />} />
+            <Route path="/expense" element={<Expense />} />
+            <Route path="/category" element={<Category />} />
+            <Route path="/filter" element={<Filter />} />
+          </Route>
+
+          <Route element={<PublicOnlyRoute />}>
+            <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<Signup />} />
+          </Route>
+
+          <Route path="*" element={<Root />} />
         </Routes>
       </BrowserRouter>
     </>
   );
 };
 
+// "/" and unknown paths: send the user wherever makes sense for their session
 const Root = () => {
-  const isAuthenticated = !! localStorage.getItem("token");
-  return isAuthenticated ? (
-    <Navigate to="/dashboard" />
+  return hasValidSession() ? (
+    <Navigate to="/dashboard" replace />
   ) : (
-    <Navigate to="/login" />
+    <Navigate to="/login" replace />
   );
 }
 

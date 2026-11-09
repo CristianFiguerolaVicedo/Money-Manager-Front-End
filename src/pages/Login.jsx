@@ -1,7 +1,7 @@
 import { useContext, useState } from "react";
 import { assets } from "../assets/assets";
 import Input from "../components/Input.jsx";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { validateEmail } from "../util/validation.js";
 import axiosConfig from "../util/axiosConfig.jsx";
 import { API_ENDPOINTS } from "../util/apiEndpoints.js";
@@ -17,6 +17,7 @@ const Login = () => {
   const { setUser } = useContext(AppContext);
 
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -47,7 +48,9 @@ const Login = () => {
       if (token) {
         localStorage.setItem("token", token);
         setUser(user);
-        navigate("/dashboard");
+        // Return to the private page the user tried to open before logging in
+        const from = location.state?.from;
+        navigate(from && from !== "/login" ? from : "/dashboard", { replace: true });
       }
     } catch (err) {
       if (err.response && err.response.data.message) {
