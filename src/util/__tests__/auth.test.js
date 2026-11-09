@@ -12,7 +12,7 @@ globalThis.localStorage = {
 const { getToken, setToken, clearToken, hasValidSession, getTokenExpiry } = await import("../auth.js");
 
 const base64url = (value) =>
-  Buffer.from(JSON.stringify(value)).toString("base64").replace(/=+$/, "").replace(/\+/g, "-").replace(/\//g, "_");
+  btoa(JSON.stringify(value)).replace(/=+$/, "").replace(/\+/g, "-").replace(/\//g, "_");
 const fakeJwt = (payload) => `${base64url({ alg: "HS256" })}.${base64url(payload)}.signature`;
 
 beforeEach(() => store.clear());
