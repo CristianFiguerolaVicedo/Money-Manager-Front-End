@@ -8,6 +8,14 @@ export const getToken = () => {
   }
 };
 
+export const setToken = (token) => {
+  try {
+    localStorage.setItem(TOKEN_KEY, token);
+  } catch {
+    // storage unavailable: the session will only last for this page
+  }
+};
+
 export const clearToken = () => {
   try {
     localStorage.removeItem(TOKEN_KEY);
@@ -38,4 +46,12 @@ export const hasValidSession = () => {
     return false;
   }
   return true;
+};
+
+// Milliseconds since epoch when the current token expires, or null if unknown
+export const getTokenExpiry = () => {
+  const token = getToken();
+  if (!token) return null;
+  const payload = decodePayload(token);
+  return payload && typeof payload.exp === "number" ? payload.exp * 1000 : null;
 };

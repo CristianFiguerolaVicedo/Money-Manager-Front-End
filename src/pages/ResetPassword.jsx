@@ -8,8 +8,7 @@ import axiosConfig from "../util/axiosConfig.jsx";
 import { API_ENDPOINTS } from "../util/apiEndpoints.js";
 import { getErrorMessage } from "../util/util.js";
 import { clearToken } from "../util/auth.js";
-
-const MIN_LENGTH = 8;
+import { PASSWORD_HINT, validatePassword } from "../util/validation.js";
 
 // Opened from the link in the password reset email: /reset-password?token=...
 const ResetPassword = () => {
@@ -24,8 +23,9 @@ const ResetPassword = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (password.length < MIN_LENGTH) {
-      setError(`La contraseña debe tener al menos ${MIN_LENGTH} caracteres`);
+    const passwordError = validatePassword(password);
+    if (passwordError) {
+      setError(passwordError);
       return;
     }
     if (password !== confirmPassword) {
@@ -63,13 +63,13 @@ const ResetPassword = () => {
   }
 
   return (
-    <AuthLayout title="Elige una contraseña nueva" subtitle={`Mínimo ${MIN_LENGTH} caracteres.`}>
+    <AuthLayout title="Elige una contraseña nueva" subtitle={`${PASSWORD_HINT}.`}>
       <form onSubmit={handleSubmit} className="space-y-4">
         <Input
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           label="Contraseña nueva"
-          placeholder={`Mínimo ${MIN_LENGTH} caracteres`}
+          placeholder="Mínimo 8 caracteres"
           type="password"
         />
         <Input

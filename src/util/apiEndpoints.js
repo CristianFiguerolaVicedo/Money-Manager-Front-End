@@ -10,6 +10,7 @@ export const API_ENDPOINTS = {
     FORGOT_PASSWORD: "/forgot-password",
     RESET_PASSWORD: "/reset-password",
     GET_USER_INFO: "/profile",
+    REFRESH_TOKEN: "/refresh-token",
     GET_ALL_CATEGORIES: "/categories",
     ADD_CATEGORY: "/categories",
     UPDATE_CATEGORY: (categoryId) => `/categories/${categoryId}`,

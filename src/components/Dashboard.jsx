@@ -2,6 +2,7 @@ import { useContext } from "react";
 import Menubar from "./Menubar";
 import Sidebar from "./Sidebar";
 import AppContext from "../context/AppContext";
+import SessionWatcher from "./SessionWatcher";
 
 const Dashboard = ({ children, activeMenu }) => {
   const { user } = useContext(AppContext);
@@ -9,6 +10,7 @@ const Dashboard = ({ children, activeMenu }) => {
   return (
     <div>
       <Menubar activeMenu={activeMenu} />
+      <SessionWatcher />
 
       {user && (
         <div className="flex">
