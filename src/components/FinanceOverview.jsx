@@ -1,4 +1,4 @@
-import { addThousandSeparator } from "../util/util";
+import { formatCurrency } from "../util/util";
 import CustomPieChart from "./CustomPieChart";
 
 const FinanceOverview = ({totalBalance, totalIncome, totalExpense}) => {
@@ -22,7 +22,7 @@ const FinanceOverview = ({totalBalance, totalIncome, totalExpense}) => {
             <CustomPieChart 
                 data={balanceData}
                 label="Total Balance"
-                totalAmount={`${Number(totalBalance) < 0 ? "-" : ""}$${addThousandSeparator(Math.abs(Number(totalBalance) || 0))}`}
+                totalAmount={formatCurrency(totalBalance)}
                 colors={COLORS}
                 showTextAnchor
             />

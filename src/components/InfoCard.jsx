@@ -9,7 +9,7 @@ const InfoCard = ({icon, label, value, color}) => {
                     {label}
                 </h6>
                 <span className="text-[22px]">
-                    &#36;{value}
+                    {value}
                 </span>
             </div>
         </div>

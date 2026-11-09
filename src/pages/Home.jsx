@@ -1,8 +1,8 @@
+import { formatCurrency } from "../util/util";
 import { Coins, Wallet, WalletCards } from "lucide-react";
 import Dashboard from "../components/Dashboard";
 import InfoCard from "../components/InfoCard";
 import useUser from "../hooks/useUser";
-import { addThousandSeparator } from "../util/util";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axiosConfig from "../util/axiosConfig";
@@ -51,21 +51,21 @@ const Home = () => {
                         <InfoCard 
                             icon={<WalletCards />}
                             label="Total Balance"
-                            value={addThousandSeparator(dashboardData?.totalBalance || 0)}
+                            value={formatCurrency(dashboardData?.totalBalance || 0)}
                             color="bg-purple-800"
                         />
 
                         <InfoCard 
                             icon={<Wallet />}
                             label="Total Income"
-                            value={addThousandSeparator(dashboardData?.totalIncome || 0)}
+                            value={formatCurrency(dashboardData?.totalIncome || 0)}
                             color="bg-green-800"
                         />
 
                         <InfoCard 
                             icon={<Coins />}
                             label="Total Expense"
-                            value={addThousandSeparator(dashboardData?.totalExpense || 0)}
+                            value={formatCurrency(dashboardData?.totalExpense || 0)}
                             color="bg-red-800"
                         />
                     </div>

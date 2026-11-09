@@ -1,4 +1,4 @@
-import { addThousandSeparator } from "../util/util";
+import { formatCurrency, formatAxisCurrency } from "../util/util";
 import {
     ResponsiveContainer,
     AreaChart,
@@ -23,7 +23,7 @@ const CustomLineChart = ({data}) => {
                     };
                 }
 
-                acc[categoryName].totalAmount += amount;
+                acc[categoryName].totalAmount += Number(amount) || 0;
                 return acc;
             }, {});
 
@@ -36,7 +36,7 @@ const CustomLineChart = ({data}) => {
                     <hr className="my-1 border-gray-200" />
                     {/* Display the total amount for the date */}
                     <p className="text-sm text-gray-700 font-bold mb-2">
-                        Total: <span className="text-purple-800">&#36;{addThousandSeparator(dataPoint.totalAmount)}</span>
+                        Total: <span className="text-purple-800">{formatCurrency(dataPoint.totalAmount)}</span>
                     </p>
             
                     {/* Iterate over the newly grouped categories for a consolidated view */}
@@ -46,7 +46,7 @@ const CustomLineChart = ({data}) => {
                             {categoriesInTooltip.map((groupedItem, index) => (
                                 <div key={index} className="flex justify-between text-xs text-gray-700">
                                     <span>{groupedItem.categoryName}:</span>
-                                    <span>&#36;{addThousandSeparator(groupedItem.totalAmount)}</span>
+                                    <span>{formatCurrency(groupedItem.totalAmount)}</span>
                                 </div>
                             ))}
                         </div>
@@ -70,7 +70,7 @@ const CustomLineChart = ({data}) => {
             
                     <CartesianGrid stroke="none" />
                     <XAxis dataKey="month" tick={{ fontSize: 12, fill: "#555" }} stroke="none" />
-                    <YAxis tick={{ fontSize: 12, fill: "#555" }} stroke="none" />
+                    <YAxis tick={{ fontSize: 12, fill: "#555" }} stroke="none" tickFormatter={formatAxisCurrency} width={80} />
                     <Tooltip content={<CustomTooltip />} />
             
                     <Area
