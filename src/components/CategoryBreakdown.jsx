@@ -24,7 +24,7 @@ const CategoryBreakdown = ({ title, subtitle, items = [], emptyText, className =
               <li key={item.key}>
                 <div className="flex items-center justify-between gap-3 text-sm">
                   <span className="flex items-center gap-2 min-w-0 text-gray-700">
-                    {item.icon && <span aria-hidden="true">{item.icon}</span>}
+                    {item.icon && <img src={item.icon} alt="" className="w-5 h-5 shrink-0" />}
                     <span className="truncate">{item.name}</span>
                   </span>
                   <span className="shrink-0 text-gray-800 font-medium">
