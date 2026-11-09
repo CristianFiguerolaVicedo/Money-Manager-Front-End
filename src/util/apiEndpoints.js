@@ -5,6 +5,8 @@ const CLOUDINARY_CLOUD_NAME = "drsuueqhd";
 export const API_ENDPOINTS = {
     LOGIN: "/login",
     REGISTER: "/register",
+    ACTIVATE: "/activate",
+    RESEND_ACTIVATION: "/resend-activation",
     FORGOT_PASSWORD: "/forgot-password",
     RESET_PASSWORD: "/reset-password",
     GET_USER_INFO: "/profile",

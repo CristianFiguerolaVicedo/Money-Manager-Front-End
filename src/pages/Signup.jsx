@@ -1,12 +1,12 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import AuthLayout from "../components/AuthLayout.jsx";
 import Input from "../components/Input.jsx";
 import { validateEmail } from "../util/validation.js";
 import axiosConfig from "../util/axiosConfig.jsx";
 import { API_ENDPOINTS } from "../util/apiEndpoints.js";
-import { toast } from "react-hot-toast";
-import { LoaderCircle } from "lucide-react";
+import { LoaderCircle, MailCheck } from "lucide-react";
+import ResendActivationButton from "../components/ResendActivationButton.jsx";
 import ProfileImageSelector from "../components/ProfileImageSelector.jsx";
 import uploadProfileImage from "../util/uploadProfileImage.js";
 import { getErrorMessage } from "../util/util.js";
@@ -18,8 +18,7 @@ const Signup = () => {
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [profilePhoto, setProfilePhoto] = useState(null);
-
-  const navigate = useNavigate();
+  const [registeredEmail, setRegisteredEmail] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -62,8 +61,7 @@ const Signup = () => {
         profileImageUrl,
       });
       if (response.status === 201) {
-        toast.success("¡Cuenta creada! Revisa tu email y actívala antes de iniciar sesión.", { duration: 6000 });
-        navigate("/login");
+        setRegisteredEmail(email.trim());
       }
     } catch (err) {
       console.error("Something went wrong", err);
@@ -72,6 +70,24 @@ const Signup = () => {
       setIsLoading(false);
     }
   };
+
+  if (registeredEmail) {
+    return (
+      <AuthLayout title="¡Ya casi está! Revisa tu email">
+        <div className="flex flex-col items-center text-center gap-4">
+          <MailCheck className="w-12 h-12 text-purple-800" />
+          <p className="text-sm text-slate-700">
+            Te hemos enviado un enlace de activación a <strong>{registeredEmail}</strong>. Ábrelo para activar
+            tu cuenta; caduca en 24 horas. Si no lo ves, mira en la carpeta de spam.
+          </p>
+          <ResendActivationButton email={registeredEmail} />
+          <Link to="/login" className="font-medium text-purple-800 underline">
+            Ir a iniciar sesión
+          </Link>
+        </div>
+      </AuthLayout>
+    );
+  }
 
   return (
     <AuthLayout title="Crea tu cuenta" subtitle="Empieza a controlar tus gastos con Money Manager.">
