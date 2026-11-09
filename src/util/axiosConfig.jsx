@@ -1,5 +1,6 @@
 import axios from "axios";
 import { BASE_URL } from "./apiEndpoints";
+import { trackRequestEnd, trackRequestStart } from "./serverWakeNotice";
 
 const axiosConfig = axios.create({
     baseURL: BASE_URL,
@@ -25,15 +26,17 @@ axiosConfig.interceptors.request.use((config) => {
         }
     }
 
-    return config;
+    return trackRequestStart(config);
 }, (error) => {
     return Promise.reject(error);
 });
 
 //Response interceptor
 axiosConfig.interceptors.response.use((response) => {
+    trackRequestEnd(response.config);
     return response;
 }, (error) => {
+    trackRequestEnd(error.config);
     if (error.response) {
         if (error.response.status === 401) {
             // Expired/invalid session: drop the token so "/" doesn't bounce back to the dashboard

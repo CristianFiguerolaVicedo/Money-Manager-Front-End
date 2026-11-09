@@ -3,6 +3,7 @@ import { LoaderCircle } from "lucide-react";
 import EmojiPickerPopup from "./EmojiPickerPopup";
 import Input from "./Input";
 import { getTodayLocalDate } from "../util/util";
+import NoCategoriesNotice from "./NoCategoriesNotice";
 
 const emptyTransaction = () => ({
   name: "",
@@ -54,6 +55,10 @@ const TransactionForm = ({ config, categories, initialData, onSubmit }) => {
       setTransaction((prev) => ({ ...prev, categoryId: categories[0].id }));
     }
   }, [categories, transaction.categoryId]);
+
+  if (categories.length === 0) {
+    return <NoCategoriesNotice labels={config.labels} compact />;
+  }
 
   return (
     <div>
