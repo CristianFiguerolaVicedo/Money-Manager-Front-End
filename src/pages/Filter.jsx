@@ -6,8 +6,7 @@ import axiosConfig from "../util/axiosConfig";
 import { API_ENDPOINTS } from "../util/apiEndpoints";
 import toast from "react-hot-toast";
 import TransactionInfoCard from "../components/TransactionInfoCard";
-import moment from "moment";
-import { getErrorMessage } from "../util/util";
+import { getErrorMessage, formatDate } from "../util/util";
 
 const Filter = () => {
     useUser();
@@ -154,7 +153,7 @@ const Filter = () => {
                             key={transaction.id}
                             title={transaction.name}
                             icon={transaction.icon}
-                            date={moment(transaction.date).format('Do MMM YYYY')}
+                            date={formatDate(transaction.date)}
                             amount={transaction.amount}
                             type={resultType}
                             hideDeleteBtn

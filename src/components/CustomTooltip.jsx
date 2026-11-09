@@ -1,4 +1,4 @@
-import { addThousandSeparator } from "../util/util"
+import { formatCurrency } from "../util/util";
 
 const CustomTooltip = ({active, payload}) => {
     if (active && payload && payload.length) {
@@ -8,7 +8,7 @@ const CustomTooltip = ({active, payload}) => {
                     {payload[0].name}
                 </p>
                 <p className="text-sm text-gray-600">
-                    Amount: <span className="text-sm font-medium text-gray-900">&#36;{addThousandSeparator(payload[0].value)}</span>
+                    Amount: <span className="text-sm font-medium text-gray-900">{formatCurrency(payload[0].value)}</span>
                 </p>
             </div>
         )

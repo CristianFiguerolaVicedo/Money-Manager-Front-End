@@ -1,6 +1,6 @@
+import { formatDate } from "../util/util";
 import { ArrowRight } from "lucide-react";
 import TransactionInfoCard from "./TransactionInfoCard";
-import moment from "moment";
 
 const Transactions = ({transactions, onMore, type, title}) => {
     return(
@@ -26,7 +26,7 @@ const Transactions = ({transactions, onMore, type, title}) => {
                         key={item.id}
                         title={item.name}
                         icon={item.icon}
-                        date={moment(item.date).format('Do MMM YYYY')}
+                        date={formatDate(item.date)}
                         amount={item.amount}
                         type={type}
                         hideDeleteBtn
