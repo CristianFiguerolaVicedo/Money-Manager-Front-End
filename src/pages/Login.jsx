@@ -1,5 +1,6 @@
 import { useContext, useState } from "react";
 import AuthLayout from "../components/AuthLayout.jsx";
+import { setToken } from "../util/auth.js";
 import ResendActivationButton from "../components/ResendActivationButton.jsx";
 import Input from "../components/Input.jsx";
 import { Link, useNavigate, useLocation } from "react-router-dom";
@@ -49,7 +50,7 @@ const Login = () => {
       });
       const { token, user } = response.data;
       if (token) {
-        localStorage.setItem("token", token);
+        setToken(token);
         setUser(user);
         // Return to the private page the user tried to open before logging in
         const from = location.state?.from;
@@ -92,6 +93,11 @@ const Login = () => {
           </Link>
         </div>
 
+        {!error && location.state?.sessionExpired && (
+          <p className="text-amber-900 text-sm text-center bg-amber-50 p-2 rounded">
+            Tu sesión ha caducado. Vuelve a iniciar sesión.
+          </p>
+        )}
         {error && (
           <p className="text-red-800 text-sm text-center bg-red-50 p-2 rounded">{error}</p>
         )}

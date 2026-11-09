@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import AuthLayout from "../components/AuthLayout.jsx";
 import Input from "../components/Input.jsx";
-import { validateEmail } from "../util/validation.js";
+import { PASSWORD_HINT, validateEmail, validatePassword } from "../util/validation.js";
 import axiosConfig from "../util/axiosConfig.jsx";
 import { API_ENDPOINTS } from "../util/apiEndpoints.js";
 import { LoaderCircle, MailCheck } from "lucide-react";
@@ -40,8 +40,9 @@ const Signup = () => {
       return;
     }
 
-    if (password.length < 8) {
-      setError("La contraseña debe tener al menos 8 caracteres");
+    const passwordError = validatePassword(password);
+    if (passwordError) {
+      setError(passwordError);
       setIsLoading(false);
       return;
     }
@@ -118,6 +119,7 @@ const Signup = () => {
               placeholder="Mínimo 8 caracteres"
               type="password"
             />
+            <p className="text-xs text-slate-500 -mt-3 mb-2">{PASSWORD_HINT}</p>
           </div>
         </div>
         {error && (
