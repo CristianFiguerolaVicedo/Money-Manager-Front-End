@@ -8,7 +8,9 @@ import {
   shiftMonth,
   formatMonthLabel,
   getErrorMessage,
-  prepareIncomeLineChartData,
+  buildDailySeries,
+  groupByCategory,
+  foldSmallGroups,
 } from "../util.js";
 
 // Intl uses non-breaking spaces before "€"; compare with normal spaces
@@ -57,14 +59,36 @@ test("getErrorMessage prefers the backend message", () => {
   assert.equal(getErrorMessage(undefined, "Sin conexión"), "Sin conexión");
 });
 
-test("prepareIncomeLineChartData groups by day and sorts by date", () => {
-  const data = prepareIncomeLineChartData([
-    { date: "2026-10-05", amount: 10 },
-    { date: "2026-10-01", amount: "5.5" },
-    { date: "2026-10-05", amount: 2 },
+test("buildDailySeries has one entry per day, with zeros for empty days", () => {
+  const series = buildDailySeries(
+    [
+      { date: "2026-02-03", amount: 10, categoryName: "Comida" },
+      { date: "2026-02-03", amount: "2.5", categoryName: "Ocio" },
+      { date: "2026-02-28", amount: 4 },
+      { date: "2026-03-01", amount: 99 }, // another month: ignored
+    ],
+    "2026-02"
+  );
+  assert.equal(series.length, 28);
+  assert.deepEqual(series[2], { day: 3, date: "2026-02-03", total: 12.5, items: series[2].items });
+  assert.equal(series[2].items.length, 2);
+  assert.equal(series[0].total, 0);
+  assert.equal(series[27].total, 4);
+  assert.equal(buildDailySeries([], "2024-02").length, 29); // leap year
+});
+
+test("groupByCategory sums per category, biggest first", () => {
+  const groups = groupByCategory([
+    { categoryId: 1, categoryName: "Comida", amount: 10 },
+    { categoryId: 2, categoryName: "Ocio", amount: 30 },
+    { categoryId: 1, categoryName: "Comida", amount: "5" },
   ]);
-  assert.deepEqual(data.map((d) => [d.date, d.totalAmount, d.items.length]), [
-    ["2026-10-01", 5.5, 1],
-    ["2026-10-05", 12, 2],
-  ]);
+  assert.deepEqual(groups.map((g) => [g.name, g.amount]), [["Ocio", 30], ["Comida", 15]]);
+});
+
+test("foldSmallGroups keeps the biggest and folds the rest into Otras", () => {
+  const groups = [50, 40, 30, 20, 10, 5, 1].map((amount, i) => ({ key: i, name: `C${i}`, amount }));
+  const folded = foldSmallGroups(groups, 4);
+  assert.deepEqual(folded.map((g) => [g.name, g.amount]), [["C0", 50], ["C1", 40], ["C2", 30], ["Otras (4)", 36]]);
+  assert.equal(foldSmallGroups(groups.slice(0, 3), 4).length, 3);
 });

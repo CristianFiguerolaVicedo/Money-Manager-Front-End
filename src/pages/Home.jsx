@@ -9,7 +9,8 @@ import axiosConfig from "../util/axiosConfig";
 import { API_ENDPOINTS } from "../util/apiEndpoints";
 import toast from "react-hot-toast";
 import RecentTransactions from "../components/RecentTransactions";
-import FinanceOverview from "../components/FinanceOverview";
+import MonthlyTrendChart from "../components/MonthlyTrendChart";
+import CategoryBreakdown from "../components/CategoryBreakdown";
 import Transactions from "../components/Transactions";
 import GettingStarted from "../components/GettingStarted";
 
@@ -90,16 +91,26 @@ const Home = () => {
                             color="bg-red-800"
                         />
                     </div>
+                    <div className="mt-6">
+                        <MonthlyTrendChart data={dashboardData?.monthlySummary || []} />
+                    </div>
+
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
                         <RecentTransactions
                             transactions={dashboardData?.recentTransactions}
                             onMore={() => navigate("/expense")}
                         />
 
-                        <FinanceOverview 
-                            totalBalance={dashboardData?.totalBalance || 0}
-                            totalIncome={dashboardData?.totalIncome || 0}
-                            totalExpense={dashboardData?.totalExpense || 0}
+                        <CategoryBreakdown
+                            title="Gastos del mes por categoría"
+                            subtitle="En qué se va el dinero este mes"
+                            items={(dashboardData?.expenseByCategory || []).map((row) => ({
+                                key: row.categoryId,
+                                name: row.categoryName,
+                                icon: row.icon,
+                                amount: Number(row.amount) || 0,
+                            }))}
+                            emptyText="Aún no tienes gastos este mes"
                         />
 
                         <Transactions 
