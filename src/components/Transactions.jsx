@@ -5,7 +5,7 @@ import TransactionInfoCard from "./TransactionInfoCard";
 const Transactions = ({transactions, onMore, type, title}) => {
     return(
         <div className="p-4 bg-white rounded-xl shadow-sm border border-gray-200">
-            <div className="flex items-center justify-between">
+            <div className="flex flex-wrap gap-2 items-center justify-between">
                 <h5 className="text-lg">
                     {title}
                 </h5>
@@ -16,7 +16,7 @@ const Transactions = ({transactions, onMore, type, title}) => {
                     active:bg-gray-300 active:scale-95 focus:outline-none 
                     focus:ring-2 focus:ring-blue-300 focus:ring-offset-1 hover:cursor-pointer hover:text-purple-800"
                 >
-                    More <ArrowRight className="text-base" size={15}/>
+                    Ver más <ArrowRight className="text-base" size={15}/>
                 </button>
             </div>
 

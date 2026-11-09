@@ -29,17 +29,17 @@ const TransactionList = ({ config, transactions, loading, onEdit, onDelete, onDo
     <div className="bg-white rounded-xl shadow-sm border border-gray-200 shadow-xl p-4">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <h5 className="text-lg">{config.listTitle}</h5>
-        <div className="flex items-center justify-end gap-2">
+        <div className="flex flex-wrap items-center justify-end gap-2">
           <button disabled={busy || isEmpty} onClick={runWith(setEmailLoading, onEmail)} className={actionButtonClass}>
             {emailLoading ? (
               <>
                 <LoaderCircle className="w-4 h-4 animate-spin" />
-                Emailing...
+                Enviando...
               </>
             ) : (
               <>
                 <Mail size={15} className="text-base" />
-                Email
+                Enviar por email
               </>
             )}
           </button>
@@ -47,12 +47,12 @@ const TransactionList = ({ config, transactions, loading, onEdit, onDelete, onDo
             {downloadLoading ? (
               <>
                 <LoaderCircle className="w-4 h-4 animate-spin" />
-                Downloading...
+                Descargando...
               </>
             ) : (
               <>
                 <Download size={15} className="text-base" />
-                Download
+                Descargar Excel
               </>
             )}
           </button>
@@ -65,7 +65,7 @@ const TransactionList = ({ config, transactions, loading, onEdit, onDelete, onDo
         </div>
       ) : isEmpty ? (
         <p className="text-sm text-gray-500 py-8 text-center">
-          No {config.type === "income" ? "incomes" : "expenses"} in this month.
+          {config.labels.empty}
         </p>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2">

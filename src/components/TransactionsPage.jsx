@@ -14,11 +14,11 @@ import { getCurrentMonth, getErrorMessage, getTodayLocalDate } from "../util/uti
 
 // Returns an error message, or null when the transaction is valid
 const validateTransaction = ({ name, amount, date, categoryId }) => {
-  if (!name || !name.trim()) return "Please enter the name";
-  if (!amount || isNaN(amount) || Number(amount) <= 0) return "Amount should be a valid number greater than 0";
-  if (!date) return "Please select a date";
-  if (date > getTodayLocalDate()) return "Date cannot be in the future";
-  if (!categoryId) return "A category is required";
+  if (!name || !name.trim()) return "Escribe un concepto";
+  if (!amount || isNaN(amount) || Number(amount) <= 0) return "El importe debe ser un número mayor que 0";
+  if (!date) return "Elige una fecha";
+  if (date > getTodayLocalDate()) return "La fecha no puede ser futura";
+  if (!categoryId) return "Elige una categoría";
   return null;
 };
 
@@ -26,8 +26,8 @@ const validateTransaction = ({ name, amount, date, categoryId }) => {
 const TransactionsPage = ({ config }) => {
   useUser();
 
-  const { endpoints, singular, type } = config;
-  const lower = singular.toLowerCase();
+  const { endpoints, type, labels } = config;
+  const lower = labels.one;
 
   const [month, setMonth] = useState(getCurrentMonth());
   const [transactions, setTransactions] = useState([]);
@@ -52,7 +52,7 @@ const TransactionsPage = ({ config }) => {
     } catch (error) {
       console.error(`Failed to fetch ${lower} details`, error);
       if (requestId === latestRequest.current) {
-        toast.error(getErrorMessage(error, `Failed to fetch ${lower} details`));
+        toast.error(getErrorMessage(error, `No se han podido cargar los ${labels.many}`));
       }
     } finally {
       if (requestId === latestRequest.current) {
@@ -67,7 +67,7 @@ const TransactionsPage = ({ config }) => {
       setCategories(response.data || []);
     } catch (error) {
       console.error(`Failed to fetch ${lower} categories`, error);
-      toast.error(getErrorMessage(error, `Failed to fetch ${lower} categories`));
+      toast.error(getErrorMessage(error, `No se han podido cargar las categorías de ${labels.many}`));
     }
   }, [type, lower]);
 
@@ -110,16 +110,16 @@ const TransactionsPage = ({ config }) => {
     try {
       if (editing) {
         await axiosConfig.put(endpoints.update(editing.id), payload);
-        toast.success(`${singular} updated successfully`);
+        toast.success(labels.updated);
       } else {
         await axiosConfig.post(endpoints.add, payload);
-        toast.success(`${singular} added successfully`);
+        toast.success(labels.added);
       }
       closeForm();
       showMonthOf(payload.date);
     } catch (err) {
       console.error(`Error saving ${lower}`, err);
-      toast.error(getErrorMessage(err, editing ? `Failed to update ${lower}` : `Failed to add ${lower}`));
+      toast.error(getErrorMessage(err, editing ? `No se ha podido actualizar el ${lower}` : `No se ha podido añadir el ${lower}`));
     }
   };
 
@@ -127,11 +127,11 @@ const TransactionsPage = ({ config }) => {
     try {
       await axiosConfig.delete(endpoints.remove(id));
       setDeleteAlert({ show: false, id: null });
-      toast.success(`${singular} deleted successfully`);
+      toast.success(labels.deleted);
       fetchTransactions(month);
     } catch (error) {
       console.error(`Error deleting the ${lower}`, error);
-      toast.error(getErrorMessage(error, `Failed to delete ${lower}`));
+      toast.error(getErrorMessage(error, `No se ha podido borrar el ${lower}`));
     }
   };
 
@@ -144,25 +144,25 @@ const TransactionsPage = ({ config }) => {
       const url = window.URL.createObjectURL(new Blob([response.data]));
       const link = document.createElement("a");
       link.href = url;
-      link.setAttribute("download", `${lower}-${month}.xlsx`);
+      link.setAttribute("download", `${labels.many}-${month}.xlsx`);
       document.body.appendChild(link);
       link.click();
       link.parentNode.removeChild(link);
       window.URL.revokeObjectURL(url);
-      toast.success(`${singular} details downloaded successfully`);
+      toast.success("Excel descargado");
     } catch (error) {
       console.error(`Error downloading ${lower} details`, error);
-      toast.error(getErrorMessage(error, `Failed to download ${lower} details`));
+      toast.error(getErrorMessage(error, "No se ha podido descargar el Excel"));
     }
   };
 
   const handleEmail = async () => {
     try {
       await axiosConfig.get(endpoints.email, { params: { month } });
-      toast.success(`${singular} details sent to your email`);
+      toast.success("Te hemos enviado el Excel por email");
     } catch (error) {
       console.error(`Failed to email ${lower} details`, error);
-      toast.error(getErrorMessage(error, `Failed to email ${lower} details`));
+      toast.error(getErrorMessage(error, "No se ha podido enviar el email"));
     }
   };
 
@@ -191,7 +191,7 @@ const TransactionsPage = ({ config }) => {
           <Modal
             isOpen={formModal.open}
             onClose={closeForm}
-            title={formModal.editing ? `Edit ${singular}` : `Add ${singular}`}
+            title={formModal.editing ? labels.edit : labels.add}
           >
             {/* key: fresh form state for every add/edit */}
             <TransactionForm
@@ -206,10 +206,10 @@ const TransactionsPage = ({ config }) => {
           <Modal
             isOpen={deleteAlert.show}
             onClose={() => setDeleteAlert({ show: false, id: null })}
-            title={`Delete ${singular}`}
+            title={labels.remove}
           >
             <DeleteAlert
-              content={`Are you sure you want to delete this ${lower}?`}
+              content={labels.confirmDelete}
               onDelete={() => handleDelete(deleteAlert.id)}
             />
           </Modal>

@@ -10,31 +10,36 @@ export const assets = {
 export const SIDE_BAR_DATA = [
     {
         id: "01",
-        label: "Dashboard",
+        key: "Dashboard",
+        label: "Inicio",
         icon: LayoutDashboard,
         path: "/dashboard"
     },
     {
         id: "02",
-        label: "Category",
+        key: "Category",
+        label: "Categorías",
         icon: List,
         path: "/category"
     },
     {
         id: "03",
-        label: "Income",
+        key: "Income",
+        label: "Ingresos",
         icon: Wallet,
         path: "/income"
     },
     {
         id: "04",
-        label: "Expense",
+        key: "Expense",
+        label: "Gastos",
         icon: Coins,
         path: "/expense"
     },
     {
         id: "05",
-        label: "Filters",
+        key: "Filters",
+        label: "Buscar",
         icon: FunnelPlus,
         path: "/filter"
     },

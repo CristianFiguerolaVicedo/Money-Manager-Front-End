@@ -31,7 +31,7 @@ const Home = () => {
             }
         } catch (error) {
             console.error("Failed to fetch dashboard data", error);
-            toast.error("Failed to fetch dashboard data. Please try again");
+            toast.error("No se han podido cargar los datos. Inténtalo de nuevo");
         } finally {
             setLoading(false);
         }
@@ -50,21 +50,21 @@ const Home = () => {
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                         <InfoCard 
                             icon={<WalletCards />}
-                            label="Total Balance"
+                            label="Saldo total"
                             value={formatCurrency(dashboardData?.totalBalance || 0)}
                             color="bg-purple-800"
                         />
 
                         <InfoCard 
                             icon={<Wallet />}
-                            label="Total Income"
+                            label="Ingresos totales"
                             value={formatCurrency(dashboardData?.totalIncome || 0)}
                             color="bg-green-800"
                         />
 
                         <InfoCard 
                             icon={<Coins />}
-                            label="Total Expense"
+                            label="Gastos totales"
                             value={formatCurrency(dashboardData?.totalExpense || 0)}
                             color="bg-red-800"
                         />
@@ -85,7 +85,7 @@ const Home = () => {
                             transactions={dashboardData?.recent5Expense || []}
                             onMore={() => navigate("/expense")}
                             type="expense"
-                            title="Recent Expenses"
+                            title="Últimos gastos"
                         />
 
                         
@@ -93,7 +93,7 @@ const Home = () => {
                             transactions={dashboardData?.recent5Incomes || []}
                             onMore={() => navigate("/income")}
                             type="income"
-                            title="Recent Incomes"
+                            title="Últimos ingresos"
                         />
                     </div>    
                 </div>    

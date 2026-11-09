@@ -42,7 +42,7 @@ const CustomLineChart = ({data}) => {
                     {/* Iterate over the newly grouped categories for a consolidated view */}
                     {categoriesInTooltip && categoriesInTooltip.length > 0 && (
                         <div className="mt-2 pt-2 border-t border-gray-200">
-                            <p className="text-xs font-semibold text-gray-600 mb-1">Details:</p>
+                            <p className="text-xs font-semibold text-gray-600 mb-1">Por categoría:</p>
                             {categoriesInTooltip.map((groupedItem, index) => (
                                 <div key={index} className="flex justify-between text-xs text-gray-700">
                                     <span>{groupedItem.categoryName}:</span>
