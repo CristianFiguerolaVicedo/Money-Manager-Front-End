@@ -78,7 +78,7 @@ const TransactionList = ({ config, transactions, loading, onEdit, onDelete, onDo
               amount={item.amount}
               type={config.type}
               onEdit={() => onEdit(item)}
-              onDelete={() => onDelete(item.id)}
+              onDelete={() => onDelete(item)}
             />
           ))}
         </div>

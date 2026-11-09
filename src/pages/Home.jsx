@@ -11,6 +11,7 @@ import toast from "react-hot-toast";
 import RecentTransactions from "../components/RecentTransactions";
 import FinanceOverview from "../components/FinanceOverview";
 import Transactions from "../components/Transactions";
+import GettingStarted from "../components/GettingStarted";
 
 const Home = () => {
     useUser();
@@ -18,6 +19,7 @@ const Home = () => {
     const navigate = useNavigate();
     const [dashboardData, setDashboardData] = useState(null);
     const [loading, setLoading] = useState(false);
+    const [categoryCount, setCategoryCount] = useState(null);
 
     const fetchDashboardData = async () => {
         if (loading) return;
@@ -37,8 +39,18 @@ const Home = () => {
         }
     }
 
+    const fetchCategoryCount = async () => {
+        try {
+            const response = await axiosConfig.get(API_ENDPOINTS.GET_ALL_CATEGORIES);
+            setCategoryCount((response.data || []).length);
+        } catch {
+            setCategoryCount(null); // the guide simply stays hidden
+        }
+    }
+
     useEffect(() => {
         fetchDashboardData();
+        fetchCategoryCount();
 
         return () => {}
     }, []);
@@ -47,6 +59,15 @@ const Home = () => {
         <div>
             <Dashboard activeMenu="Dashboard">
                 <div className="my-5 mx-auto">
+                    {dashboardData && categoryCount !== null && (
+                        <div className="mb-6">
+                            <GettingStarted
+                                hasCategories={categoryCount > 0}
+                                hasIncome={(dashboardData.recent5Incomes || []).length > 0}
+                                hasExpense={(dashboardData.recent5Expense || []).length > 0}
+                            />
+                        </div>
+                    )}
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                         <InfoCard 
                             icon={<WalletCards />}

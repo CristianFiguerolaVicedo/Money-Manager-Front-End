@@ -2,7 +2,6 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
 import Dashboard from "./Dashboard";
 import Modal from "./Modal";
-import DeleteAlert from "./DeleteAlert";
 import MonthSelector from "./MonthSelector";
 import TransactionForm from "./TransactionForm";
 import TransactionList from "./TransactionList";
@@ -11,6 +10,9 @@ import useUser from "../hooks/useUser";
 import axiosConfig from "../util/axiosConfig";
 import { API_ENDPOINTS } from "../util/apiEndpoints";
 import { getCurrentMonth, getErrorMessage, getTodayLocalDate } from "../util/util";
+import NoCategoriesNotice from "./NoCategoriesNotice";
+
+const UNDO_SECONDS = 5;
 
 // Returns an error message, or null when the transaction is valid
 const validateTransaction = ({ name, amount, date, categoryId }) => {
@@ -32,11 +34,11 @@ const TransactionsPage = ({ config }) => {
   const [month, setMonth] = useState(getCurrentMonth());
   const [transactions, setTransactions] = useState([]);
   const [categories, setCategories] = useState([]);
+  const [categoriesLoaded, setCategoriesLoaded] = useState(false);
   const [loading, setLoading] = useState(false);
 
   // { open, editing } — editing holds the transaction being edited (null when adding)
   const [formModal, setFormModal] = useState({ open: false, editing: null });
-  const [deleteAlert, setDeleteAlert] = useState({ show: false, id: null });
 
   // Ignore responses from a month the user already navigated away from
   const latestRequest = useRef(0);
@@ -65,6 +67,7 @@ const TransactionsPage = ({ config }) => {
     try {
       const response = await axiosConfig.get(API_ENDPOINTS.CATEGORY_BY_TYPE(type));
       setCategories(response.data || []);
+      setCategoriesLoaded(true);
     } catch (error) {
       console.error(`Failed to fetch ${lower} categories`, error);
       toast.error(getErrorMessage(error, `No se han podido cargar las categorías de ${labels.many}`));
@@ -123,15 +126,55 @@ const TransactionsPage = ({ config }) => {
     }
   };
 
-  const handleDelete = async (id) => {
+  // Deletes right away (the item disappears at once) and offers "Deshacer" for a few seconds,
+  // which re-creates the transaction with the same data.
+  const handleDelete = async (item) => {
+    setTransactions((prev) => prev.filter((t) => t.id !== item.id));
     try {
-      await axiosConfig.delete(endpoints.remove(id));
-      setDeleteAlert({ show: false, id: null });
-      toast.success(labels.deleted);
-      fetchTransactions(month);
+      await axiosConfig.delete(endpoints.remove(item.id));
     } catch (error) {
       console.error(`Error deleting the ${lower}`, error);
       toast.error(getErrorMessage(error, `No se ha podido borrar el ${lower}`));
+      fetchTransactions(month);
+      return;
+    }
+
+    toast(
+      (t) => (
+        <span className="flex items-center gap-3">
+          <span>
+            {labels.deleted}: <strong>{item.name}</strong>
+          </span>
+          <button
+            type="button"
+            onClick={() => {
+              toast.dismiss(t.id);
+              handleUndoDelete(item);
+            }}
+            className="font-semibold text-purple-800 underline cursor-pointer whitespace-nowrap"
+          >
+            Deshacer
+          </button>
+        </span>
+      ),
+      { duration: UNDO_SECONDS * 1000 }
+    );
+  };
+
+  const handleUndoDelete = async (item) => {
+    try {
+      await axiosConfig.post(endpoints.add, {
+        name: item.name,
+        amount: Number(item.amount),
+        date: item.date,
+        icon: item.icon,
+        categoryId: item.categoryId,
+      });
+      toast.success(labels.restored);
+      showMonthOf(item.date);
+    } catch (error) {
+      console.error(`Error restoring the ${lower}`, error);
+      toast.error(getErrorMessage(error, `No se ha podido recuperar el ${lower}`));
     }
   };
 
@@ -170,6 +213,8 @@ const TransactionsPage = ({ config }) => {
     <Dashboard activeMenu={config.activeMenu}>
       <div className="my-5 mx-auto">
         <div className="grid grid-cols-1 gap-6">
+          {categoriesLoaded && categories.length === 0 && <NoCategoriesNotice labels={labels} />}
+
           <MonthSelector month={month} onChange={setMonth} />
 
           <TransactionOverview
@@ -183,7 +228,7 @@ const TransactionsPage = ({ config }) => {
             transactions={transactions}
             loading={loading}
             onEdit={(item) => setFormModal({ open: true, editing: item })}
-            onDelete={(id) => setDeleteAlert({ show: true, id })}
+            onDelete={handleDelete}
             onDownload={handleDownload}
             onEmail={handleEmail}
           />
@@ -200,17 +245,6 @@ const TransactionsPage = ({ config }) => {
               categories={categories}
               initialData={formModal.editing}
               onSubmit={handleSave}
-            />
-          </Modal>
-
-          <Modal
-            isOpen={deleteAlert.show}
-            onClose={() => setDeleteAlert({ show: false, id: null })}
-            title={labels.remove}
-          >
-            <DeleteAlert
-              content={labels.confirmDelete}
-              onDelete={() => handleDelete(deleteAlert.id)}
             />
           </Modal>
         </div>
