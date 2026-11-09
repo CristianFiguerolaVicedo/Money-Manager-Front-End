@@ -1,6 +1,6 @@
 import { useContext, useEffect, useRef, useState } from "react";
 import AppContext from "../context/AppContext";
-import { LogOut, Menu, User, X } from "lucide-react";
+import { LogOut, Menu, User, UserRound, X } from "lucide-react";
 import { assets } from "../assets/assets";
 import { useNavigate } from "react-router-dom";
 import Sidebar from "./Sidebar";
@@ -79,7 +79,11 @@ const Menubar = ({activeMenu}) => {
           onClick={() => setShowDropdown(!showDropdown)}
           className="flex items-center justify-center w-10 h-10 bg-gray-100 hover:bg-gray-200 hover:cursor-pointer rounded-full transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-purple-800 focus:ring-offset-2"
         >
-          <User className="text-purple-500" />
+          {user?.profileImageUrl ? (
+            <img src={user.profileImageUrl} alt="" className="w-10 h-10 rounded-full object-cover" />
+          ) : (
+            <User className="text-purple-500" />
+          )}
         </button>
 
         {showDropdown && (
@@ -99,6 +103,16 @@ const Menubar = ({activeMenu}) => {
             </div>
 
             <div className="py-1">
+              <button
+                onClick={() => {
+                  setShowDropdown(false);
+                  navigate("/profile");
+                }}
+                className="flex items-center gap-3 w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:cursor-pointer transition-colors duration-150"
+              >
+                <UserRound className="w-4 h-4 text-gray-500" />
+                <span>Mi perfil</span>
+              </button>
               <button onClick={handleLogout} className="flex items-center gap-3 w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors duration-150">
                 <LogOut className="w-4 h-4 text-gray-500 hover:cursor-pointer hover:text-red-500"/>
                 <span>Cerrar sesión</span>

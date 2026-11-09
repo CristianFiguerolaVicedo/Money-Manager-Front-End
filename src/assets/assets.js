@@ -1,6 +1,6 @@
 import logo from "./money-management.png";
 import login_bg from "./dramatic-sunset-rocky-coastline-with-crashing-waves.jpg";
-import { Coins, FunnelPlus, LayoutDashboard, List, Wallet } from "lucide-react";
+import { Coins, FunnelPlus, LayoutDashboard, List, UserRound, Wallet } from "lucide-react";
 
 export const assets = {
     logo,
@@ -42,5 +42,12 @@ export const SIDE_BAR_DATA = [
         label: "Buscar",
         icon: FunnelPlus,
         path: "/filter"
+    },
+    {
+        id: "06",
+        key: "Profile",
+        label: "Mi perfil",
+        icon: UserRound,
+        path: "/profile"
     },
 ];

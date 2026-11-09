@@ -1,37 +1,53 @@
 import { useMemo } from "react";
 import { Plus } from "lucide-react";
-import CustomLineChart from "./CustomLineChart";
-import { formatCurrency, prepareIncomeLineChartData } from "../util/util";
+import DailyBarChart from "./DailyBarChart";
+import CategoryBreakdown from "./CategoryBreakdown";
+import { buildDailySeries, formatCurrency, groupByCategory } from "../util/util";
 
-// Monthly chart shared by incomes and expenses
-const TransactionOverview = ({ config, transactions, onAdd }) => {
-  const chartData = useMemo(() => prepareIncomeLineChartData(transactions), [transactions]);
+// Monthly overview shared by incomes and expenses: total, bars per day and totals per category
+const TransactionOverview = ({ config, transactions, month, onAdd }) => {
+  const dailyData = useMemo(() => buildDailySeries(transactions, month), [transactions, month]);
+  const byCategory = useMemo(() => groupByCategory(transactions), [transactions]);
   const total = useMemo(
     () => (transactions || []).reduce((sum, item) => sum + (Number(item.amount) || 0), 0),
     [transactions]
   );
+  const hasData = (transactions || []).length > 0;
 
   return (
-    <div className="p-4 bg-white rounded-xl shadow-sm border border-gray-200 shadow-xl">
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <div>
-          <h5 className="text-lg">{config.overviewTitle}</h5>
-          <p className="text-xs text-gray-400 mt-0.5">{config.overviewSubtitle}</p>
-          <p className="text-sm text-gray-700 mt-2">
-            Total del mes: <span className="font-semibold">{formatCurrency(total)}</span>
-          </p>
+    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="p-4 bg-white rounded-xl shadow-sm border border-gray-200 lg:col-span-2">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <h5 className="text-lg">{config.overviewTitle}</h5>
+            <p className="text-xs text-gray-400 mt-0.5">{config.overviewSubtitle}</p>
+            <p className="text-sm text-gray-700 mt-2">
+              Total del mes: <span className="font-semibold">{formatCurrency(total)}</span>
+            </p>
+          </div>
+          <button
+            onClick={onAdd}
+            className="flex items-center gap-1 bg-green-500/20 text-green-800 px-3 py-2 rounded-lg hover:bg-green-500/30 font-semibold hover:cursor-pointer"
+          >
+            <Plus size={15} className="text-lg" /> {config.labels.add}
+          </button>
         </div>
-        <button
-          onClick={onAdd}
-          className="flex items-center gap-1 bg-green-500/20 text-green-800 px-3 py-2 rounded-lg hover:bg-green-500/30 font-semibold hover:cursor-pointer"
-        >
-          <Plus size={15} className="text-lg" /> {config.labels.add}
-        </button>
+
+        <div className="mt-6">
+          {hasData ? (
+            <DailyBarChart data={dailyData} />
+          ) : (
+            <p className="text-sm text-gray-500 py-12 text-center">{config.labels.empty}</p>
+          )}
+        </div>
       </div>
 
-      <div className="mt-10">
-        <CustomLineChart data={chartData} />
-      </div>
+      <CategoryBreakdown
+        title="Por categoría"
+        subtitle="Total del mes en cada categoría"
+        items={byCategory}
+        emptyText="Sin movimientos este mes"
+      />
     </div>
   );
 };

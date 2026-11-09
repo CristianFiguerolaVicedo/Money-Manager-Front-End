@@ -9,6 +9,7 @@ import Home from "./pages/Home";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
 import Activate from "./pages/Activate";
+import Profile from "./pages/Profile";
 import { Toaster } from "react-hot-toast";
 import { ProtectedRoute, PublicOnlyRoute } from "./components/ProtectedRoute";
 import { hasValidSession } from "./util/auth";
@@ -27,6 +28,7 @@ const App = () => {
             <Route path="/expense" element={<Expense />} />
             <Route path="/category" element={<Category />} />
             <Route path="/filter" element={<Filter />} />
+            <Route path="/profile" element={<Profile />} />
           </Route>
 
           <Route element={<PublicOnlyRoute />}>

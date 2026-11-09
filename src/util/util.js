@@ -63,35 +63,6 @@ export const formatMonthLabel = (month) => {
   return label.charAt(0).toUpperCase() + label.slice(1);
 };
 
-export const prepareIncomeLineChartData = (data = []) => {
-  const groupedByDate = data.reduce((acc, item) => {
-    const dateKey = item.date;
-
-    if (!acc[dateKey]) {
-      acc[dateKey] = {
-        date: dateKey,
-        totalAmount: 0,
-        items: [],
-      };
-    }
-
-    acc[dateKey].totalAmount += Number(item.amount) || 0;
-    acc[dateKey].items.push(item);
-    return acc;
-  }, {});
-
-  let chartData = Object.values(groupedByDate);
-
-  chartData.sort((a, b) => new Date(a.date) - new Date(b.date));
-
-  chartData = chartData.map((dataPoint) => ({
-    ...dataPoint,
-    month: formatShortDate(dataPoint.date),
-  }));
-
-  return chartData;
-}
-
 // Today's date as YYYY-MM-DD in the user's local timezone.
 // (new Date().toISOString() is UTC, which is the wrong day around midnight in Spain.)
 export const getTodayLocalDate = () => moment().format("YYYY-MM-DD");
@@ -99,3 +70,48 @@ export const getTodayLocalDate = () => moment().format("YYYY-MM-DD");
 // Best human-readable message from an axios error
 export const getErrorMessage = (error, fallback = "Something went wrong. Please try again") =>
   error?.response?.data?.message || fallback;
+
+// One entry per day of the month (days without movements are 0), for the daily bar chart.
+// "2026-10" + transactions -> [{ day: 1, date: "2026-10-01", total: 0, items: [] }, ...]
+export const buildDailySeries = (transactions = [], month) => {
+  const start = moment(month, "YYYY-MM");
+  if (!start.isValid()) return [];
+  const days = start.daysInMonth();
+  const series = Array.from({ length: days }, (_, index) => ({
+    day: index + 1,
+    date: `${month}-${String(index + 1).padStart(2, "0")}`,
+    total: 0,
+    items: [],
+  }));
+  transactions.forEach((item) => {
+    if (!item?.date || !item.date.startsWith(month)) return;
+    const entry = series[Number(item.date.slice(8, 10)) - 1];
+    if (!entry) return;
+    entry.total += Number(item.amount) || 0;
+    entry.items.push(item);
+  });
+  return series;
+};
+
+// Totals per category, biggest first: [{ key, name, icon, amount }]
+export const groupByCategory = (transactions = []) => {
+  const groups = new Map();
+  transactions.forEach((item) => {
+    const key = item.categoryId ?? item.categoryName ?? "none";
+    const group = groups.get(key) || { key, name: item.categoryName || "Sin categoría", icon: item.categoryIcon, amount: 0 };
+    group.amount += Number(item.amount) || 0;
+    groups.set(key, group);
+  });
+  return [...groups.values()].sort((a, b) => b.amount - a.amount);
+};
+
+// Keeps the biggest `max - 1` groups and folds the rest into "Otras" (so a long tail never crowds the list)
+export const foldSmallGroups = (groups = [], max = 6) => {
+  if (groups.length <= max) return groups;
+  const kept = groups.slice(0, max - 1);
+  const rest = groups.slice(max - 1);
+  return [
+    ...kept,
+    { key: "others", name: `Otras (${rest.length})`, amount: rest.reduce((sum, group) => sum + group.amount, 0) },
+  ];
+};

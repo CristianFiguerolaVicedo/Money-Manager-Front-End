@@ -220,6 +220,7 @@ const TransactionsPage = ({ config }) => {
           <TransactionOverview
             config={config}
             transactions={transactions}
+            month={month}
             onAdd={() => setFormModal({ open: true, editing: null })}
           />
 
