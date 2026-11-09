@@ -28,13 +28,13 @@ const TransactionInfoCard = ({icon, title, date, amount, type, hideDeleteBtn, on
 
                 <div className="flex items-center gap-2">
                     {onEdit && (
-                        <button type="button" aria-label={`Edit ${title}`} onClick={onEdit} className={`${actionClass} hover:text-purple-800`}>
+                        <button type="button" aria-label={`Editar ${title}`} onClick={onEdit} className={`${actionClass} hover:text-purple-800`}>
                             <Pencil size={17}/>
                         </button>
                     )}
 
                     {!hideDeleteBtn && onDelete && (
-                        <button type="button" aria-label={`Delete ${title}`} onClick={onDelete} className={`${actionClass} hover:text-red-800`}>
+                        <button type="button" aria-label={`Borrar ${title}`} onClick={onDelete} className={`${actionClass} hover:text-red-800`}>
                             <Trash2 size={18}/>
                         </button>
                     )}

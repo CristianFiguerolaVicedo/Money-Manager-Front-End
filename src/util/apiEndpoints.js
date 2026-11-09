@@ -5,10 +5,13 @@ const CLOUDINARY_CLOUD_NAME = "drsuueqhd";
 export const API_ENDPOINTS = {
     LOGIN: "/login",
     REGISTER: "/register",
+    FORGOT_PASSWORD: "/forgot-password",
+    RESET_PASSWORD: "/reset-password",
     GET_USER_INFO: "/profile",
     GET_ALL_CATEGORIES: "/categories",
     ADD_CATEGORY: "/categories",
     UPDATE_CATEGORY: (categoryId) => `/categories/${categoryId}`,
+    DELETE_CATEGORY: (categoryId) => `/categories/${categoryId}`,
     GET_ALL_INCOMES: "/incomes",
     CATEGORY_BY_TYPE: (type) => `/categories/${type}`,
     ADD_INCOME: "/incomes",

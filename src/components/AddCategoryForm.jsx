@@ -21,8 +21,8 @@ const AddCategoryForm = ({onAddCategory, initialCategoryData, isEditing}) => {
     }, [isEditing, initialCategoryData]);
 
     const categoryTypeOptions = [
-        {value: "income", label: "Income"},
-        {value: "expense", label: "Expense"}
+        {value: "income", label: "Ingreso"},
+        {value: "expense", label: "Gasto"}
     ]
 
     const handleChange = (key, value) => {
@@ -40,7 +40,7 @@ const AddCategoryForm = ({onAddCategory, initialCategoryData, isEditing}) => {
     }
 
     return(
-        <div className="p-4">
+        <div className="sm:p-4">
 
             <EmojiPickerPopup 
                 icon={category.icon}
@@ -50,15 +50,15 @@ const AddCategoryForm = ({onAddCategory, initialCategoryData, isEditing}) => {
             <Input 
                 value={category.name}
                 onChange={({target}) => handleChange("name", target.value)}
-                label="Category Name"
-                placeholder="e.g., Freelance, Salary, Groceries"
+                label="Nombre de la categoría"
+                placeholder="p. ej., Nómina, Supermercado, Alquiler"
                 type="text"
             />
 
             <Input 
                 value={category.type}
                 onChange={({target}) => handleChange("type", target.value)}
-                label="Category Type"
+                label="Tipo"
                 isSelect={true}
                 options={categoryTypeOptions}
                 disabled={isEditing}
@@ -69,11 +69,11 @@ const AddCategoryForm = ({onAddCategory, initialCategoryData, isEditing}) => {
                     {loading ? (
                         <>
                             <LoaderCircle className="w-4 h-4 animate-spin"/>
-                            {isEditing ? "Updating..." : "Adding..."}
+                            {isEditing ? "Guardando..." : "Creando..."}
                         </>
                     ) : (
                         <>
-                            {isEditing ? "Update Category" : "Add Category"}
+                            {isEditing ? "Guardar cambios" : "Crear categoría"}
                         </>
                     )}
                 </button>

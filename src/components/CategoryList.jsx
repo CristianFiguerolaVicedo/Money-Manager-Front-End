@@ -1,17 +1,21 @@
-import { ChartColumnStacked, Pencil } from "lucide-react";
+import { ChartColumnStacked, Pencil, Trash2 } from "lucide-react";
 
-const CategoryList = ({categories, onEditCategory}) => {
+const TYPE_LABELS = { income: "Ingreso", expense: "Gasto" };
+
+const CategoryList = ({categories, onEditCategory, onDeleteCategory}) => {
+    // Always visible on touch screens, revealed on hover on desktop
+    const actionClass = "text-gray-400 opacity-100 md:opacity-0 md:group-hover:opacity-100 focus:opacity-100 transition-opacity cursor-pointer";
     return(
         <div className="bg-white rounded-xl shadow-sm border border-gray-200 shadow-xl p-4">
             <div className="flex items-center justify-between mb-4">
                 <h4 className="text-lg font-semibold">
-                    Category Sources
+                    Tus categorías
                 </h4>
             </div>
 
             {categories.length === 0 ? (
                 <p className="text-gray-500">
-                    No categories added yet. Add some to get started.
+                    Aún no tienes categorías. Crea la primera para empezar a añadir ingresos y gastos.
                 </p>
             ) : (
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
@@ -32,14 +36,17 @@ const CategoryList = ({categories, onEditCategory}) => {
                                     <p className="text-sm text-gray-700 font-medium">
                                         {category.name}
                                     </p>
-                                    <p className="text-sm text-gray-400 mt-1 capitalize">
-                                        {category.type}
+                                    <p className="text-sm text-gray-400 mt-1">
+                                        {TYPE_LABELS[category.type?.toLowerCase()] || category.type}
                                     </p>
                                 </div>
 
                                 <div className="flex items-center gap-2">
-                                    <button onClick={() => onEditCategory(category)} className="text-gray-400 hover:text-blue-500 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer">
+                                    <button type="button" aria-label={`Editar ${category.name}`} onClick={() => onEditCategory(category)} className={`${actionClass} hover:text-purple-800`}>
                                         <Pencil size={18}/>
+                                    </button>
+                                    <button type="button" aria-label={`Borrar ${category.name}`} onClick={() => onDeleteCategory(category)} className={`${actionClass} hover:text-red-800`}>
+                                        <Trash2 size={18}/>
                                     </button>
                                 </div>
                             </div>

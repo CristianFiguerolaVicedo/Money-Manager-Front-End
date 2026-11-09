@@ -37,12 +37,22 @@ const Menubar = ({activeMenu}) => {
 
   useEffect(() => {
     document.body.style.overflow = openSideMenu ? "hidden" : "auto";
+    if (!openSideMenu) return;
+    const onKeyDown = (e) => e.key === "Escape" && setOpenSideMenu(false);
+    document.addEventListener("keydown", onKeyDown);
+    return () => {
+      document.removeEventListener("keydown", onKeyDown);
+      document.body.style.overflow = "auto";
+    };
   }, [openSideMenu]);
 
   return (
     <div className="flex items-center justify-between gap-5 bg-white border border-b border-gray-200/50 backdrop-blur-[2px] py-4 px-4 sm:px-7 sticky top-0 z-30">
-      <div className="flex items-center gap-5">
+      <div className="flex items-center gap-3 sm:gap-5 min-w-0">
         <button
+          type="button"
+          aria-label={openSideMenu ? "Cerrar menú" : "Abrir menú"}
+          aria-expanded={openSideMenu}
           onClick={() => setOpenSideMenu(!openSideMenu)}
           className="block lg:hidden text-black hover:bg-gray-100 p-1 rounded transition-colors"
         >
@@ -53,8 +63,8 @@ const Menubar = ({activeMenu}) => {
           )}
         </button>
 
-        <div className="flex items-center gap-2">
-          <img src={assets.logo} alt="logo" className="w-10 h-10" />
+        <div className="flex items-center gap-2 min-w-0">
+          <img src={assets.logo} alt="" className="w-10 h-10 shrink-0" />
           <span className="text-lg font-medium text-black truncate">
             Money Manager
           </span>
@@ -63,6 +73,9 @@ const Menubar = ({activeMenu}) => {
 
       <div className="relative" ref={dropdownRef}>
         <button
+          type="button"
+          aria-label="Menú de usuario"
+          aria-expanded={showDropdown}
           onClick={() => setShowDropdown(!showDropdown)}
           className="flex items-center justify-center w-10 h-10 bg-gray-100 hover:bg-gray-200 hover:cursor-pointer rounded-full transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-purple-800 focus:ring-offset-2"
         >
@@ -88,7 +101,7 @@ const Menubar = ({activeMenu}) => {
             <div className="py-1">
               <button onClick={handleLogout} className="flex items-center gap-3 w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors duration-150">
                 <LogOut className="w-4 h-4 text-gray-500 hover:cursor-pointer hover:text-red-500"/>
-                <span>Logout</span>
+                <span>Cerrar sesión</span>
               </button>
             </div>
           </div>
@@ -96,8 +109,8 @@ const Menubar = ({activeMenu}) => {
       </div>
 
       {openSideMenu && (
-        <div className="fixed inset-x-0 top-[73px] bottom-0 bg-white border-b border-gray-200 lg:hidden z-20 overflow-y-auto">
-          <Sidebar activeMenu={activeMenu} />
+        <div className="fixed inset-x-0 top-[73px] bottom-0 bg-white border-t border-gray-200 lg:hidden z-20 overflow-y-auto">
+          <Sidebar activeMenu={activeMenu} isMobile />
         </div>
       )}
     </div>

@@ -20,15 +20,15 @@ const DeleteAlert = ({content, onDelete}) => {
                 {content}
             </p>
             <div className="flex justify-end mt-6">
-                <button disabled={loading} type="button" onClick={handleDelete} className="flex items-center gap-1 bg-purple-800 text-white px-3 py-2 rounded-lg hover:bg-purple-500 font-semibold hover:cursor-pointer">
+                <button disabled={loading} type="button" onClick={handleDelete} className="flex items-center gap-1 bg-red-700 text-white px-3 py-2 rounded-lg hover:bg-red-600 font-semibold hover:cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed">
                     {loading ? (
                         <>
                             <LoaderIcon className="h-4 w-4 animate-spin"/>
-                            Deleting...
+                            Borrando...
                         </>
                     ) : (
                         <>
-                            Delete
+                            Borrar
                         </>
                     )}
                 </button>

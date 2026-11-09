@@ -15,7 +15,7 @@ const MonthSelector = ({ month, onChange, disabled = false }) => {
       <div className="flex items-center gap-2">
         <button
           type="button"
-          aria-label="Previous month"
+          aria-label="Mes anterior"
           className={buttonClass}
           disabled={disabled}
           onClick={() => onChange(shiftMonth(month, -1))}
@@ -29,7 +29,7 @@ const MonthSelector = ({ month, onChange, disabled = false }) => {
 
         <button
           type="button"
-          aria-label="Next month"
+          aria-label="Mes siguiente"
           className={buttonClass}
           disabled={disabled || isCurrent}
           onClick={() => onChange(shiftMonth(month, 1))}
@@ -45,7 +45,7 @@ const MonthSelector = ({ month, onChange, disabled = false }) => {
           onClick={() => onChange(currentMonth)}
           className="text-sm font-medium text-purple-800 hover:underline cursor-pointer disabled:opacity-40"
         >
-          Back to this month
+          Volver al mes actual
         </button>
       )}
     </div>

@@ -27,7 +27,7 @@ const Filter = () => {
         e.preventDefault();
 
         if (startDate && endDate && startDate > endDate) {
-            toast.error("Start date must be before end date");
+            toast.error("La fecha de inicio debe ser anterior a la de fin");
             return;
         }
 
@@ -48,7 +48,7 @@ const Filter = () => {
             setHasSearched(true);
         } catch (error) {
             console.error("Failed to fetch transactions", error);
-            toast.error(getErrorMessage(error, "Failed to fetch transactions. Please try again"));
+            toast.error(getErrorMessage(error, "No se han podido buscar los movimientos. Inténtalo de nuevo"));
         } finally {
             setLoading(false);
         }
@@ -59,69 +59,69 @@ const Filter = () => {
             <div className="my-5 mx-auto">
                 <div className="flex justify-between items-center mb-4">
                     <h2 className="text-2xl font-semibold">
-                        Filter Transactions
+                        Buscar movimientos
                     </h2>
                 </div>
 
                 <div className="p-4 mb-4 bg-white rounded-xl shadow-sm border border-gray-200 shadow-xl">
                     <div className="flex items-center justify-between mb-4">
                         <h5 className="text-lg font-semibold">
-                            Select the filters
+                            Filtros
                         </h5>
                     </div>
 
-                    <form onSubmit={handleSearch} className="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-6 gap-4">
+                    <form onSubmit={handleSearch} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
                         <div>
                             <label htmlFor="type" className="block text-sm font-medium mb-1">
-                                Type
+                                Tipo
                             </label>
                             <select value={type} id="type" className="w-full border rounded px-3 py-2" onChange={e => setType(e.target.value)}>
-                                <option value="income">Income</option>
-                                <option value="expense">Expense</option>
+                                <option value="income">Ingresos</option>
+                                <option value="expense">Gastos</option>
                             </select>
                         </div>
 
                         <div>
                             <label htmlFor="startDate" className="block text-sm font-medium mb-1">
-                                Start Date
+                                Desde
                             </label>
                             <input value={startDate} id="startDate" type="date" className="w-full border rounded px-3 py-2" onChange={e => setStartDate(e.target.value)}/>
                         </div>
                         <div>
                             <label htmlFor="endDate" className="block text-sm font-medium mb-1">
-                                End Date
+                                Hasta
                             </label>
                             <input value={endDate} id="endDate" type="date" className="w-full border rounded px-3 py-2" onChange={e => setEndDate(e.target.value)}/>
                         </div>
                         <div>
                             <label htmlFor="sortField" className="block text-sm font-medium mb-1">
-                                Sort Field
+                                Ordenar por
                             </label>
                             <select value={sortField} id="sortField" className="w-full border rounded px-3 py-2" onChange={e => setSortField(e.target.value)}>
-                                <option value="date">Date</option>
-                                <option value="amount">Amount</option>
-                                <option value="name">Name</option>
-                                <option value="category">Category</option>
+                                <option value="date">Fecha</option>
+                                <option value="amount">Importe</option>
+                                <option value="name">Concepto</option>
+                                <option value="category">Categoría</option>
                             </select>
                         </div>
                         <div>
                             <label htmlFor="sortOrder" className="block text-sm font-medium mb-1">
-                                Sort Order
+                                Orden
                             </label>
                             <select value={sortOrder} id="sortOrder" className="w-full border rounded px-3 py-2" onChange={e => setSortOrder(e.target.value)}>
-                                <option value="asc">Ascending</option>
-                                <option value="desc">Descending</option>
+                                <option value="asc">Ascendente</option>
+                                <option value="desc">Descendente</option>
                             </select>
                         </div>
 
                         <div className="sm:col-span-1 md:col-span-1 flex items-end">
                             <div className="w-full">
                                 <label htmlFor="keyword" className="block text-sm font-medium mb-1">
-                                    Search
+                                    Texto
                                 </label>
-                                <input value={keyword} id="keyword" type="text" placeholder="Search..." className="w-full border rounded px-3 py-2" onChange={e => setKeyword(e.target.value)}/>
+                                <input value={keyword} id="keyword" type="text" placeholder="Buscar..." className="w-full border rounded px-3 py-2" onChange={e => setKeyword(e.target.value)}/>
                             </div>
-                            <button type="submit" disabled={loading} className="ml-2 mb-1 p-2 bg-purple-800 hover:bg-purple-800 text-white rounded flex items-center justify-center cursor-pointer">
+                            <button type="submit" aria-label="Buscar" disabled={loading} className="ml-2 mb-1 p-2 bg-purple-800 hover:bg-purple-800 text-white rounded flex items-center justify-center cursor-pointer">
                                 <Search size={20}/>
                             </button>
                         </div>
@@ -130,20 +130,20 @@ const Filter = () => {
 
                 <div className="p-4 bg-white rounded-xl shadow-sm border border-gray-200">
                     <h5 className="text-lg font-semibold">
-                        Transactions
+                        Resultados
                     </h5>
                     {transactions.length === 0 && !loading ? (
                         <p className="text-gray-500">
                             {hasSearched
-                                ? "No transactions match these filters"
-                                : "Select the filters and click search to filter the transactions"}
+                                ? "Ningún movimiento coincide con estos filtros"
+                                : "Elige los filtros y pulsa buscar"}
                         </p>
                     ) : (
                         ""
                     )}
                     {loading ? (
                         <p className="text-gray-500">
-                            Loading Transactions
+                            Buscando...
                         </p>                    
                     ) : (
                         ""

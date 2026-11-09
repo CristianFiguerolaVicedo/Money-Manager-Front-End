@@ -71,7 +71,7 @@ const TransactionForm = ({ config, categories, initialData, onSubmit }) => {
       />
 
       <Input
-        label="Category"
+        label="Categoría"
         value={transaction.categoryId}
         onChange={({ target }) => handleChange("categoryId", target.value)}
         isSelect={true}
@@ -81,15 +81,15 @@ const TransactionForm = ({ config, categories, initialData, onSubmit }) => {
       <Input
         value={transaction.amount}
         onChange={({ target }) => handleChange("amount", target.value)}
-        label="Amount (€)"
-        placeholder="e.g., 500,00"
+        label="Importe (€)"
+        placeholder="p. ej., 500"
         type="number"
       />
 
       <Input
         value={transaction.date}
         onChange={({ target }) => handleChange("date", target.value)}
-        label="Date"
+        label="Fecha"
         placeholder=""
         type="date"
       />
@@ -104,12 +104,12 @@ const TransactionForm = ({ config, categories, initialData, onSubmit }) => {
           {loading ? (
             <>
               <LoaderCircle className="w-4 h-4 animate-spin" />
-              {isEditing ? "Saving..." : "Adding..."}
+              {isEditing ? "Guardando..." : "Añadiendo..."}
             </>
           ) : isEditing ? (
-            "Save changes"
+            "Guardar cambios"
           ) : (
-            `Add ${config.singular}`
+            config.labels.add
           )}
         </button>
       </div>
