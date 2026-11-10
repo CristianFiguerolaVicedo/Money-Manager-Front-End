@@ -3,6 +3,7 @@ import { LoaderCircle } from "lucide-react";
 import EmojiPickerPopup from "./EmojiPickerPopup";
 import Input from "./Input";
 import NoCategoriesNotice from "./NoCategoriesNotice";
+import AttachmentsField from "./AttachmentsField";
 import { countOccurrencesUntil, FREQUENCIES } from "../util/recurring";
 import { formatDate, getTodayLocalDate } from "../util/util";
 
@@ -14,6 +15,8 @@ const emptyTransaction = () => ({
   categoryId: "",
   repeat: "none",
   endDate: "",
+  note: "",
+  pendingFiles: [],
 });
 
 // Explains what will happen when the movement repeats
@@ -44,6 +47,7 @@ const TransactionForm = ({ config, categories, initialData, onSubmit }) => {
           date: initialData.date ?? getTodayLocalDate(),
           icon: initialData.icon ?? "",
           categoryId: initialData.categoryId ?? "",
+          note: initialData.note ?? "",
         }
       : emptyTransaction()
   );
@@ -116,6 +120,28 @@ const TransactionForm = ({ config, categories, initialData, onSubmit }) => {
         placeholder=""
         type="date"
       />
+
+      <div className="mb-4">
+        <label htmlFor="transaction-note" className="text-[13px] text-slate-800 mb-1 block">Nota (opcional)</label>
+        <textarea
+          id="transaction-note"
+          value={transaction.note}
+          onChange={({ target }) => handleChange("note", target.value)}
+          maxLength={500}
+          rows={2}
+          placeholder="p. ej., cena de cumpleaños con Marta"
+          className="w-full bg-transparent border border-gray-300 rounded-md py-2 px-3 text-gray-700 focus:outline-none focus:border-blue-500 resize-y"
+        />
+      </div>
+
+      {(isEditing || transaction.repeat === "none") && (
+        <AttachmentsField
+          type={config.type}
+          transactionId={isEditing ? initialData.id : null}
+          pending={transaction.pendingFiles}
+          onPendingChange={(files) => handleChange("pendingFiles", files)}
+        />
+      )}
 
       {!isEditing && (
         <>

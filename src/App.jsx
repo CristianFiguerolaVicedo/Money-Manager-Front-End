@@ -13,6 +13,7 @@ import Profile from "./pages/Profile";
 import Budgets from "./pages/Budgets";
 import Compare from "./pages/Compare";
 import Goals from "./pages/Goals";
+import Import from "./pages/Import";
 import Unsubscribe from "./pages/Unsubscribe";
 import { Toaster } from "react-hot-toast";
 import { ProtectedRoute, PublicOnlyRoute } from "./components/ProtectedRoute";
@@ -35,6 +36,7 @@ const App = () => {
             <Route path="/budgets" element={<Budgets />} />
             <Route path="/goals" element={<Goals />} />
             <Route path="/compare" element={<Compare />} />
+            <Route path="/import" element={<Import />} />
             <Route path="/profile" element={<Profile />} />
           </Route>
 
