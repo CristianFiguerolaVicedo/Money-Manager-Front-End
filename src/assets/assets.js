@@ -1,6 +1,6 @@
 import logo from "./money-management.png";
 import login_bg from "./dramatic-sunset-rocky-coastline-with-crashing-waves.jpg";
-import { Coins, FunnelPlus, LayoutDashboard, List, PiggyBank, UserRound, Wallet } from "lucide-react";
+import { ArrowLeftRight, Coins, FunnelPlus, LayoutDashboard, List, PiggyBank, Target, UserRound, Wallet } from "lucide-react";
 
 export const assets = {
     logo,
@@ -49,6 +49,20 @@ export const SIDE_BAR_DATA = [
         label: "Presupuestos",
         icon: PiggyBank,
         path: "/budgets"
+    },
+    {
+        id: "08",
+        key: "Goals",
+        label: "Objetivos",
+        icon: Target,
+        path: "/goals"
+    },
+    {
+        id: "09",
+        key: "Compare",
+        label: "Comparar meses",
+        icon: ArrowLeftRight,
+        path: "/compare"
     },
     {
         id: "06",
