@@ -10,6 +10,8 @@ import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
 import Activate from "./pages/Activate";
 import Profile from "./pages/Profile";
+import Budgets from "./pages/Budgets";
+import Unsubscribe from "./pages/Unsubscribe";
 import { Toaster } from "react-hot-toast";
 import { ProtectedRoute, PublicOnlyRoute } from "./components/ProtectedRoute";
 import { hasValidSession } from "./util/auth";
@@ -28,6 +30,7 @@ const App = () => {
             <Route path="/expense" element={<Expense />} />
             <Route path="/category" element={<Category />} />
             <Route path="/filter" element={<Filter />} />
+            <Route path="/budgets" element={<Budgets />} />
             <Route path="/profile" element={<Profile />} />
           </Route>
 
@@ -40,6 +43,7 @@ const App = () => {
           {/* Reachable from the email link whether or not someone is logged in */}
           <Route path="/reset-password" element={<ResetPassword />} />
           <Route path="/activate" element={<Activate />} />
+          <Route path="/unsubscribe" element={<Unsubscribe />} />
 
           <Route path="*" element={<Root />} />
         </Routes>

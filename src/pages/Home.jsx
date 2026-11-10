@@ -11,6 +11,7 @@ import toast from "react-hot-toast";
 import RecentTransactions from "../components/RecentTransactions";
 import MonthlyTrendChart from "../components/MonthlyTrendChart";
 import CategoryBreakdown from "../components/CategoryBreakdown";
+import BudgetAlerts from "../components/BudgetAlerts";
 import Transactions from "../components/Transactions";
 import GettingStarted from "../components/GettingStarted";
 
@@ -21,6 +22,7 @@ const Home = () => {
     const [dashboardData, setDashboardData] = useState(null);
     const [loading, setLoading] = useState(false);
     const [categoryCount, setCategoryCount] = useState(null);
+    const [budgets, setBudgets] = useState([]);
 
     const fetchDashboardData = async () => {
         if (loading) return;
@@ -49,9 +51,19 @@ const Home = () => {
         }
     }
 
+    const fetchBudgets = async () => {
+        try {
+            const response = await axiosConfig.get(API_ENDPOINTS.BUDGETS);
+            setBudgets(response.data || []);
+        } catch {
+            setBudgets([]); // the alert simply stays hidden
+        }
+    }
+
     useEffect(() => {
         fetchDashboardData();
         fetchCategoryCount();
+        fetchBudgets();
 
         return () => {}
     }, []);
@@ -67,6 +79,11 @@ const Home = () => {
                                 hasIncome={(dashboardData.recent5Incomes || []).length > 0}
                                 hasExpense={(dashboardData.recent5Expense || []).length > 0}
                             />
+                        </div>
+                    )}
+                    {budgets.length > 0 && (
+                        <div className="mb-6 empty:hidden">
+                            <BudgetAlerts budgets={budgets} />
                         </div>
                     )}
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">

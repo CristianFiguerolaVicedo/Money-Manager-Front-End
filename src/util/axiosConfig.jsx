@@ -11,7 +11,7 @@ const axiosConfig = axios.create({
 });
 
 //List of endpoint that dont require authorization
-const excludeEndpoint = ["/login", "/register", "/status", "/activate", "/health", "/forgot-password", "/reset-password", "/resend-activation"];
+const excludeEndpoint = ["/login", "/register", "/status", "/activate", "/health", "/forgot-password", "/reset-password", "/resend-activation", "/unsubscribe"];
 
 //Request Interceptor
 axiosConfig.interceptors.request.use((config) => {
