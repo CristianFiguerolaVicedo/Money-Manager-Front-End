@@ -3,8 +3,10 @@ import './index.css'
 import App from './App.jsx'
 import { AppContextProvider } from './context/AppContext.jsx'
 import { warmUpServer } from './util/serverWakeNotice.js'
+import { initTheme } from './util/theme.js'
 
 warmUpServer()
+initTheme()
 
 createRoot(document.getElementById('root')).render(
   <AppContextProvider>

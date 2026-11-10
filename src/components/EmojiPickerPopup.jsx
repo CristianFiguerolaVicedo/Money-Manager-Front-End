@@ -1,9 +1,11 @@
 import EmojiPicker from "emoji-picker-react";
 import { Image, X } from "lucide-react";
 import { useState } from "react";
+import useDarkTheme from "../hooks/useDarkTheme";
 
 const EmojiPickerPopup = ({icon, onSelect}) => {
     const [isOpen, setIsOpen] = useState(false);
+    const dark = useDarkTheme();
 
     const handleEmojiClick = (emoji) => {
         onSelect(emoji?.imageUrl || "");
@@ -32,6 +34,7 @@ const EmojiPickerPopup = ({icon, onSelect}) => {
                         <EmojiPicker 
                             open={isOpen}
                             onEmojiClick={handleEmojiClick}
+                            theme={dark ? "dark" : "light"}
                         />
                     </div>
                 )}

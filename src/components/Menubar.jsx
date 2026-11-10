@@ -4,6 +4,8 @@ import { LogOut, Menu, User, UserRound, X } from "lucide-react";
 import { assets } from "../assets/assets";
 import { useNavigate } from "react-router-dom";
 import Sidebar from "./Sidebar";
+import ThemeSwitcher from "./ThemeSwitcher";
+import { clearToken } from "../util/auth";
 
 const Menubar = ({activeMenu}) => {
   const [openSideMenu, setOpenSideMenu] = useState(false);
@@ -13,7 +15,7 @@ const Menubar = ({activeMenu}) => {
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    localStorage.clear();
+    clearToken(); // keeps per-browser settings such as the theme
     clearUser();
     setShowDropdown(false);
     navigate("/login");
@@ -87,7 +89,7 @@ const Menubar = ({activeMenu}) => {
         </button>
 
         {showDropdown && (
-          <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-1 z-50">
+          <div className="absolute right-0 mt-2 w-56 bg-white rounded-lg shadow-lg border border-gray-200 py-1 z-50">
             <div className="px-4 py-3 border-b border-gray-100">
               <div className="flex items-center gap-3">
                 <div className="flex items-center justify-center w-8 h-8 bg-gray-100 rounded-full">
@@ -100,6 +102,10 @@ const Menubar = ({activeMenu}) => {
                   <p className="text-xs text-gray-500 truncate">{user?.email}</p>
                 </div>
               </div>
+            </div>
+
+            <div className="border-b border-gray-100">
+              <ThemeSwitcher />
             </div>
 
             <div className="py-1">

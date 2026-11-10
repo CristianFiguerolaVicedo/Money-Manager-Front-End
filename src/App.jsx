@@ -19,7 +19,7 @@ import { hasValidSession } from "./util/auth";
 const App = () => {
   return (
     <>
-      <Toaster />
+      <Toaster toastOptions={{ style: { background: "var(--toast-bg)", color: "var(--toast-fg)" } }} />
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Root />} />

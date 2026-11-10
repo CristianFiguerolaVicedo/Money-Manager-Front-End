@@ -2,8 +2,9 @@ import { useEffect, useState } from "react";
 import { LoaderCircle } from "lucide-react";
 import EmojiPickerPopup from "./EmojiPickerPopup";
 import Input from "./Input";
-import { getTodayLocalDate } from "../util/util";
 import NoCategoriesNotice from "./NoCategoriesNotice";
+import { countOccurrencesUntil, FREQUENCIES } from "../util/recurring";
+import { formatDate, getTodayLocalDate } from "../util/util";
 
 const emptyTransaction = () => ({
   name: "",
@@ -11,7 +12,24 @@ const emptyTransaction = () => ({
   date: getTodayLocalDate(),
   icon: "",
   categoryId: "",
+  repeat: "none",
+  endDate: "",
 });
+
+// Explains what will happen when the movement repeats
+const RepeatHint = ({ transaction }) => {
+  const today = getTodayLocalDate();
+  if (!transaction.date) return null;
+  const until = transaction.endDate && transaction.endDate < today ? transaction.endDate : today;
+  const now = countOccurrencesUntil(transaction.date, transaction.repeat, until);
+  return (
+    <p className="text-xs text-gray-500 -mt-2 mb-2">
+      {now > 0
+        ? `Se ${now === 1 ? "creará 1 movimiento" : `crearán ${now} movimientos`} ahora (desde el ${formatDate(transaction.date)}) y los siguientes se añadirán solos.`
+        : `El primero se añadirá solo el ${formatDate(transaction.date)}.`}
+    </p>
+  );
+};
 
 // Add/edit form shared by incomes and expenses.
 // `initialData` switches it to edit mode and pre-fills the fields.
@@ -99,6 +117,30 @@ const TransactionForm = ({ config, categories, initialData, onSubmit }) => {
         type="date"
       />
 
+      {!isEditing && (
+        <>
+          <Input
+            label="Repetir"
+            value={transaction.repeat}
+            onChange={({ target }) => handleChange("repeat", target.value)}
+            isSelect={true}
+            options={FREQUENCIES}
+          />
+          {transaction.repeat !== "none" && (
+            <>
+              <Input
+                value={transaction.endDate}
+                onChange={({ target }) => handleChange("endDate", target.value)}
+                label="Hasta (opcional)"
+                placeholder=""
+                type="date"
+              />
+              <RepeatHint transaction={transaction} />
+            </>
+          )}
+        </>
+      )}
+
       <div className="flex justify-end mt-6">
         <button
           type="button"
@@ -113,6 +155,8 @@ const TransactionForm = ({ config, categories, initialData, onSubmit }) => {
             </>
           ) : isEditing ? (
             "Guardar cambios"
+          ) : transaction.repeat !== "none" ? (
+            "Crear movimiento recurrente"
           ) : (
             config.labels.add
           )}

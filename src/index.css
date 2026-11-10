@@ -1,8 +1,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap');
 @import "tailwindcss";
+@import "./dark.css";
 
 body {
     font-family: 'Outfit', sans-serif;
-    background-color: #fcfbfc;
+    background-color: var(--app-bg, #fcfbfc);
     overflow: hidden;
 }

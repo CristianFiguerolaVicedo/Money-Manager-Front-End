@@ -1,7 +1,7 @@
 import { formatCurrencyAbs } from "../util/util";
-import { Pencil, Trash2, TrendingDown, TrendingUp, UtensilsCrossed } from "lucide-react";
+import { Pencil, Repeat, Trash2, TrendingDown, TrendingUp, UtensilsCrossed } from "lucide-react";
 
-const TransactionInfoCard = ({icon, title, date, amount, type, hideDeleteBtn, onDelete, onEdit}) => {
+const TransactionInfoCard = ({icon, title, date, amount, type, hideDeleteBtn, onDelete, onEdit, recurring = false}) => {
     // Always visible on touch screens (no hover there), revealed on hover on desktop
     const actionClass = "text-gray-400 opacity-100 md:opacity-0 md:group-hover:opacity-100 focus:opacity-100 transition-opacity cursor-pointer";
     const getAmountStyles = () => type === 'income' ? 'bg-green-50 text-green-800' : 'bg-red-50 text-red-800';
@@ -18,8 +18,14 @@ const TransactionInfoCard = ({icon, title, date, amount, type, hideDeleteBtn, on
 
             <div className="flex-1 flex items-center justify-between">
                 <div>
-                    <p className="text-sm text-gray-700 font-medium">
+                    <p className="flex items-center gap-1.5 text-sm text-gray-700 font-medium">
                         {title}
+                        {recurring && (
+                            <span title="Recurrente" className="inline-flex items-center text-purple-800">
+                                <Repeat size={13} aria-hidden="true" />
+                                <span className="sr-only">(recurrente)</span>
+                            </span>
+                        )}
                     </p>
                     <p className="text-xs text-gray-400 mt-1">
                         {date}

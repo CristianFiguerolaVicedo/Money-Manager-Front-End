@@ -1,9 +1,11 @@
 import { foldSmallGroups, formatCurrency } from "../util/util";
-import { CHART_COLORS } from "./chartColors";
+import { chartColors } from "./chartColors";
+import useDarkTheme from "../hooks/useDarkTheme";
 
 // Ranked list of categories with a proportional bar (easier to compare than a pie)
 // items: [{ key, name, icon, amount }]
 const CategoryBreakdown = ({ title, subtitle, items = [], emptyText, className = "" }) => {
+  const colors = chartColors(useDarkTheme());
   const groups = foldSmallGroups(items.filter((item) => Number(item.amount) > 0), 6);
   const total = groups.reduce((sum, item) => sum + Number(item.amount), 0);
   const max = groups.reduce((top, item) => Math.max(top, Number(item.amount)), 0);
@@ -31,10 +33,10 @@ const CategoryBreakdown = ({ title, subtitle, items = [], emptyText, className =
                     {formatCurrency(amount)} <span className="text-xs text-gray-400 font-normal">· {share}%</span>
                   </span>
                 </div>
-                <div className="mt-1.5 h-2 rounded-full" style={{ backgroundColor: CHART_COLORS.track }}>
+                <div className="mt-1.5 h-2 rounded-full bg-purple-100">
                   <div
                     className="h-2 rounded-full"
-                    style={{ width: `${max > 0 ? Math.max((amount / max) * 100, 2) : 0}%`, backgroundColor: CHART_COLORS.single }}
+                    style={{ width: `${max > 0 ? Math.max((amount / max) * 100, 2) : 0}%`, backgroundColor: colors.single }}
                   />
                 </div>
               </li>
