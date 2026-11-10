@@ -13,6 +13,7 @@ import { API_ENDPOINTS } from "../util/apiEndpoints";
 import { getCurrentMonth, getErrorMessage, getTodayLocalDate } from "../util/util";
 import NoCategoriesNotice from "./NoCategoriesNotice";
 import { budgetToastMessage } from "../util/budgets";
+import { uploadAttachment } from "./AttachmentsField";
 
 const UNDO_SECONDS = 5;
 
@@ -126,7 +127,11 @@ const TransactionsPage = ({ config }) => {
     fetchTransactions(month);
   }, [month, fetchTransactions]);
 
-  const closeForm = () => setFormModal({ open: false, editing: null });
+  const closeForm = () => {
+    // Attachments are saved straight away while editing, so refresh the paperclip counts
+    if (formModal.editing) fetchTransactions(month);
+    setFormModal({ open: false, editing: null });
+  };
 
   // After saving, show the month the transaction belongs to so it never "disappears"
   const showMonthOf = (date) => {
@@ -151,6 +156,7 @@ const TransactionsPage = ({ config }) => {
       date: transaction.date,
       icon: transaction.icon,
       categoryId: Number(transaction.categoryId),
+      note: transaction.note?.trim() || null,
     };
     const editing = formModal.editing;
 
@@ -178,8 +184,16 @@ const TransactionsPage = ({ config }) => {
         await axiosConfig.put(endpoints.update(editing.id), payload);
         toast.success(labels.updated);
       } else {
-        await axiosConfig.post(endpoints.add, payload);
+        const response = await axiosConfig.post(endpoints.add, payload);
         toast.success(labels.added);
+        const files = transaction.pendingFiles || [];
+        if (files.length && response.data?.id) {
+          try {
+            for (const file of files) await uploadAttachment(type, response.data.id, file);
+          } catch (uploadError) {
+            toast.error(getErrorMessage(uploadError, "El movimiento se ha guardado, pero no se ha podido adjuntar algún archivo"));
+          }
+        }
       }
       closeForm();
       showMonthOf(payload.date);
@@ -244,6 +258,7 @@ const TransactionsPage = ({ config }) => {
         date: item.date,
         icon: item.icon,
         categoryId: item.categoryId,
+        note: item.note ?? null,
       });
       toast.success(labels.restored);
       showMonthOf(item.date);

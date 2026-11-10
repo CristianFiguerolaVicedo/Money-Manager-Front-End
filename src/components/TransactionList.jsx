@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { Download, LoaderCircle, Mail } from "lucide-react";
+import { Download, FileUp, LoaderCircle, Mail } from "lucide-react";
+import { Link } from "react-router-dom";
 import TransactionInfoCard from "./TransactionInfoCard";
 import { formatDate } from "../util/util";
 
@@ -34,6 +35,10 @@ const TransactionList = ({ config, transactions, loading, onEdit, onDelete, onDo
       <div className="flex flex-wrap items-center justify-between gap-3">
         <h5 className="text-lg">{config.listTitle}</h5>
         <div className="flex flex-wrap items-center justify-end gap-2">
+          <Link to={`/import?type=${config.type}`} className={actionButtonClass}>
+            <FileUp size={15} className="text-base" />
+            Importar CSV
+          </Link>
           <button disabled={busy || isEmpty} onClick={runWith(setEmailLoading, onEmail)} className={actionButtonClass}>
             {emailLoading ? (
               <>
@@ -84,6 +89,8 @@ const TransactionList = ({ config, transactions, loading, onEdit, onDelete, onDo
               onEdit={() => onEdit(item)}
               onDelete={() => onDelete(item)}
               recurring={item.recurringId != null}
+              note={item.note}
+              attachmentCount={item.attachmentCount || 0}
             />
           ))}
         </div>

@@ -1,7 +1,7 @@
 import { formatCurrencyAbs } from "../util/util";
-import { Pencil, Repeat, Trash2, TrendingDown, TrendingUp, UtensilsCrossed } from "lucide-react";
+import { Paperclip, Pencil, Repeat, Trash2, TrendingDown, TrendingUp, UtensilsCrossed } from "lucide-react";
 
-const TransactionInfoCard = ({icon, title, date, amount, type, hideDeleteBtn, onDelete, onEdit, recurring = false}) => {
+const TransactionInfoCard = ({icon, title, date, amount, type, hideDeleteBtn, onDelete, onEdit, recurring = false, note = null, attachmentCount = 0}) => {
     // Always visible on touch screens (no hover there), revealed on hover on desktop
     const actionClass = "text-gray-400 opacity-100 md:opacity-0 md:group-hover:opacity-100 focus:opacity-100 transition-opacity cursor-pointer";
     const getAmountStyles = () => type === 'income' ? 'bg-green-50 text-green-800' : 'bg-red-50 text-red-800';
@@ -20,6 +20,13 @@ const TransactionInfoCard = ({icon, title, date, amount, type, hideDeleteBtn, on
                 <div>
                     <p className="flex items-center gap-1.5 text-sm text-gray-700 font-medium">
                         {title}
+                        {attachmentCount > 0 && (
+                            <span title={`${attachmentCount} archivo${attachmentCount === 1 ? "" : "s"} adjunto${attachmentCount === 1 ? "" : "s"}`} className="inline-flex items-center gap-0.5 text-xs text-gray-500">
+                                <Paperclip size={12} aria-hidden="true" />
+                                <span className="sr-only">({attachmentCount} adjuntos)</span>
+                                <span aria-hidden="true">{attachmentCount}</span>
+                            </span>
+                        )}
                         {recurring && (
                             <span title="Recurrente" className="inline-flex items-center text-purple-800">
                                 <Repeat size={13} aria-hidden="true" />
@@ -30,6 +37,11 @@ const TransactionInfoCard = ({icon, title, date, amount, type, hideDeleteBtn, on
                     <p className="text-xs text-gray-400 mt-1">
                         {date}
                     </p>
+                    {note && (
+                        <p className="text-xs text-gray-500 mt-0.5 line-clamp-1 break-all" title={note}>
+                            {note}
+                        </p>
+                    )}
                 </div>
 
                 <div className="flex items-center gap-2">
