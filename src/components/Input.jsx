@@ -1,6 +1,12 @@
 import { Eye, EyeOff } from "lucide-react";
-import { useState } from "react";
+import { useId, useState } from "react";
 
+const fieldClass =
+  "w-full bg-transparent border border-gray-300 rounded-lg py-2 px-3 text-gray-800 leading-tight " +
+  "focus:outline-none focus:border-violet-600 focus:ring-2 focus:ring-violet-200 " +
+  "disabled:bg-gray-100 disabled:text-gray-500 disabled:cursor-not-allowed";
+
+// Text/number/date/password input or select, with a label that is really tied to the field (A11)
 const Input = ({
   label,
   value,
@@ -10,23 +16,22 @@ const Input = ({
   isSelect,
   options,
   disabled = false,
+  id,
+  autoComplete,
 }) => {
+  const generatedId = useId();
+  const fieldId = id || generatedId;
   const [showPassword, setShowPassword] = useState(false);
-  const toggleShowPassword = () => {
-    setShowPassword(!showPassword);
-  };
+  const isPassword = type === "password";
 
   return (
     <div className="mb-4">
-      <label className="text-[13px] text-slate-800 mb-1">{label}</label>
+      <label htmlFor={fieldId} className="block text-[13px] font-medium text-gray-700 mb-1">
+        {label}
+      </label>
       <div className="relative">
         {isSelect ? (
-          <select
-            value={value}
-            onChange={(e) => onChange(e)}
-            disabled={disabled}
-            className="w-full bg-transparent outline-none border border-gray-300 rounded-md py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:border-blue-500 disabled:bg-gray-100 disabled:cursor-not-allowed"
-          >
+          <select id={fieldId} value={value} onChange={(e) => onChange(e)} disabled={disabled} className={fieldClass}>
             {options.map((option) => (
               <option key={option.value} value={option.value}>
                 {option.label}
@@ -35,33 +40,27 @@ const Input = ({
           </select>
         ) : (
           <input
-            className="w-full bg-transparent outline-none border border-gray-300 rounded-md py-2 px-3 pr-10 text-gray-700 leading-tight focus:outline-none focus:border-blue-500 disabled:bg-gray-100 disabled:text-gray-500 disabled:cursor-not-allowed"
-            type={
-              type === "password" ? (showPassword ? "text" : "password") : type
-            }
+            id={fieldId}
+            className={`${fieldClass} ${isPassword ? "pr-11" : ""}`}
+            type={isPassword ? (showPassword ? "text" : "password") : type}
             placeholder={placeholder}
             value={value}
             onChange={(e) => onChange(e)}
             disabled={disabled}
+            autoComplete={autoComplete}
           />
         )}
 
-        {type === "password" && (
-          <span className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer">
-            {showPassword ? (
-              <Eye
-                size={20}
-                className="text-purple-600"
-                onClick={toggleShowPassword}
-              />
-            ) : (
-              <EyeOff
-                size={20}
-                className="text-slate-400"
-                onClick={toggleShowPassword}
-              />
-            )}
-          </span>
+        {isPassword && (
+          <button
+            type="button"
+            onClick={() => setShowPassword((shown) => !shown)}
+            aria-label={showPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
+            aria-pressed={showPassword}
+            className="absolute right-1.5 top-1/2 -translate-y-1/2 p-1.5 rounded-md text-gray-500 hover:text-violet-700 cursor-pointer"
+          >
+            {showPassword ? <Eye size={18} aria-hidden="true" /> : <EyeOff size={18} aria-hidden="true" />}
+          </button>
         )}
       </div>
     </div>

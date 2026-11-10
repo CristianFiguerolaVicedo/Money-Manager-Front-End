@@ -52,10 +52,10 @@ const MonthlyTrendChart = ({ data = [] }) => {
   const shown = rows[activeIndex ?? rows.length - 1];
 
   return (
-    <div className="p-4 bg-white rounded-xl shadow-sm border border-gray-200">
+    <div className="p-4 bg-white rounded-2xl border border-gray-200">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <h5 className="text-lg">Ingresos y gastos</h5>
+          <h2 className="text-lg">Ingresos y gastos</h2>
           <p className="text-xs text-gray-400 mt-0.5">Últimos {rows.length} meses</p>
         </div>
         <div className="flex items-center gap-4 text-xs text-gray-600" aria-hidden="true">

@@ -15,9 +15,9 @@ import uploadProfileImage from "../util/uploadProfileImage";
 import { getErrorMessage } from "../util/util";
 import { PASSWORD_HINT, validatePassword } from "../util/validation";
 
-const cardClass = "p-5 bg-white rounded-xl shadow-sm border border-gray-200";
+const cardClass = "p-5 bg-white rounded-2xl border border-gray-200";
 const primaryButton =
-  "flex items-center gap-2 bg-purple-800 text-white px-4 py-2 rounded-lg hover:bg-purple-500 font-semibold hover:cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed";
+  "flex items-center gap-2 bg-violet-700 text-white px-4 py-2 rounded-lg hover:bg-violet-800 font-semibold hover:cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed";
 
 const Spinner = () => <LoaderCircle className="w-4 h-4 animate-spin" />;
 
@@ -74,7 +74,7 @@ const PersonalDataCard = ({ user, setUser }) => {
 
   return (
     <section className={cardClass} aria-labelledby="personal-data">
-      <h5 id="personal-data" className="text-lg mb-5">Datos personales</h5>
+      <h2 id="personal-data" className="text-lg mb-5">Datos personales</h2>
       <ProfileImageSelector
         image={newPhoto}
         setImage={setNewPhoto}
@@ -152,7 +152,7 @@ const EmailPreferencesCard = ({ user, setUser }) => {
 
   return (
     <section className={cardClass} aria-labelledby="email-preferences">
-      <h5 id="email-preferences" className="text-lg">Emails</h5>
+      <h2 id="email-preferences" className="text-lg">Emails</h2>
       <p className="text-sm text-gray-500 mt-1 mb-4">Elige qué emails quieres recibir en {user.email}.</p>
       <ul className="divide-y divide-gray-100">
         {EMAIL_OPTIONS.map((option) => (
@@ -202,7 +202,7 @@ const PasswordCard = () => {
 
   return (
     <section className={cardClass} aria-labelledby="change-password">
-      <h5 id="change-password" className="text-lg mb-5">Cambiar contraseña</h5>
+      <h2 id="change-password" className="text-lg mb-5">Cambiar contraseña</h2>
       <Input label="Contraseña actual" value={form.current} onChange={set("current")} placeholder="••••••••" type="password" />
       <Input label="Nueva contraseña" value={form.next} onChange={set("next")} placeholder="••••••••" type="password" />
       <Input label="Repite la nueva contraseña" value={form.confirm} onChange={set("confirm")} placeholder="••••••••" type="password" />
@@ -242,7 +242,7 @@ const DeleteAccountCard = ({ onDeleted }) => {
 
   return (
     <section className={`${cardClass} border-red-200`} aria-labelledby="delete-account">
-      <h5 id="delete-account" className="text-lg text-red-800">Borrar cuenta</h5>
+      <h2 id="delete-account" className="text-lg text-red-800">Borrar cuenta</h2>
       <p className="text-sm text-gray-600 mt-2">
         Se borrarán tu cuenta, tus categorías y todos tus ingresos y gastos. No se puede deshacer.
       </p>
@@ -295,7 +295,7 @@ const Profile = () => {
   return (
     <Dashboard activeMenu="Profile">
       <div className="my-5 mx-auto max-w-3xl">
-        <h2 className="text-2xl font-semibold text-gray-800 mb-6">Mi perfil</h2>
+        <h1 className="text-2xl font-semibold tracking-tight text-gray-800 mb-6">Mi perfil</h1>
         {!user ? (
           <div className="flex justify-center py-16 text-gray-400">
             <LoaderCircle className="w-6 h-6 animate-spin" />

@@ -61,7 +61,7 @@ const BudgetRow = ({ budget, onSave, onRemove }) => {
   const remaining = Number(budget.remaining);
 
   return (
-    <li className="p-4 bg-white rounded-xl border border-gray-200 shadow-sm">
+    <li className="p-4 bg-white rounded-2xl border border-gray-200">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div className="flex items-center gap-3 min-w-0">
           <div className="w-10 h-10 flex items-center justify-center rounded-full bg-gray-100 shrink-0">
@@ -111,7 +111,7 @@ const BudgetRow = ({ budget, onSave, onRemove }) => {
             <button
               type="submit"
               disabled={saving}
-              className="flex items-center gap-1 bg-purple-800 text-white px-3 py-1.5 rounded-lg text-sm font-semibold hover:bg-purple-500 cursor-pointer disabled:opacity-60"
+              className="flex items-center gap-1 bg-violet-700 text-white px-3 py-1.5 rounded-lg text-sm font-semibold hover:bg-violet-800 cursor-pointer disabled:opacity-60"
             >
               {saving && <LoaderCircle className="w-4 h-4 animate-spin" />} Guardar
             </button>
@@ -219,7 +219,7 @@ const Budgets = () => {
   return (
     <Dashboard activeMenu="Budgets">
       <div className="my-5 mx-auto max-w-3xl">
-        <h2 className="text-2xl font-semibold text-gray-800">Presupuestos</h2>
+        <h1 className="text-2xl font-semibold tracking-tight text-gray-800">Presupuestos</h1>
         <p className="text-sm text-gray-500 mt-1 mb-6">
           Pon un límite mensual a tus categorías de gastos. Cada mes empieza de cero.
         </p>
@@ -228,7 +228,7 @@ const Budgets = () => {
           <MonthSelector month={month} onChange={setMonth} />
 
           {totals.count > 0 && (
-            <div className="p-4 bg-white rounded-xl border border-gray-200 shadow-sm">
+            <div className="p-4 bg-white rounded-2xl border border-gray-200">
               <p className="text-sm text-gray-500">Total de las categorías con presupuesto</p>
               <p className="text-lg text-gray-800 mt-1">
                 <span className="font-semibold">{formatCurrency(totals.spent)}</span> de {formatCurrency(totals.budget)}
@@ -242,7 +242,7 @@ const Budgets = () => {
               <LoaderCircle className="w-6 h-6 animate-spin" />
             </div>
           ) : budgets.length === 0 ? (
-            <div className="p-6 bg-white rounded-xl border border-gray-200 text-center">
+            <div className="p-6 bg-white rounded-2xl border border-gray-200 text-center">
               <p className="text-sm text-gray-600">Para poner presupuestos necesitas al menos una categoría de gastos.</p>
               <Link to="/category" className="inline-block mt-3 text-sm font-semibold text-purple-800 underline">
                 Crear una categoría

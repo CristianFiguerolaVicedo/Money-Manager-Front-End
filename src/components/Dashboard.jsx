@@ -9,6 +9,7 @@ const Dashboard = ({ children, activeMenu }) => {
 
   return (
     <div>
+      <a href="#main-content" className="skip-link">Saltar al contenido</a>
       <Menubar activeMenu={activeMenu} />
       <SessionWatcher />
 
@@ -18,7 +19,9 @@ const Dashboard = ({ children, activeMenu }) => {
             <Sidebar activeMenu={activeMenu} />
           </div>
 
-          <main className="grow min-w-0 px-3 sm:px-5 py-5">{children}</main>
+          <main id="main-content" tabIndex={-1} className="grow min-w-0 px-4 sm:px-8 py-6 focus:outline-none">
+            <div className="max-w-6xl mx-auto">{children}</div>
+          </main>
         </div>
       )}
     </div>

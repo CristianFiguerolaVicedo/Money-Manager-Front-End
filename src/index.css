@@ -2,8 +2,57 @@
 @import "tailwindcss";
 @import "./dark.css";
 
+/*
+ * Design tokens (A9). Violet is the brand; the side panel is a deep plum, the one bold element.
+ * Light-mode gray-400/500 are a touch darker than Tailwind's so small text passes 4.5:1 contrast (A11).
+ */
+@theme {
+  --font-sans: "Outfit", ui-sans-serif, system-ui, sans-serif;
+  --color-plum-900: #24103a;
+  --color-plum-800: #321a4d;
+  --color-plum-700: #44275f;
+  --color-plum-200: #d9c9f2;
+  --color-plum-300: #b9a2dc;
+  --color-gray-400: #6e6e7a;
+  --color-gray-500: #5f5f6b;
+}
+
 body {
-    font-family: 'Outfit', sans-serif;
-    background-color: var(--app-bg, #fcfbfc);
-    overflow: hidden;
+  font-family: 'Outfit', sans-serif;
+  background-color: var(--app-bg);
+  color: var(--color-gray-800);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Visible keyboard focus everywhere (mouse clicks don't show it) */
+:focus-visible {
+  outline: 2px solid #7c3aed;
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* "Saltar al contenido" link: hidden until focused with the keyboard */
+.skip-link {
+  position: absolute;
+  left: 1rem;
+  top: -100px;
+  z-index: 100;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  background: #6d28d9;
+  color: #fff;
+  font-weight: 600;
+}
+.skip-link:focus { top: 0.75rem; }
+
+/* Amounts line up in lists and tables */
+.tabular-nums, table td { font-variant-numeric: tabular-nums; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

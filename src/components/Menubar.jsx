@@ -11,6 +11,7 @@ const Menubar = ({activeMenu}) => {
   const [openSideMenu, setOpenSideMenu] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
   const dropdownRef = useRef(null);
+  const userButtonRef = useRef(null);
   const { user, clearUser } = useContext(AppContext);
   const navigate = useNavigate();
 
@@ -28,12 +29,22 @@ const Menubar = ({activeMenu}) => {
       }
     };
 
+    // Escape closes the menu and gives focus back to the button that opened it
+    const handleEscape = (event) => {
+      if (event.key === "Escape") {
+        setShowDropdown(false);
+        userButtonRef.current?.focus();
+      }
+    };
+
     if (showDropdown) {
       document.addEventListener("mousedown", handleClickOutside);
+      document.addEventListener("keydown", handleEscape);
     }
 
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("keydown", handleEscape);
     }
   }, [showDropdown]);
 
@@ -49,14 +60,14 @@ const Menubar = ({activeMenu}) => {
   }, [openSideMenu]);
 
   return (
-    <div className="flex items-center justify-between gap-5 bg-white border border-b border-gray-200/50 backdrop-blur-[2px] py-4 px-4 sm:px-7 sticky top-0 z-30">
+    <header className="flex items-center justify-between gap-5 h-16 bg-white border-b border-gray-200 px-4 sm:px-6 sticky top-0 z-30">
       <div className="flex items-center gap-3 sm:gap-5 min-w-0">
         <button
           type="button"
           aria-label={openSideMenu ? "Cerrar menú" : "Abrir menú"}
           aria-expanded={openSideMenu}
           onClick={() => setOpenSideMenu(!openSideMenu)}
-          className="block lg:hidden text-black hover:bg-gray-100 p-1 rounded transition-colors"
+          className="block lg:hidden text-gray-800 hover:bg-gray-100 p-1.5 rounded-lg transition-colors cursor-pointer"
         >
           {openSideMenu ? (
             <X className="text-2xl hover:cursor-pointer" />
@@ -66,8 +77,8 @@ const Menubar = ({activeMenu}) => {
         </button>
 
         <div className="flex items-center gap-2 min-w-0">
-          <img src={assets.logo} alt="" className="w-10 h-10 shrink-0" />
-          <span className="text-lg font-medium text-black truncate">
+          <img src={assets.logo} alt="" className="app-logo w-9 h-9 shrink-0" />
+          <span className="text-lg font-semibold tracking-tight text-gray-900 truncate">
             Money Manager
           </span>
         </div>
@@ -76,8 +87,10 @@ const Menubar = ({activeMenu}) => {
       <div className="relative" ref={dropdownRef}>
         <button
           type="button"
+          ref={userButtonRef}
           aria-label="Menú de usuario"
           aria-expanded={showDropdown}
+          aria-controls="user-menu"
           onClick={() => setShowDropdown(!showDropdown)}
           className="flex items-center justify-center w-10 h-10 bg-gray-100 hover:bg-gray-200 hover:cursor-pointer rounded-full transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-purple-800 focus:ring-offset-2"
         >
@@ -89,7 +102,7 @@ const Menubar = ({activeMenu}) => {
         </button>
 
         {showDropdown && (
-          <div className="absolute right-0 mt-2 w-56 bg-white rounded-lg shadow-lg border border-gray-200 py-1 z-50">
+          <div id="user-menu" className="absolute right-0 mt-2 w-60 bg-white rounded-xl shadow-lg border border-gray-200 py-1 z-50">
             <div className="px-4 py-3 border-b border-gray-100">
               <div className="flex items-center gap-3">
                 <div className="flex items-center justify-center w-8 h-8 bg-gray-100 rounded-full">
@@ -119,8 +132,8 @@ const Menubar = ({activeMenu}) => {
                 <UserRound className="w-4 h-4 text-gray-500" />
                 <span>Mi perfil</span>
               </button>
-              <button onClick={handleLogout} className="flex items-center gap-3 w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors duration-150">
-                <LogOut className="w-4 h-4 text-gray-500 hover:cursor-pointer hover:text-red-500"/>
+              <button type="button" onClick={handleLogout} className="flex items-center gap-3 w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors duration-150 cursor-pointer">
+                <LogOut className="w-4 h-4 text-gray-500" aria-hidden="true" />
                 <span>Cerrar sesión</span>
               </button>
             </div>
@@ -129,11 +142,11 @@ const Menubar = ({activeMenu}) => {
       </div>
 
       {openSideMenu && (
-        <div className="fixed inset-x-0 top-[73px] bottom-0 bg-white border-t border-gray-200 lg:hidden z-20 overflow-y-auto">
-          <Sidebar activeMenu={activeMenu} isMobile />
+        <div className="fixed inset-x-0 top-16 bottom-0 bg-plum-900 lg:hidden z-20 overflow-y-auto">
+          <Sidebar activeMenu={activeMenu} isMobile onNavigate={() => setOpenSideMenu(false)} />
         </div>
       )}
-    </div>
+    </header>
   );
 };
 

@@ -53,7 +53,7 @@ const EditRuleForm = ({ rule, categories, onSave, onCancel }) => {
           type="button"
           onClick={submit}
           disabled={saving}
-          className="flex items-center gap-1 bg-purple-800 text-white px-4 py-2 rounded-lg hover:bg-purple-500 font-semibold cursor-pointer disabled:opacity-60"
+          className="flex items-center gap-1 bg-violet-700 text-white px-4 py-2 rounded-lg hover:bg-violet-800 font-semibold cursor-pointer disabled:opacity-60"
         >
           {saving && <LoaderCircle className="w-4 h-4 animate-spin" />} Guardar cambios
         </button>
@@ -77,10 +77,10 @@ const RecurringList = ({ config, rules, categories, onUpdate, onDelete }) => {
   if (!rules.length) return null;
 
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4">
+    <div className="bg-white rounded-2xl border border-gray-200 p-4">
       <div className="flex items-center gap-2">
         <Repeat size={18} className="text-purple-800" />
-        <h5 className="text-lg">{config.labels.recurringTitle}</h5>
+        <h2 className="text-lg">{config.labels.recurringTitle}</h2>
       </div>
       <p className="text-xs text-gray-400 mt-0.5">Se añaden solos en cada fecha. Los ya creados aparecen en la lista de su mes.</p>
 

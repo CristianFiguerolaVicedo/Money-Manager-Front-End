@@ -65,7 +65,7 @@ const AddCategoryForm = ({onAddCategory, initialCategoryData, isEditing}) => {
             />
 
             <div className="flex justify-end mt-6">
-                <button disabled={loading} onClick={handleSubmit} type="button" className="flex items-center gap-1 bg-purple-800 text-white px-3 py-2 rounded-lg hover:bg-purple-500 font-semibold hover:cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed">
+                <button disabled={loading} onClick={handleSubmit} type="button" className="flex items-center gap-1 bg-violet-700 text-white px-3 py-2 rounded-lg hover:bg-violet-800 font-semibold hover:cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed">
                     {loading ? (
                         <>
                             <LoaderCircle className="w-4 h-4 animate-spin"/>

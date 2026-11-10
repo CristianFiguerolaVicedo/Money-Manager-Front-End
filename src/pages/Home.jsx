@@ -72,6 +72,7 @@ const Home = () => {
         <div>
             <Dashboard activeMenu="Dashboard">
                 <div className="my-5 mx-auto">
+                    <h1 className="text-2xl font-semibold tracking-tight text-gray-900 mb-5">Inicio</h1>
                     {dashboardData && categoryCount !== null && (
                         <div className="mb-6">
                             <GettingStarted

@@ -11,7 +11,7 @@ const MonthSelector = ({ month, onChange, disabled = false }) => {
     "hover:bg-purple-50 hover:text-purple-800 cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed";
 
   return (
-    <div className="flex flex-wrap items-center justify-between gap-3 bg-white rounded-xl border border-gray-200 shadow-sm px-4 py-3">
+    <div className="flex flex-wrap items-center justify-between gap-3 bg-white rounded-2xl border border-gray-200 px-4 py-3">
       <div className="flex items-center gap-2">
         <button
           type="button"

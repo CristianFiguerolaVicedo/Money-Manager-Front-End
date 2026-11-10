@@ -6,7 +6,7 @@
  */
 
 :root {
-  --app-bg: #fcfbfc;
+  --app-bg: #f6f5f9;
   --toast-bg: #ffffff;
   --toast-fg: #1f2937;
 }
@@ -86,3 +86,6 @@
 
 /* recharts measurement/tooltip text */
 .dark .recharts-default-tooltip { background-color: var(--surface) !important; border-color: var(--color-gray-200) !important; }
+
+/* The logo has a dark outline: give it a light backing in the dark top bar */
+.dark .app-logo { background-color: #f1f0f5; border-radius: 8px; padding: 2px; }

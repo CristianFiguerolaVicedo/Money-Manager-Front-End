@@ -118,7 +118,7 @@ const Category = () => {
     <Dashboard activeMenu="Category">
       <div className="my-5 mx-auto">
         <div className="flex flex-wrap gap-3 justify-between items-center mb-5">
-          <h2 className="text-2xl font-semibold">Categorías</h2>
+          <h1 className="text-2xl font-semibold tracking-tight">Categorías</h1>
           <button onClick={() => setOpenAddCategoryModal(true)} className="flex items-center gap-1 bg-green-500/20 text-green-800 px-3 py-2 rounded-lg hover:bg-green-500/30 font-semibold hover:cursor-pointer">
             <Plus size={15} />
             Nueva categoría

@@ -12,7 +12,7 @@ import { goalStatusText } from "../util/goals";
 import { formatCurrency, formatDate, getErrorMessage, getTodayLocalDate } from "../util/util";
 
 const primaryButton =
-  "flex items-center gap-1.5 bg-purple-800 text-white px-4 py-2 rounded-lg hover:bg-purple-500 font-semibold cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed";
+  "flex items-center gap-1.5 bg-violet-700 text-white px-4 py-2 rounded-lg hover:bg-violet-800 font-semibold cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed";
 const secondaryButton =
   "flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-gray-200 text-sm text-gray-700 hover:bg-gray-50 cursor-pointer";
 
@@ -89,7 +89,7 @@ const GoalCard = ({ goal, onContribute, onWithdraw, onEdit, onDelete, onDeleteCo
   const historyId = `goal-history-${goal.id}`;
 
   return (
-    <li className="p-5 bg-white rounded-xl border border-gray-200 shadow-sm">
+    <li className="p-5 bg-white rounded-2xl border border-gray-200">
       <div className="flex items-start justify-between gap-3">
         <div className="flex items-center gap-3 min-w-0">
           <div className="w-11 h-11 flex items-center justify-center rounded-full bg-purple-50 shrink-0">
@@ -250,7 +250,7 @@ const Goals = () => {
       <div className="my-5 mx-auto max-w-3xl">
         <div className="flex flex-wrap items-start justify-between gap-3 mb-6">
           <div>
-            <h2 className="text-2xl font-semibold text-gray-800">Objetivos de ahorro</h2>
+            <h1 className="text-2xl font-semibold tracking-tight text-gray-800">Objetivos de ahorro</h1>
             <p className="text-sm text-gray-500 mt-1">
               {goals.length > 0 ? `Llevas ${formatCurrency(totalSaved)} ahorrados entre todos tus objetivos.` : "Ponte una meta y ve guardando dinero para ella."}
             </p>
@@ -263,7 +263,7 @@ const Goals = () => {
         {loading ? (
           <div className="flex justify-center py-16 text-gray-400"><LoaderCircle className="w-6 h-6 animate-spin" /></div>
         ) : goals.length === 0 ? (
-          <div className="p-8 bg-white rounded-xl border border-gray-200 text-center">
+          <div className="p-8 bg-white rounded-2xl border border-gray-200 text-center">
             <Target size={32} className="mx-auto text-purple-800" />
             <p className="text-gray-700 mt-3">Aún no tienes objetivos.</p>
             <p className="text-sm text-gray-500 mt-1">Por ejemplo: un fondo de emergencia, un viaje o la entrada de un piso.</p>
