@@ -1,6 +1,7 @@
 import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { formatAxisCurrency, formatCurrency, formatDate, groupByCategory } from "../util/util";
-import { CHART_COLORS } from "./chartColors";
+import { chartColors } from "./chartColors";
+import useDarkTheme from "../hooks/useDarkTheme";
 
 const DayTooltip = ({ active, payload }) => {
   if (!active || !payload?.length) return null;
@@ -27,18 +28,21 @@ const DayTooltip = ({ active, payload }) => {
 };
 
 // One bar per day of the month (empty days included, so gaps are visible instead of interpolated)
-const DailyBarChart = ({ data = [] }) => (
+const DailyBarChart = ({ data = [] }) => {
+  const colors = chartColors(useDarkTheme());
+  return (
   <div role="img" aria-label="Gráfica de barras por día del mes">
     <ResponsiveContainer width="100%" height={260}>
       <BarChart data={data} barCategoryGap="20%">
-        <CartesianGrid vertical={false} stroke={CHART_COLORS.grid} />
-        <XAxis dataKey="day" tick={{ fontSize: 11, fill: CHART_COLORS.axis }} axisLine={false} tickLine={false} interval="preserveStartEnd" minTickGap={8} />
-        <YAxis tickFormatter={formatAxisCurrency} tick={{ fontSize: 12, fill: CHART_COLORS.axis }} axisLine={false} tickLine={false} width={80} />
-        <Tooltip content={<DayTooltip />} cursor={{ fill: "rgba(126, 34, 206, 0.06)" }} />
-        <Bar dataKey="total" fill={CHART_COLORS.single} radius={[4, 4, 0, 0]} maxBarSize={18} minPointSize={0} />
+        <CartesianGrid vertical={false} stroke={colors.grid} />
+        <XAxis dataKey="day" tick={{ fontSize: 11, fill: colors.axis }} axisLine={false} tickLine={false} interval="preserveStartEnd" minTickGap={8} />
+        <YAxis tickFormatter={formatAxisCurrency} tick={{ fontSize: 12, fill: colors.axis }} axisLine={false} tickLine={false} width={80} />
+        <Tooltip content={<DayTooltip />} cursor={{ fill: colors.cursor }} />
+        <Bar dataKey="total" fill={colors.single} radius={[4, 4, 0, 0]} maxBarSize={18} minPointSize={0} />
       </BarChart>
     </ResponsiveContainer>
   </div>
-);
+  );
+};
 
 export default DailyBarChart;

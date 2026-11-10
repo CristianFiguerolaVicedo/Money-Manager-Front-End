@@ -79,6 +79,7 @@ const TransactionList = ({ config, transactions, loading, onEdit, onDelete, onDo
               type={config.type}
               onEdit={() => onEdit(item)}
               onDelete={() => onDelete(item)}
+              recurring={item.recurringId != null}
             />
           ))}
         </div>

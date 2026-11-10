@@ -1,0 +1,88 @@
+/*
+ * Dark theme (A4): active when <html> has the "dark" class (see src/util/theme.js).
+ * Instead of adding dark: variants to every component, the gray/slate scales are inverted
+ * and the few light tints and coloured texts the app uses are remapped. Coloured buttons
+ * (bg-purple-800 + text-white, etc.) keep their colours.
+ */
+
+:root {
+  --app-bg: #fcfbfc;
+  --toast-bg: #ffffff;
+  --toast-fg: #1f2937;
+}
+
+.dark {
+  color-scheme: dark;
+  --app-bg: #0f0e13;
+  --surface: #17161c;
+  --toast-bg: #26252e;
+  --toast-fg: #f1f0f5;
+
+  /* gray / slate: inverted so "light background / dark text" keeps working */
+  --color-gray-50: #1c1b22;
+  --color-gray-100: #26252e;
+  --color-gray-200: #33323c;
+  --color-gray-300: #45444f;
+  --color-gray-400: #8b8a96;
+  --color-gray-500: #a3a2ad;
+  --color-gray-600: #bdbcc6;
+  --color-gray-700: #d4d3db;
+  --color-gray-800: #e6e5ec;
+  --color-gray-900: #f1f0f5;
+  --color-gray-950: #fafafa;
+  --color-slate-400: #8b8a96;
+  --color-slate-500: #a3a2ad;
+  --color-slate-600: #bdbcc6;
+  --color-slate-700: #d4d3db;
+  --color-slate-800: #e6e5ec;
+
+  /* light tints used as backgrounds / borders */
+  --color-purple-50: #221a30;
+  --color-purple-100: #2c2140;
+  --color-purple-200: #4a3270;
+  --color-red-50: #2c1517;
+  --color-red-200: #6b2a2e;
+  --color-red-300: #8a3439;
+  --color-amber-50: #2a2112;
+  --color-amber-200: #6b5221;
+  --color-green-50: #11261a;
+}
+
+.dark body {
+  background-color: var(--app-bg);
+  color: var(--color-gray-800);
+}
+
+/* surfaces */
+.dark .bg-white { background-color: var(--surface); }
+.dark .bg-white\/95 { background-color: rgb(23 22 28 / 0.95); }
+.dark .text-black { color: var(--color-gray-900); }
+
+/* coloured text: lighter shades so they stay readable on dark surfaces */
+.dark .text-purple-500,
+.dark .text-purple-600,
+.dark .text-purple-800,
+.dark .hover\:text-purple-800:hover { color: #c9a3f7; }
+.dark .text-red-700,
+.dark .text-red-800,
+.dark .hover\:text-red-800:hover { color: #f9a3a3; }
+.dark .text-green-700,
+.dark .text-green-800 { color: #7fe0a8; }
+.dark .text-amber-700,
+.dark .text-amber-800,
+.dark .text-amber-900 { color: #f5cf6b; }
+
+/* …except on solid coloured buttons/badges, where text stays white */
+.dark .bg-purple-800.text-white,
+.dark .bg-purple-950.text-white,
+.dark .bg-red-800.text-white,
+.dark .bg-red-700.text-white { color: #ffffff; }
+
+/* native controls: keep inputs readable */
+.dark input,
+.dark select,
+.dark textarea { color: var(--color-gray-800); }
+.dark select option { background-color: var(--surface); }
+
+/* recharts measurement/tooltip text */
+.dark .recharts-default-tooltip { background-color: var(--surface) !important; border-color: var(--color-gray-200) !important; }

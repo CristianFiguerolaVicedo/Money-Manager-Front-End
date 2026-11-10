@@ -6,6 +6,7 @@ import MonthSelector from "./MonthSelector";
 import TransactionForm from "./TransactionForm";
 import TransactionList from "./TransactionList";
 import TransactionOverview from "./TransactionOverview";
+import RecurringList from "./RecurringList";
 import useUser from "../hooks/useUser";
 import axiosConfig from "../util/axiosConfig";
 import { API_ENDPOINTS } from "../util/apiEndpoints";
@@ -16,11 +17,13 @@ import { budgetToastMessage } from "../util/budgets";
 const UNDO_SECONDS = 5;
 
 // Returns an error message, or null when the transaction is valid
-const validateTransaction = ({ name, amount, date, categoryId }) => {
+const validateTransaction = ({ name, amount, date, categoryId, repeat, endDate }) => {
+  const recurring = repeat && repeat !== "none";
   if (!name || !name.trim()) return "Escribe un concepto";
   if (!amount || isNaN(amount) || Number(amount) <= 0) return "El importe debe ser un número mayor que 0";
   if (!date) return "Elige una fecha";
-  if (date > getTodayLocalDate()) return "La fecha no puede ser futura";
+  if (!recurring && date > getTodayLocalDate()) return "La fecha no puede ser futura";
+  if (recurring && endDate && endDate < date) return "La fecha de fin no puede ser anterior a la de inicio";
   if (!categoryId) return "Elige una categoría";
   return null;
 };
@@ -36,6 +39,7 @@ const TransactionsPage = ({ config }) => {
   const [transactions, setTransactions] = useState([]);
   const [categories, setCategories] = useState([]);
   const [categoriesLoaded, setCategoriesLoaded] = useState(false);
+  const [rules, setRules] = useState([]);
   const [loading, setLoading] = useState(false);
 
   // { open, editing } — editing holds the transaction being edited (null when adding)
@@ -79,6 +83,45 @@ const TransactionsPage = ({ config }) => {
     fetchCategories();
   }, [fetchCategories]);
 
+  const fetchRules = useCallback(async () => {
+    try {
+      const response = await axiosConfig.get(API_ENDPOINTS.RECURRING, { params: { type } });
+      setRules(response.data || []);
+    } catch (error) {
+      console.error(`Failed to fetch recurring ${lower}s`, error);
+    }
+  }, [type, lower]);
+
+  useEffect(() => {
+    fetchRules();
+  }, [fetchRules]);
+
+  const handleUpdateRule = async (rule, changes) => {
+    try {
+      await axiosConfig.put(API_ENDPOINTS.UPDATE_RECURRING(rule.id), changes);
+      toast.success(
+        changes.active === false ? `«${rule.name}» en pausa` : changes.active === true ? `«${rule.name}» reanudado` : "Cambios guardados"
+      );
+      fetchRules();
+      fetchTransactions(month);
+      return true;
+    } catch (error) {
+      toast.error(getErrorMessage(error, "No se han podido guardar los cambios"));
+      return false;
+    }
+  };
+
+  const handleDeleteRule = async (rule) => {
+    try {
+      await axiosConfig.delete(API_ENDPOINTS.DELETE_RECURRING(rule.id));
+      toast.success(`«${rule.name}» ya no se repetirá`);
+      fetchRules();
+      fetchTransactions(month);
+    } catch (error) {
+      toast.error(getErrorMessage(error, "No se ha podido borrar"));
+    }
+  };
+
   useEffect(() => {
     fetchTransactions(month);
   }, [month, fetchTransactions]);
@@ -110,6 +153,25 @@ const TransactionsPage = ({ config }) => {
       categoryId: Number(transaction.categoryId),
     };
     const editing = formModal.editing;
+
+    if (!editing && transaction.repeat && transaction.repeat !== "none") {
+      try {
+        await axiosConfig.post(API_ENDPOINTS.RECURRING, {
+          ...payload,
+          type,
+          frequency: transaction.repeat,
+          startDate: payload.date,
+          endDate: transaction.endDate || null,
+        });
+        toast.success(labels.recurringCreated);
+        closeForm();
+        fetchRules();
+        fetchTransactions(month); // occurrences already due appear in their months
+      } catch (err) {
+        toast.error(getErrorMessage(err, `No se ha podido crear el ${lower} recurrente`));
+      }
+      return;
+    }
 
     try {
       if (editing) {
@@ -245,6 +307,14 @@ const TransactionsPage = ({ config }) => {
             onDelete={handleDelete}
             onDownload={handleDownload}
             onEmail={handleEmail}
+          />
+
+          <RecurringList
+            config={config}
+            rules={rules}
+            categories={categories}
+            onUpdate={handleUpdateRule}
+            onDelete={handleDeleteRule}
           />
 
           <Modal

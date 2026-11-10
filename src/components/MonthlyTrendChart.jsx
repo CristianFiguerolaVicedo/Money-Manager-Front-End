@@ -1,19 +1,20 @@
 import { useState } from "react";
 import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { formatAxisCurrency, formatCurrency, formatMonthLabel } from "../util/util";
-import { CHART_COLORS } from "./chartColors";
+import { chartColors } from "./chartColors";
+import useDarkTheme from "../hooks/useDarkTheme";
 
 const shortMonth = (month) =>
   new Intl.DateTimeFormat("es-ES", { month: "short" })
     .format(new Date(Number(month.slice(0, 4)), Number(month.slice(5, 7)) - 1, 1))
     .replace(".", "");
 
-const SERIES = [
-  { key: "income", label: "Ingresos", color: CHART_COLORS.income },
-  { key: "expense", label: "Gastos", color: CHART_COLORS.expense },
+const seriesFor = (colors) => [
+  { key: "income", label: "Ingresos", color: colors.income },
+  { key: "expense", label: "Gastos", color: colors.expense },
 ];
 
-const MonthTotals = ({ row }) => {
+const MonthTotals = ({ row, series: SERIES }) => {
   const balance = Number(row.balance) || 0;
   return (
     <div className="flex flex-wrap gap-x-5 gap-y-1 text-sm text-gray-600">
@@ -32,17 +33,19 @@ const MonthTotals = ({ row }) => {
   );
 };
 
-const TrendTooltip = ({ active, payload }) => {
+const TrendTooltip = ({ active, payload, series }) => {
   if (!active || !payload?.length) return null;
   return (
     <div className="bg-white shadow-md rounded-lg p-3 border border-gray-200">
-      <MonthTotals row={payload[0].payload} />
+      <MonthTotals row={payload[0].payload} series={series} />
     </div>
   );
 };
 
 // Income vs expenses of the last months (grouped bars) with the hovered month's totals written out below
 const MonthlyTrendChart = ({ data = [] }) => {
+  const colors = chartColors(useDarkTheme());
+  const SERIES = seriesFor(colors);
   const [activeIndex, setActiveIndex] = useState(null);
   const rows = data.map((row) => ({ ...row, income: Number(row.income) || 0, expense: Number(row.expense) || 0 }));
   const hasData = rows.some((row) => row.income > 0 || row.expense > 0);
@@ -80,10 +83,10 @@ const MonthlyTrendChart = ({ data = [] }) => {
                 onMouseMove={(state) => state?.activeTooltipIndex != null && setActiveIndex(Number(state.activeTooltipIndex))}
                 onMouseLeave={() => setActiveIndex(null)}
               >
-                <CartesianGrid vertical={false} stroke={CHART_COLORS.grid} />
-                <XAxis dataKey="month" tickFormatter={shortMonth} tick={{ fontSize: 12, fill: CHART_COLORS.axis }} axisLine={false} tickLine={false} />
-                <YAxis tickFormatter={formatAxisCurrency} tick={{ fontSize: 12, fill: CHART_COLORS.axis }} axisLine={false} tickLine={false} width={80} />
-                <Tooltip content={<TrendTooltip />} cursor={{ fill: "rgba(126, 34, 206, 0.06)" }} />
+                <CartesianGrid vertical={false} stroke={colors.grid} />
+                <XAxis dataKey="month" tickFormatter={shortMonth} tick={{ fontSize: 12, fill: colors.axis }} axisLine={false} tickLine={false} />
+                <YAxis tickFormatter={formatAxisCurrency} tick={{ fontSize: 12, fill: colors.axis }} axisLine={false} tickLine={false} width={80} />
+                <Tooltip content={<TrendTooltip series={SERIES} />} cursor={{ fill: colors.cursor }} />
                 {SERIES.map((series) => (
                   <Bar key={series.key} dataKey={series.key} name={series.label} fill={series.color} radius={[4, 4, 0, 0]} maxBarSize={28} />
                 ))}
@@ -92,7 +95,7 @@ const MonthlyTrendChart = ({ data = [] }) => {
           </div>
           {shown && (
             <div className="mt-2 pt-3 border-t border-gray-100" aria-live="polite">
-              <MonthTotals row={shown} />
+              <MonthTotals row={shown} series={SERIES} />
             </div>
           )}
         </>
