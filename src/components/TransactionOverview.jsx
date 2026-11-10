@@ -20,7 +20,7 @@ const TransactionOverview = ({ config, transactions, month, onAdd }) => {
       <div className="p-4 bg-white rounded-2xl border border-gray-200 lg:col-span-2">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
-            <h2 className="text-lg">{config.overviewTitle}</h2>
+            <h2 className="text-lg font-medium text-gray-900">{config.overviewTitle}</h2>
             <p className="text-xs text-gray-400 mt-0.5">{config.overviewSubtitle}</p>
             <p className="text-sm text-gray-700 mt-2">
               Total del mes: <span className="font-semibold">{formatCurrency(total)}</span>
@@ -36,7 +36,7 @@ const TransactionOverview = ({ config, transactions, month, onAdd }) => {
 
         <div className="mt-6">
           {hasData ? (
-            <DailyBarChart data={dailyData} />
+            <DailyBarChart data={dailyData} type={config.type} />
           ) : (
             <p className="text-sm text-gray-500 py-12 text-center">{config.labels.empty}</p>
           )}

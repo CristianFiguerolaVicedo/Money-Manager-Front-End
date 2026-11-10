@@ -7,7 +7,7 @@ const ResentTransactions = ({transactions, onMore}) => {
     return(
         <div className="p-4 bg-white rounded-2xl border border-gray-200">
             <div className="flex flex-wrap gap-2 items-center justify-between">
-                <h2 className="text-lg">
+                <h2 className="text-lg font-medium text-gray-900">
                     Últimos movimientos
                 </h2>
                 <button type="button" onClick={onMore} className={btnSecondary}>

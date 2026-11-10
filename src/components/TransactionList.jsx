@@ -30,7 +30,7 @@ const TransactionList = ({ config, transactions, loading, onEdit, onDelete, onDo
   return (
     <div className="bg-white rounded-2xl border border-gray-200 p-4">
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <h2 className="text-lg">{config.listTitle}</h2>
+        <h2 className="text-lg font-medium text-gray-900">{config.listTitle}</h2>
         <div className="flex flex-wrap items-center justify-end gap-2">
           <Link to={`/import?type=${config.type}`} className={actionButtonClass}>
             <FileUp size={15} className="text-base" />

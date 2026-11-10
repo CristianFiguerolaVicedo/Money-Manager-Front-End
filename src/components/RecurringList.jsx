@@ -80,7 +80,7 @@ const RecurringList = ({ config, rules, categories, onUpdate, onDelete }) => {
     <div className="bg-white rounded-2xl border border-gray-200 p-4">
       <div className="flex items-center gap-2">
         <Repeat size={18} className="text-purple-800" />
-        <h2 className="text-lg">{config.labels.recurringTitle}</h2>
+        <h2 className="text-lg font-medium text-gray-900">{config.labels.recurringTitle}</h2>
       </div>
       <p className="text-xs text-gray-400 mt-0.5">Se añaden solos en cada fecha. Los ya creados aparecen en la lista de su mes.</p>
 

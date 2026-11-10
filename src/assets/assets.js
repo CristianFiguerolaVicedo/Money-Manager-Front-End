@@ -1,11 +1,5 @@
-import logo from "./money-management.png";
-import login_bg from "./dramatic-sunset-rocky-coastline-with-crashing-waves.jpg";
 import { ArrowLeftRight, Coins, FileUp, FunnelPlus, LayoutDashboard, List, PiggyBank, Target, UserRound, Wallet } from "lucide-react";
 
-export const assets = {
-    logo,
-    login_bg
-}
 
 // Side menu, grouped by what the user is doing. `key` is what pages pass as activeMenu.
 export const SIDE_BAR_GROUPS = [

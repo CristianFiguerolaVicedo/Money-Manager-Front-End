@@ -52,7 +52,7 @@ const CategoryComparison = ({ title, rows, goodWhenUp, labelA, labelB, colorB })
   return (
     <div className="p-4 bg-white rounded-2xl border border-gray-200">
       <div className="flex flex-wrap items-center justify-between gap-2">
-        <h2 className="text-lg">{title}</h2>
+        <h2 className="text-lg font-medium text-gray-900">{title}</h2>
         <div className="flex items-center gap-4 text-xs text-gray-600" aria-hidden="true">
           <span className="flex items-center gap-1.5"><span className="w-3 h-2 rounded-sm bg-gray-300" />{labelA}</span>
           <span className="flex items-center gap-1.5"><span className="w-3 h-2 rounded-sm" style={{ backgroundColor: colorB }} />{labelB}</span>
