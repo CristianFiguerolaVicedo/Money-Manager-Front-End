@@ -38,7 +38,7 @@ const SummaryCard = ({ title, change, goodWhenUp, labelA, labelB }) => (
     <p className="text-sm text-gray-500">{title}</p>
     <p className="text-2xl font-semibold text-gray-800 mt-1">{formatCurrency(change.b)}</p>
     <p className="text-xs text-gray-500 mt-0.5">
-      {labelB} · antes {formatCurrency(change.a)} en {labelA}
+      En {labelB.toLowerCase()} · antes {formatCurrency(change.a)} en {labelA.toLowerCase()}
     </p>
     <div className="mt-2">
       <Change change={change} goodWhenUp={goodWhenUp} />
