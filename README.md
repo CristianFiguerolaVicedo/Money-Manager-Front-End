@@ -1,99 +1,81 @@
-# Inventory App - Front-end
+# Money Manager · Frontend
 
-## This is the front-end part of a whole inventory project. You can find the backend repository in this link: <https://github.com/CristianFiguerolaVicedo/Inventory-back-end>
+Web de **Money Manager**: lleva tus ingresos y gastos, mira en qué se va el dinero, pon presupuestos y ahorra para tus objetivos.
 
-This app was made using `Java` for the backend with `Springboot` and `JavaScript` with `React` for the front-end
+- Web: <https://money-manager-cristian.netlify.app>
+- Backend (API): [Money-Manager-Back-End](https://github.com/CristianFiguerolaVicedo/Money-Manager-Back-End)
 
-The intention of this project is to help small and medium e-commerces manage their inventory in an easy, clean and simple way and to be an alternative to the tipically used excel.
+## Qué puedes hacer
 
-This inventory wants to be as much user-friendly as possible, making it perfect for everyone to use wether you have high technological knowledge or not.
+| Página | Para qué |
+|---|---|
+| Inicio | Saldo, ingresos y gastos totales, los últimos 6 meses, los gastos del mes por categoría y avisos de presupuesto |
+| Comparar meses | Dos meses lado a lado: totales y cambio por categoría |
+| Ingresos / Gastos | Lista por mes con gráfica por día y desglose por categoría; añadir, editar y borrar (con «Deshacer»), notas, tickets adjuntos, movimientos recurrentes y exportar a Excel |
+| Buscar | Filtrar por fechas y texto, con resultados paginados y el total |
+| Categorías | Crear, editar y borrar (pasando sus movimientos a otra categoría) |
+| Importar CSV | Cargar el extracto del banco con vista previa antes de guardar |
+| Presupuestos | Límite mensual por categoría, con aviso al acercarte o pasarte |
+| Objetivos | Metas de ahorro con aportaciones, retiradas y cuánto ahorrar al mes |
+| Mi perfil | Nombre, foto, contraseña, emails programados y borrar la cuenta |
 
-### Features
+Tiene tema claro, oscuro o según el sistema (en el menú de usuario) y se puede usar entera con el teclado.
 
-1. Login and Register
-2. Product List
-3. Category List
-4. Product Filter
-5. Sale List and Overview
-6. Calendar
-7. Balance Overview
-8. Style Guide
+## Tecnología
 
-## Login and Register
+- React 19 + Vite, React Router 7
+- Tailwind CSS 4 (tokens de diseño en `src/index.css`, tema oscuro en `src/dark.css`)
+- Recharts para las gráficas, lucide-react para los iconos
+- Axios con interceptores (token, sesión caducada, aviso de servidor despertando)
+- Cloudinary para las fotos de perfil
+- Tests con el test runner que trae Node (`node --test`), sin dependencias extra
 
-When you first enter the web you see the login, where you have to put your user information (email and password), but if you are not registered you will see a link where you can access the register form.
+## Estructura
 
-In the register form you have to put your name, email, password and an optional profile pic. When everything is validated you will be redirected to the login form to login and access the main page of the web.
+```
+src/
+├── pages/        Una por pantalla (Home, Income, Expense, Budgets, Goals, Import…)
+├── components/   Piezas reutilizables (TransactionsPage, Modal, Input, gráficas…)
+├── config/       Textos y endpoints de ingresos y gastos
+├── context/      Usuario conectado
+├── hooks/        useUser, useDarkTheme
+├── util/         API, sesión, formatos (€, fechas), CSV, presupuestos, comparativa… y sus tests en __tests__/
+├── index.css     Tokens de diseño y estilos de accesibilidad
+└── dark.css      Tema oscuro
+```
 
-## Product List
+## Ejecutar en local
 
-This is the first and main page of the application, where you can see all your products, their data, a button to add new products and a button to download an excel of your products.
+Necesitas Node 22 y el backend en marcha (ver su README).
 
-Ths products will be grouped by categories in expandable menus to make them easier to find.
+```bash
+npm ci
+cp .env.example .env      # VITE_API_BASE_URL=http://localhost:8080/api/v1.0
+npm run dev               # http://localhost:5173
+```
 
-The user can also edit and delete any product.
+| Comando | Qué hace |
+|---|---|
+| `npm run dev` | Servidor de desarrollo |
+| `npm test` | Tests de las utilidades (formatos, fechas, CSV, presupuestos…) |
+| `npm run lint` | ESLint |
+| `npm run build` | Compila a `dist/` |
 
-## Category List
+## Variables de entorno
 
-In this part the user can see a list of all the created categories with their name.
+| Variable | Para qué |
+|---|---|
+| `VITE_API_BASE_URL` | URL de la API, con `/api/v1.0` al final. En producción: `https://money-manager-t0yw.onrender.com/api/v1.0` |
 
-The user can also edit and delete any category
+Vite las incluye al compilar: si la cambias en Netlify, vuelve a desplegar.
 
-## Product Filter
+## Despliegue
 
-In this part of the app the user can use many filters to find any product created.
+Netlify compila y publica cada vez que se fusiona algo en `main`. Cada PR tiene su vista previa en `https://deploy-preview-<n>--money-manager-cristian.netlify.app`, y el backend acepta esas direcciones en CORS. `public/_redirects` envía todas las rutas a `index.html` para que funcionen al recargar.
 
-Ths available fields are: the date the product was created, the category or status, the sort order and a keyword.
+GitHub Actions (`.github/workflows/ci.yml`) ejecuta lint, tests y build en cada PR.
 
-After selecting the criteria, a list of grouped products will pop up.
+## Notas
 
-## Sale List and Overview
-
-In this part of the page the main thing the user sees it is a liner graphic of the money of the sales of the actual month.
-
-Below the graphic we can see a list of all the sales for the current month with their details and at the top right of the page there is a button to add a new sale.
-
-## Calendar
-
-This is a simple page where the user has a calendar with the events added by he/her.
-
-You can click any event to show a pop up with the details of the event and the option to delete it.
-
-## Balance Overview
-
-This page shows, the expenses, incomes, sales money and total balance of the selected month and year.
-
-The sales money is automatically imported from the sales page.
-
-## Style Sheet
-
-
-This app uses a palette of green and white using the following colors:
-
-<span style="display:inline-flex;align-items:center;">
-  <span style="width:20px;height:20px;background-color:#E5E1DF;border:1px solid #000;display:inline-block;margin-right:8px;"></span>
-  #E5E1DF
-</span>
-
-<span style="display:inline-flex;align-items:center;">
-  <span style="width:20px;height:20px;background-color:#B7B2AC;border:1px solid #000;display:inline-block;margin-right:8px;"></span>
-  #B7B2AC
-</span>
-
-<span style="display:inline-flex;align-items:center;">
-  <span style="width:20px;height:20px;background-color:#949488;border:1px solid #000;display:inline-block;margin-right:8px;"></span>
-  #949488
-</span>
-
-<span style="display:inline-flex;align-items:center;">
-  <span style="width:20px;height:20px;background-color:#717866;border:1px solid #000;display:inline-block;margin-right:8px;"></span>
-  #717866
-</span>
-
-<span style="display:inline-flex;align-items:center;">
-  <span style="width:20px;height:20px;background-color:#505746;border:1px solid #000;display:inline-block;margin-right:8px;"></span>
-  #505746
-</span>
-
-
-
+- El backend está en el plan gratuito de Render, que se duerme: la primera carga puede tardar hasta un minuto. La web lo avisa y lo despierta al abrirse.
+- El tema y otros ajustes del navegador se guardan en `localStorage`; cerrar sesión solo borra el token.
