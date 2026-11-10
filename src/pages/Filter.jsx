@@ -90,7 +90,7 @@ const Filter = () => {
 
                 <div className="p-4 mb-4 bg-white rounded-2xl border border-gray-200">
                     <div className="flex items-center justify-between mb-4">
-                        <h2 className="text-lg font-semibold">
+                        <h2 className="text-lg font-medium text-gray-900">
                             Filtros
                         </h2>
                     </div>
@@ -155,7 +155,7 @@ const Filter = () => {
 
                 <div id="search-results" className="p-4 bg-white rounded-2xl border border-gray-200 scroll-mt-24">
                     <div className="flex flex-wrap items-baseline justify-between gap-2">
-                        <h2 className="text-lg font-semibold">
+                        <h2 className="text-lg font-medium text-gray-900">
                             Resultados
                         </h2>
                         {hasSearched && pageInfo.totalItems > 0 && (

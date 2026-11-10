@@ -28,7 +28,7 @@ const DayTooltip = ({ active, payload }) => {
 };
 
 // One bar per day of the month (empty days included, so gaps are visible instead of interpolated)
-const DailyBarChart = ({ data = [] }) => {
+const DailyBarChart = ({ data = [], type }) => {
   const colors = chartColors(useDarkTheme());
   return (
   <div role="img" aria-label="Gráfica de barras por día del mes">
@@ -38,7 +38,7 @@ const DailyBarChart = ({ data = [] }) => {
         <XAxis dataKey="day" tick={{ fontSize: 11, fill: colors.axis }} axisLine={false} tickLine={false} interval="preserveStartEnd" minTickGap={8} />
         <YAxis tickFormatter={formatAxisCurrency} tick={{ fontSize: 12, fill: colors.axis }} axisLine={false} tickLine={false} width={80} />
         <Tooltip content={<DayTooltip />} cursor={{ fill: colors.cursor }} />
-        <Bar dataKey="total" fill={colors.single} radius={[4, 4, 0, 0]} maxBarSize={18} minPointSize={0} />
+        <Bar dataKey="total" fill={type === "income" ? colors.income : type === "expense" ? colors.expense : colors.single} radius={[4, 4, 0, 0]} maxBarSize={18} minPointSize={0} />
       </BarChart>
     </ResponsiveContainer>
   </div>

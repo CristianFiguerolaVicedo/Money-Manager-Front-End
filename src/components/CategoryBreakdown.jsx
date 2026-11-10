@@ -12,7 +12,7 @@ const CategoryBreakdown = ({ title, subtitle, items = [], emptyText, className =
 
   return (
     <div className={`p-4 bg-white rounded-2xl border border-gray-200 ${className}`}>
-      <h2 className="text-lg">{title}</h2>
+      <h2 className="text-lg font-medium text-gray-900">{title}</h2>
       {subtitle && <p className="text-xs text-gray-400 mt-0.5">{subtitle}</p>}
 
       {groups.length === 0 ? (
@@ -33,7 +33,7 @@ const CategoryBreakdown = ({ title, subtitle, items = [], emptyText, className =
                     {formatCurrency(amount)} <span className="text-xs text-gray-400 font-normal">· {share}%</span>
                   </span>
                 </div>
-                <div className="mt-1.5 h-2 rounded-full bg-purple-100">
+                <div className="mt-1.5 h-2 rounded-full bg-gray-100">
                   <div
                     className="h-2 rounded-full"
                     style={{ width: `${max > 0 ? Math.max((amount / max) * 100, 2) : 0}%`, backgroundColor: colors.single }}

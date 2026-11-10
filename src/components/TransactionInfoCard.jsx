@@ -16,10 +16,10 @@ const TransactionInfoCard = ({icon, title, date, amount, type, hideDeleteBtn, on
                 )}
             </div>
 
-            <div className="flex-1 flex items-center justify-between">
-                <div>
-                    <p className="flex items-center gap-1.5 text-sm text-gray-700 font-medium">
-                        {title}
+            <div className="flex-1 min-w-0 flex items-center justify-between gap-2">
+                <div className="min-w-0">
+                    <p className="flex items-center gap-1.5 min-w-0 text-sm text-gray-800 font-medium">
+                        <span className="truncate" title={title}>{title}</span>
                         {attachmentCount > 0 && (
                             <span title={`${attachmentCount} archivo${attachmentCount === 1 ? "" : "s"} adjunto${attachmentCount === 1 ? "" : "s"}`} className="inline-flex items-center gap-0.5 text-xs text-gray-500">
                                 <Paperclip size={12} aria-hidden="true" />
@@ -57,14 +57,14 @@ const TransactionInfoCard = ({icon, title, date, amount, type, hideDeleteBtn, on
                         </button>
                     )}
 
-                    <div className={`flex items-center gap-2 px-3 py-1.5 rounded-md ${getAmountStyles()}`}>
+                    <div className={`flex items-center gap-2 px-2.5 py-1 rounded-md whitespace-nowrap ${getAmountStyles()}`}>
                         <span className="text-sm font-semibold tabular-nums">
-                            {type === 'income' ? '+' : '-'} {formatCurrencyAbs(amount)}
+                            {type === 'income' ? '+' : '−'}{formatCurrencyAbs(amount)}
                         </span>
                         {type === 'income' ? (
-                            <TrendingUp size={15}/>
+                            <TrendingUp size={15} className="hidden sm:block" aria-hidden="true"/>
                         ) : (
-                            <TrendingDown size={15}/>
+                            <TrendingDown size={15} className="hidden sm:block" aria-hidden="true"/>
                         )}
                     </div>
                 </div>

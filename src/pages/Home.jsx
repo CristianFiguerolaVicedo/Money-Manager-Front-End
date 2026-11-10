@@ -92,21 +92,21 @@ const Home = () => {
                             icon={<WalletCards />}
                             label="Saldo total"
                             value={formatCurrency(dashboardData?.totalBalance || 0)}
-                            color="bg-purple-800"
+                            tone="neutral"
                         />
 
                         <InfoCard 
                             icon={<Wallet />}
                             label="Ingresos totales"
                             value={formatCurrency(dashboardData?.totalIncome || 0)}
-                            color="bg-green-800"
+                            tone="income"
                         />
 
                         <InfoCard 
                             icon={<Coins />}
                             label="Gastos totales"
                             value={formatCurrency(dashboardData?.totalExpense || 0)}
-                            color="bg-red-800"
+                            tone="expense"
                         />
                     </div>
                     <div className="mt-6">

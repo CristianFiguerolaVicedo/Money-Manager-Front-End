@@ -8,7 +8,7 @@ const CategoryList = ({categories, onEditCategory, onDeleteCategory}) => {
     return(
         <div className="bg-white rounded-2xl border border-gray-200 p-4">
             <div className="flex items-center justify-between mb-4">
-                <h2 className="text-lg font-semibold">
+                <h2 className="text-lg font-medium text-gray-900">
                     Tus categorías
                 </h2>
             </div>

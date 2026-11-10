@@ -1,5 +1,5 @@
-// Light / dark theme. The choice ("light" | "dark" | "system") is a per-browser convenience in localStorage;
-// index.html applies it before the first paint so there is no white flash.
+// Light / dark theme. Dark is the default; the choice ("light" | "dark" | "system") is a per-browser
+// convenience in localStorage. index.html applies it before the first paint so there is no flash.
 
 const STORAGE_KEY = "theme";
 const listeners = new Set();
@@ -8,9 +8,9 @@ let media = null;
 export const getThemePreference = () => {
   try {
     const value = localStorage.getItem(STORAGE_KEY);
-    return value === "light" || value === "dark" ? value : "system";
+    return value === "light" || value === "dark" || value === "system" ? value : "dark";
   } catch {
-    return "system";
+    return "dark";
   }
 };
 
@@ -29,8 +29,7 @@ const apply = () => {
 
 export const setThemePreference = (preference) => {
   try {
-    if (preference === "system") localStorage.removeItem(STORAGE_KEY);
-    else localStorage.setItem(STORAGE_KEY, preference);
+    localStorage.setItem(STORAGE_KEY, preference);
   } catch {
     // storage unavailable: the theme still changes for this visit
     document.documentElement.dataset.themeOverride = preference;

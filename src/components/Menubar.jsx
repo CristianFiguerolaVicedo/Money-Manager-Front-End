@@ -1,7 +1,7 @@
 import { useContext, useEffect, useRef, useState } from "react";
 import AppContext from "../context/AppContext";
 import { LogOut, Menu, User, UserRound, X } from "lucide-react";
-import { assets } from "../assets/assets";
+import Logo from "./Logo";
 import { useNavigate } from "react-router-dom";
 import Sidebar from "./Sidebar";
 import ThemeSwitcher from "./ThemeSwitcher";
@@ -76,12 +76,7 @@ const Menubar = ({activeMenu}) => {
           )}
         </button>
 
-        <div className="flex items-center gap-2 min-w-0">
-          <img src={assets.logo} alt="" className="app-logo w-9 h-9 shrink-0" />
-          <span className="text-lg font-semibold tracking-tight text-gray-900 truncate">
-            Money Manager
-          </span>
-        </div>
+        <Logo size={30} className="min-w-0" />
       </div>
 
       <div className="relative" ref={dropdownRef}>
