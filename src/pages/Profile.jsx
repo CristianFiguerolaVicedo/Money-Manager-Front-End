@@ -95,6 +95,86 @@ const PersonalDataCard = ({ user, setUser }) => {
   );
 };
 
+const EMAIL_OPTIONS = [
+  {
+    key: "emailDailyReminder",
+    field: "dailyReminder",
+    title: "Recordatorio diario",
+    description: "Por la tarde, solo los días en que no hayas apuntado nada.",
+  },
+  {
+    key: "emailDailySummary",
+    field: "dailySummary",
+    title: "Resumen diario de gastos",
+    description: "Por la noche, la lista de los gastos del día (si los hubo).",
+  },
+  {
+    key: "emailMonthlyReport",
+    field: "monthlyReport",
+    title: "Informe mensual",
+    description: "El día 1: ingresos, gastos, ahorro, categorías con más gasto y presupuestos del mes anterior.",
+  },
+];
+
+const Toggle = ({ checked, onChange, disabled, labelledBy, describedBy }) => (
+  <button
+    type="button"
+    role="switch"
+    aria-checked={checked}
+    aria-labelledby={labelledBy}
+    aria-describedby={describedBy}
+    disabled={disabled}
+    onClick={() => onChange(!checked)}
+    className={`relative inline-flex h-6 w-11 shrink-0 items-center rounded-full transition-colors cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-purple-300 ${
+      checked ? "bg-purple-800" : "bg-gray-300"
+    }`}
+  >
+    <span className={`inline-block h-5 w-5 rounded-full bg-white shadow transition-transform ${checked ? "translate-x-5" : "translate-x-0.5"}`} />
+  </button>
+);
+
+// Optional scheduled emails (all off until the user turns them on)
+const EmailPreferencesCard = ({ user, setUser }) => {
+  const [saving, setSaving] = useState(null);
+
+  const handleToggle = async (option, value) => {
+    setSaving(option.key);
+    try {
+      const response = await axiosConfig.put(API_ENDPOINTS.EMAIL_PREFERENCES, { [option.field]: value });
+      setUser(response.data);
+      toast.success(value ? `${option.title}: activado` : `${option.title}: desactivado`);
+    } catch (error) {
+      toast.error(getErrorMessage(error, "No se ha podido guardar la preferencia"));
+    } finally {
+      setSaving(null);
+    }
+  };
+
+  return (
+    <section className={cardClass} aria-labelledby="email-preferences">
+      <h5 id="email-preferences" className="text-lg">Emails</h5>
+      <p className="text-sm text-gray-500 mt-1 mb-4">Elige qué emails quieres recibir en {user.email}.</p>
+      <ul className="divide-y divide-gray-100">
+        {EMAIL_OPTIONS.map((option) => (
+          <li key={option.key} className="flex items-center justify-between gap-4 py-3">
+            <div>
+              <p id={`${option.key}-title`} className="text-sm font-medium text-gray-800">{option.title}</p>
+              <p id={`${option.key}-desc`} className="text-xs text-gray-500 mt-0.5">{option.description}</p>
+            </div>
+            <Toggle
+              checked={Boolean(user[option.key])}
+              onChange={(value) => handleToggle(option, value)}
+              disabled={saving !== null}
+              labelledBy={`${option.key}-title`}
+              describedBy={`${option.key}-desc`}
+            />
+          </li>
+        ))}
+      </ul>
+    </section>
+  );
+};
+
 const emptyPasswords = { current: "", next: "", confirm: "" };
 
 const PasswordCard = () => {
@@ -224,6 +304,7 @@ const Profile = () => {
           <div className="grid grid-cols-1 gap-6">
             {/* key: reset the form when the user data is replaced */}
             <PersonalDataCard key={`${user.id}-${user.updatedAt}`} user={user} setUser={setUser} />
+            <EmailPreferencesCard user={user} setUser={setUser} />
             <PasswordCard />
             <DeleteAccountCard onDeleted={handleDeleted} />
           </div>

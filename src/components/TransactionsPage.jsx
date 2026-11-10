@@ -11,6 +11,7 @@ import axiosConfig from "../util/axiosConfig";
 import { API_ENDPOINTS } from "../util/apiEndpoints";
 import { getCurrentMonth, getErrorMessage, getTodayLocalDate } from "../util/util";
 import NoCategoriesNotice from "./NoCategoriesNotice";
+import { budgetToastMessage } from "../util/budgets";
 
 const UNDO_SECONDS = 5;
 
@@ -120,9 +121,21 @@ const TransactionsPage = ({ config }) => {
       }
       closeForm();
       showMonthOf(payload.date);
+      if (type === "expense") warnAboutBudget(payload.categoryId, payload.date);
     } catch (err) {
       console.error(`Error saving ${lower}`, err);
       toast.error(getErrorMessage(err, editing ? `No se ha podido actualizar el ${lower}` : `No se ha podido añadir el ${lower}`));
+    }
+  };
+
+  // After saving an expense: tell the user if that category is close to / over its budget
+  const warnAboutBudget = async (categoryId, date) => {
+    try {
+      const response = await axiosConfig.get(API_ENDPOINTS.BUDGETS, { params: { month: date.slice(0, 7) } });
+      const message = budgetToastMessage((response.data || []).find((b) => b.categoryId === Number(categoryId)));
+      if (message) toast(message, { icon: "⚠️", duration: 6000 });
+    } catch {
+      // only a hint: ignore errors
     }
   };
 
