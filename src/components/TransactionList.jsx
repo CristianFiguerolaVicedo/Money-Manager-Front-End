@@ -9,10 +9,14 @@ const actionButtonClass =
   "active:bg-gray-300 active:scale-95 focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-offset-1 " +
   "hover:cursor-pointer hover:text-purple-800 disabled:opacity-60 disabled:cursor-not-allowed";
 
+const PAGE_SIZE = 20;
+
 // List shared by incomes and expenses, with edit/delete per item and Excel email/download
 const TransactionList = ({ config, transactions, loading, onEdit, onDelete, onDownload, onEmail }) => {
   const [emailLoading, setEmailLoading] = useState(false);
   const [downloadLoading, setDownloadLoading] = useState(false);
+  // Long months are shown 20 at a time (the parent resets this per month with `key`)
+  const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
   const busy = emailLoading || downloadLoading;
   const isEmpty = !transactions || transactions.length === 0;
 
@@ -69,7 +73,7 @@ const TransactionList = ({ config, transactions, loading, onEdit, onDelete, onDo
         </p>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2">
-          {transactions.map((item) => (
+          {transactions.slice(0, visibleCount).map((item) => (
             <TransactionInfoCard
               key={item.id}
               title={item.name}
@@ -82,6 +86,18 @@ const TransactionList = ({ config, transactions, loading, onEdit, onDelete, onDo
               recurring={item.recurringId != null}
             />
           ))}
+        </div>
+      )}
+
+      {!loading && transactions && transactions.length > visibleCount && (
+        <div className="flex justify-center mt-4">
+          <button
+            type="button"
+            onClick={() => setVisibleCount((count) => count + PAGE_SIZE)}
+            className="px-4 py-2 text-sm font-medium text-purple-800 border border-purple-200 rounded-lg hover:bg-purple-50 cursor-pointer"
+          >
+            Mostrar {Math.min(PAGE_SIZE, transactions.length - visibleCount)} más ({visibleCount} de {transactions.length})
+          </button>
         </div>
       )}
     </div>

@@ -11,6 +11,8 @@ import {
   buildDailySeries,
   groupByCategory,
   foldSmallGroups,
+  getCurrentMonth,
+  getTodayLocalDate,
 } from "../util.js";
 
 // Intl uses non-breaking spaces before "€"; compare with normal spaces
@@ -91,4 +93,21 @@ test("foldSmallGroups keeps the biggest and folds the rest into Otras", () => {
   const folded = foldSmallGroups(groups, 4);
   assert.deepEqual(folded.map((g) => [g.name, g.amount]), [["C0", 50], ["C1", 40], ["C2", 30], ["Otras (4)", 36]]);
   assert.equal(foldSmallGroups(groups.slice(0, 3), 4).length, 3);
+});
+
+test("formatDate rejects impossible dates", () => {
+  assert.equal(formatDate("2026-02-30"), "");
+  assert.equal(formatDate("abc"), "");
+});
+
+test("shiftMonth handles invalid input and long jumps", () => {
+  assert.equal(shiftMonth("2026-10", -13), "2025-09");
+  assert.equal(shiftMonth("nope", 1), "nope");
+});
+
+test("getTodayLocalDate and getCurrentMonth use local time", () => {
+  const now = new Date();
+  const expected = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
+  assert.equal(getCurrentMonth(), expected);
+  assert.ok(getTodayLocalDate().startsWith(expected));
 });
