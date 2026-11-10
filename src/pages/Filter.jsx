@@ -83,46 +83,46 @@ const Filter = () => {
         <Dashboard activeMenu="Filters">
             <div className="my-5 mx-auto">
                 <div className="flex justify-between items-center mb-4">
-                    <h2 className="text-2xl font-semibold">
+                    <h1 className="text-2xl font-semibold tracking-tight">
                         Buscar movimientos
-                    </h2>
+                    </h1>
                 </div>
 
-                <div className="p-4 mb-4 bg-white rounded-xl shadow-sm border border-gray-200 shadow-xl">
+                <div className="p-4 mb-4 bg-white rounded-2xl border border-gray-200">
                     <div className="flex items-center justify-between mb-4">
-                        <h5 className="text-lg font-semibold">
+                        <h2 className="text-lg font-semibold">
                             Filtros
-                        </h5>
+                        </h2>
                     </div>
 
                     <form onSubmit={handleSearch} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
                         <div>
-                            <label htmlFor="type" className="block text-sm font-medium mb-1">
+                            <label htmlFor="type" className="block text-[13px] font-medium text-gray-700 mb-1">
                                 Tipo
                             </label>
-                            <select value={type} id="type" className="w-full border rounded px-3 py-2" onChange={e => setType(e.target.value)}>
+                            <select value={type} id="type" className="w-full bg-transparent border border-gray-300 rounded-lg py-2 px-3 text-gray-800 focus:outline-none focus:border-violet-600 focus:ring-2 focus:ring-violet-200" onChange={e => setType(e.target.value)}>
                                 <option value="income">Ingresos</option>
                                 <option value="expense">Gastos</option>
                             </select>
                         </div>
 
                         <div>
-                            <label htmlFor="startDate" className="block text-sm font-medium mb-1">
+                            <label htmlFor="startDate" className="block text-[13px] font-medium text-gray-700 mb-1">
                                 Desde
                             </label>
-                            <input value={startDate} id="startDate" type="date" className="w-full border rounded px-3 py-2" onChange={e => setStartDate(e.target.value)}/>
+                            <input value={startDate} id="startDate" type="date" className="w-full bg-transparent border border-gray-300 rounded-lg py-2 px-3 text-gray-800 focus:outline-none focus:border-violet-600 focus:ring-2 focus:ring-violet-200" onChange={e => setStartDate(e.target.value)}/>
                         </div>
                         <div>
-                            <label htmlFor="endDate" className="block text-sm font-medium mb-1">
+                            <label htmlFor="endDate" className="block text-[13px] font-medium text-gray-700 mb-1">
                                 Hasta
                             </label>
-                            <input value={endDate} id="endDate" type="date" className="w-full border rounded px-3 py-2" onChange={e => setEndDate(e.target.value)}/>
+                            <input value={endDate} id="endDate" type="date" className="w-full bg-transparent border border-gray-300 rounded-lg py-2 px-3 text-gray-800 focus:outline-none focus:border-violet-600 focus:ring-2 focus:ring-violet-200" onChange={e => setEndDate(e.target.value)}/>
                         </div>
                         <div>
-                            <label htmlFor="sortField" className="block text-sm font-medium mb-1">
+                            <label htmlFor="sortField" className="block text-[13px] font-medium text-gray-700 mb-1">
                                 Ordenar por
                             </label>
-                            <select value={sortField} id="sortField" className="w-full border rounded px-3 py-2" onChange={e => setSortField(e.target.value)}>
+                            <select value={sortField} id="sortField" className="w-full bg-transparent border border-gray-300 rounded-lg py-2 px-3 text-gray-800 focus:outline-none focus:border-violet-600 focus:ring-2 focus:ring-violet-200" onChange={e => setSortField(e.target.value)}>
                                 <option value="date">Fecha</option>
                                 <option value="amount">Importe</option>
                                 <option value="name">Concepto</option>
@@ -130,10 +130,10 @@ const Filter = () => {
                             </select>
                         </div>
                         <div>
-                            <label htmlFor="sortOrder" className="block text-sm font-medium mb-1">
+                            <label htmlFor="sortOrder" className="block text-[13px] font-medium text-gray-700 mb-1">
                                 Orden
                             </label>
-                            <select value={sortOrder} id="sortOrder" className="w-full border rounded px-3 py-2" onChange={e => setSortOrder(e.target.value)}>
+                            <select value={sortOrder} id="sortOrder" className="w-full bg-transparent border border-gray-300 rounded-lg py-2 px-3 text-gray-800 focus:outline-none focus:border-violet-600 focus:ring-2 focus:ring-violet-200" onChange={e => setSortOrder(e.target.value)}>
                                 <option value="asc">Ascendente</option>
                                 <option value="desc">Descendente</option>
                             </select>
@@ -141,23 +141,23 @@ const Filter = () => {
 
                         <div className="sm:col-span-1 md:col-span-1 flex items-end">
                             <div className="w-full">
-                                <label htmlFor="keyword" className="block text-sm font-medium mb-1">
+                                <label htmlFor="keyword" className="block text-[13px] font-medium text-gray-700 mb-1">
                                     Texto
                                 </label>
-                                <input value={keyword} id="keyword" type="text" placeholder="Buscar..." className="w-full border rounded px-3 py-2" onChange={e => setKeyword(e.target.value)}/>
+                                <input value={keyword} id="keyword" type="text" placeholder="Buscar..." className="w-full bg-transparent border border-gray-300 rounded-lg py-2 px-3 text-gray-800 focus:outline-none focus:border-violet-600 focus:ring-2 focus:ring-violet-200" onChange={e => setKeyword(e.target.value)}/>
                             </div>
-                            <button type="submit" aria-label="Buscar" disabled={loading} className="ml-2 mb-1 p-2 bg-purple-800 hover:bg-purple-800 text-white rounded flex items-center justify-center cursor-pointer">
+                            <button type="submit" aria-label="Buscar" disabled={loading} className="ml-2 p-2.5 bg-violet-700 hover:bg-violet-800 text-white rounded-lg flex items-center justify-center cursor-pointer disabled:opacity-50">
                                 <Search size={20}/>
                             </button>
                         </div>
                     </form>
                 </div>
 
-                <div id="search-results" className="p-4 bg-white rounded-xl shadow-sm border border-gray-200 scroll-mt-24">
+                <div id="search-results" className="p-4 bg-white rounded-2xl border border-gray-200 scroll-mt-24">
                     <div className="flex flex-wrap items-baseline justify-between gap-2">
-                        <h5 className="text-lg font-semibold">
+                        <h2 className="text-lg font-semibold">
                             Resultados
-                        </h5>
+                        </h2>
                         {hasSearched && pageInfo.totalItems > 0 && (
                             <p className="text-sm text-gray-600" aria-live="polite">
                                 {firstShown}–{lastShown} de {pageInfo.totalItems} · Total: <span className="font-semibold text-gray-800">{formatCurrency(pageInfo.totalAmount)}</span>

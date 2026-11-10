@@ -11,8 +11,8 @@ const CategoryBreakdown = ({ title, subtitle, items = [], emptyText, className =
   const max = groups.reduce((top, item) => Math.max(top, Number(item.amount)), 0);
 
   return (
-    <div className={`p-4 bg-white rounded-xl shadow-sm border border-gray-200 ${className}`}>
-      <h5 className="text-lg">{title}</h5>
+    <div className={`p-4 bg-white rounded-2xl border border-gray-200 ${className}`}>
+      <h2 className="text-lg">{title}</h2>
       {subtitle && <p className="text-xs text-gray-400 mt-0.5">{subtitle}</p>}
 
       {groups.length === 0 ? (

@@ -6,11 +6,11 @@ const CategoryList = ({categories, onEditCategory, onDeleteCategory}) => {
     // Always visible on touch screens, revealed on hover on desktop
     const actionClass = "text-gray-400 opacity-100 md:opacity-0 md:group-hover:opacity-100 focus:opacity-100 transition-opacity cursor-pointer";
     return(
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 shadow-xl p-4">
+        <div className="bg-white rounded-2xl border border-gray-200 p-4">
             <div className="flex items-center justify-between mb-4">
-                <h4 className="text-lg font-semibold">
+                <h2 className="text-lg font-semibold">
                     Tus categorías
-                </h4>
+                </h2>
             </div>
 
             {categories.length === 0 ? (

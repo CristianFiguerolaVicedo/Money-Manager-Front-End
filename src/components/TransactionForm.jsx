@@ -172,7 +172,7 @@ const TransactionForm = ({ config, categories, initialData, onSubmit }) => {
           type="button"
           disabled={loading}
           onClick={handleSubmit}
-          className="flex items-center gap-1 bg-purple-800 text-white px-3 py-2 rounded-lg hover:bg-purple-500 font-semibold hover:cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
+          className="flex items-center gap-1 bg-violet-700 text-white px-3 py-2 rounded-lg hover:bg-violet-800 font-semibold hover:cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
         >
           {loading ? (
             <>

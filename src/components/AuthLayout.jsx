@@ -13,11 +13,15 @@ const AuthLayout = ({ title, subtitle, children }) => {
       />
 
       <div className="relative z-10 w-full max-w-lg px-4 sm:px-6">
-        <div className="bg-white/95 backdrop-blur-sm rounded-lg shadow-2xl p-6 sm:p-8">
-          <h3 className="text-2xl font-semibold text-black text-center mb-2">{title}</h3>
+        <div className="flex items-center justify-center gap-2 mb-4 text-white drop-shadow">
+          <img src={assets.logo} alt="" className="w-9 h-9" />
+          <span className="text-xl font-semibold tracking-tight">Money Manager</span>
+        </div>
+        <main className="bg-white/95 backdrop-blur-sm rounded-2xl shadow-2xl p-6 sm:p-8">
+          <h1 className="text-2xl font-semibold tracking-tight text-gray-900 text-center mb-2">{title}</h1>
           {subtitle && <p className="text-sm text-slate-700 text-center mb-8">{subtitle}</p>}
           {children}
-        </div>
+        </main>
       </div>
     </div>
   );

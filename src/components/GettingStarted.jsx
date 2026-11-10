@@ -50,7 +50,7 @@ const GettingStarted = ({ hasCategories, hasIncome, hasExpense }) => {
               {step === next && (
                 <Link
                   to={step.to}
-                  className="inline-flex items-center gap-1 mt-2 text-sm font-semibold text-white bg-purple-800 hover:bg-purple-600 px-3 py-1.5 rounded-lg"
+                  className="inline-flex items-center gap-1 mt-2 text-sm font-semibold text-white bg-purple-800 hover:bg-violet-800 px-3 py-1.5 rounded-lg"
                 >
                   {step.cta} <ArrowRight size={15} />
                 </Link>

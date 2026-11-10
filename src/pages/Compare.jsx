@@ -34,7 +34,7 @@ const Change = ({ change, goodWhenUp }) => {
 };
 
 const SummaryCard = ({ title, change, goodWhenUp, labelA, labelB }) => (
-  <div className="p-4 bg-white rounded-xl border border-gray-200 shadow-sm">
+  <div className="p-4 bg-white rounded-2xl border border-gray-200">
     <p className="text-sm text-gray-500">{title}</p>
     <p className="text-2xl font-semibold text-gray-800 mt-1">{formatCurrency(change.b)}</p>
     <p className="text-xs text-gray-500 mt-0.5">
@@ -50,9 +50,9 @@ const SummaryCard = ({ title, change, goodWhenUp, labelA, labelB }) => (
 const CategoryComparison = ({ title, rows, goodWhenUp, labelA, labelB, colorB }) => {
   const max = rows.reduce((top, row) => Math.max(top, row.a, row.b), 0);
   return (
-    <div className="p-4 bg-white rounded-xl border border-gray-200 shadow-sm">
+    <div className="p-4 bg-white rounded-2xl border border-gray-200">
       <div className="flex flex-wrap items-center justify-between gap-2">
-        <h5 className="text-lg">{title}</h5>
+        <h2 className="text-lg">{title}</h2>
         <div className="flex items-center gap-4 text-xs text-gray-600" aria-hidden="true">
           <span className="flex items-center gap-1.5"><span className="w-3 h-2 rounded-sm bg-gray-300" />{labelA}</span>
           <span className="flex items-center gap-1.5"><span className="w-3 h-2 rounded-sm" style={{ backgroundColor: colorB }} />{labelB}</span>
@@ -136,7 +136,7 @@ const Compare = () => {
   return (
     <Dashboard activeMenu="Compare">
       <div className="my-5 mx-auto">
-        <h2 className="text-2xl font-semibold text-gray-800">Comparar meses</h2>
+        <h1 className="text-2xl font-semibold tracking-tight text-gray-800">Comparar meses</h1>
         <p className="text-sm text-gray-500 mt-1 mb-6">Mira en qué ha cambiado tu dinero de un mes a otro.</p>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">

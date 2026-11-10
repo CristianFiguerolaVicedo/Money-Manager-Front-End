@@ -302,6 +302,7 @@ const TransactionsPage = ({ config }) => {
   return (
     <Dashboard activeMenu={config.activeMenu}>
       <div className="my-5 mx-auto">
+        <h1 className="text-2xl font-semibold tracking-tight text-gray-900 mb-5 capitalize">{labels.many}</h1>
         <div className="grid grid-cols-1 gap-6">
           {categoriesLoaded && categories.length === 0 && <NoCategoriesNotice labels={labels} />}
 

@@ -2,6 +2,7 @@ import { useMemo } from "react";
 import { Plus } from "lucide-react";
 import DailyBarChart from "./DailyBarChart";
 import CategoryBreakdown from "./CategoryBreakdown";
+import { btnPrimary } from "./ui";
 import { buildDailySeries, formatCurrency, groupByCategory } from "../util/util";
 
 // Monthly overview shared by incomes and expenses: total, bars per day and totals per category
@@ -16,10 +17,10 @@ const TransactionOverview = ({ config, transactions, month, onAdd }) => {
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-      <div className="p-4 bg-white rounded-xl shadow-sm border border-gray-200 lg:col-span-2">
+      <div className="p-4 bg-white rounded-2xl border border-gray-200 lg:col-span-2">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
-            <h5 className="text-lg">{config.overviewTitle}</h5>
+            <h2 className="text-lg">{config.overviewTitle}</h2>
             <p className="text-xs text-gray-400 mt-0.5">{config.overviewSubtitle}</p>
             <p className="text-sm text-gray-700 mt-2">
               Total del mes: <span className="font-semibold">{formatCurrency(total)}</span>
@@ -27,7 +28,7 @@ const TransactionOverview = ({ config, transactions, month, onAdd }) => {
           </div>
           <button
             onClick={onAdd}
-            className="flex items-center gap-1 bg-green-500/20 text-green-800 px-3 py-2 rounded-lg hover:bg-green-500/30 font-semibold hover:cursor-pointer"
+            className={btnPrimary}
           >
             <Plus size={15} className="text-lg" /> {config.labels.add}
           </button>

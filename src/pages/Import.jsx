@@ -24,7 +24,7 @@ const MODES = [
 ];
 
 const selectClass = "w-full border border-gray-300 rounded-md py-2 px-3 bg-transparent text-gray-700 focus:outline-none focus:border-blue-500";
-const card = "p-5 bg-white rounded-xl border border-gray-200 shadow-sm";
+const card = "p-5 bg-white rounded-2xl border border-gray-200";
 
 // Bank exports are often Windows-1252: if UTF-8 decoding produces replacement characters, retry with it
 const readText = async (file) => {
@@ -130,7 +130,7 @@ const Import = () => {
   return (
     <Dashboard activeMenu="Import">
       <div className="my-5 mx-auto max-w-4xl">
-        <h2 className="text-2xl font-semibold text-gray-800">Importar desde CSV</h2>
+        <h1 className="text-2xl font-semibold tracking-tight text-gray-800">Importar desde CSV</h1>
         <p className="text-sm text-gray-500 mt-1 mb-6">
           Sube el CSV que exporta tu banco u otra app. Antes de guardar nada verás cómo quedan los movimientos.
         </p>
@@ -269,7 +269,7 @@ const Import = () => {
                   type="button"
                   onClick={handleImport}
                   disabled={importing || validCount === 0}
-                  className="flex items-center gap-2 bg-purple-800 text-white px-4 py-2 rounded-lg hover:bg-purple-500 font-semibold cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
+                  className="flex items-center gap-2 bg-violet-700 text-white px-4 py-2 rounded-lg hover:bg-violet-800 font-semibold cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
                 >
                   {importing && <LoaderCircle className="w-4 h-4 animate-spin" />}
                   Importar {validCount} movimientos

@@ -1,21 +1,16 @@
+import { btnSecondary } from "./ui";
 import { formatDate } from "../util/util";
 import { ArrowRight } from "lucide-react";
 import TransactionInfoCard from "./TransactionInfoCard";
 
 const ResentTransactions = ({transactions, onMore}) => {
     return(
-        <div className="p-4 bg-white rounded-xl shadow-sm border border-gray-200">
+        <div className="p-4 bg-white rounded-2xl border border-gray-200">
             <div className="flex flex-wrap gap-2 items-center justify-between">
-                <h4 className="text-lg">
+                <h2 className="text-lg">
                     Últimos movimientos
-                </h4>
-                <button onClick={onMore} className="flex items-center gap-2 px-4 py-2 text-sm font-medium 
-                    text-gray-700 bg-gray-100 border border-gray-300 
-                    rounded-xl shadow-sm transition-all duration-200 
-                    ease-in-out hover:bg-purple-500/10 hover:shadow-md 
-                    active:bg-gray-300 active:scale-95 focus:outline-none 
-                    focus:ring-2 focus:ring-blue-300 focus:ring-offset-1 hover:cursor-pointer hover:text-purple-800"
-                >
+                </h2>
+                <button type="button" onClick={onMore} className={btnSecondary}>
                     Ver más <ArrowRight className="text-base" size={15}/>
                 </button>
             </div>

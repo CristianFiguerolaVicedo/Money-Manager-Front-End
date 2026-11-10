@@ -2,13 +2,10 @@ import { useState } from "react";
 import { Download, FileUp, LoaderCircle, Mail } from "lucide-react";
 import { Link } from "react-router-dom";
 import TransactionInfoCard from "./TransactionInfoCard";
+import { btnSecondary } from "./ui";
 import { formatDate } from "../util/util";
 
-const actionButtonClass =
-  "flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 border border-gray-300 " +
-  "rounded-xl shadow-sm transition-all duration-200 ease-in-out hover:bg-purple-500/10 hover:shadow-md " +
-  "active:bg-gray-300 active:scale-95 focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-offset-1 " +
-  "hover:cursor-pointer hover:text-purple-800 disabled:opacity-60 disabled:cursor-not-allowed";
+const actionButtonClass = btnSecondary;
 
 const PAGE_SIZE = 20;
 
@@ -31,9 +28,9 @@ const TransactionList = ({ config, transactions, loading, onEdit, onDelete, onDo
   };
 
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-gray-200 shadow-xl p-4">
+    <div className="bg-white rounded-2xl border border-gray-200 p-4">
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <h5 className="text-lg">{config.listTitle}</h5>
+        <h2 className="text-lg">{config.listTitle}</h2>
         <div className="flex flex-wrap items-center justify-end gap-2">
           <Link to={`/import?type=${config.type}`} className={actionButtonClass}>
             <FileUp size={15} className="text-base" />
@@ -68,7 +65,8 @@ const TransactionList = ({ config, transactions, loading, onEdit, onDelete, onDo
         </div>
       </div>
 
-      {loading ? (
+      {/* While refreshing, keep the list on screen (focus stays on its buttons) */}
+      {loading && isEmpty ? (
         <div className="flex justify-center py-10 text-gray-400">
           <LoaderCircle className="w-6 h-6 animate-spin" />
         </div>
@@ -96,7 +94,7 @@ const TransactionList = ({ config, transactions, loading, onEdit, onDelete, onDo
         </div>
       )}
 
-      {!loading && transactions && transactions.length > visibleCount && (
+      {transactions && transactions.length > visibleCount && (
         <div className="flex justify-center mt-4">
           <button
             type="button"

@@ -14,21 +14,26 @@ const EmojiPickerPopup = ({icon, onSelect}) => {
 
     return(
         <div className="flex flex-col md:flex-row items-start gap-5 mb-6">
-            <div onClick={() => setIsOpen(true)} className="flex items-center gap-4 cursor-pointer">
-                <div className="w-12 h-12 flex items-center justify-center text-2xl bg-purple-50 text-purple-500 rounded-lg">
+            <button
+                type="button"
+                onClick={() => setIsOpen(true)}
+                aria-expanded={isOpen}
+                className="flex items-center gap-4 rounded-lg cursor-pointer text-left"
+            >
+                <span className="w-12 h-12 flex items-center justify-center text-2xl bg-purple-50 text-purple-500 rounded-lg">
                     {icon ? (
-                        <img src={icon} alt="Icono" className="w-12 h-12" />
+                        <img src={icon} alt="" className="w-8 h-8" />
                     ) : (
-                        <Image />
+                        <Image aria-hidden="true" />
                     )}
-                </div>
-                <p>{icon ? "Cambiar icono" : "Elegir icono"}</p>
-            </div>
+                </span>
+                <span className="text-gray-700">{icon ? "Cambiar icono" : "Elegir icono"}</span>
+            </button>
 
 
                 {isOpen && (
                     <div className="relative">
-                        <button type="button" onClick={() => setIsOpen(false)} className="w-7 h-7 flex items-center justify-center bg-white border border-gray-200 rounded-full absolute -top-2 -right-2 z-10 cursor-pointer">
+                        <button type="button" aria-label="Cerrar selector de iconos" onClick={() => setIsOpen(false)} className="w-7 h-7 flex items-center justify-center bg-white border border-gray-200 rounded-full absolute -top-2 -right-2 z-10 cursor-pointer">
                             <X />
                         </button>
                         <EmojiPicker 

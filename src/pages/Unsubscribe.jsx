@@ -46,7 +46,7 @@ const Unsubscribe = () => {
             : message}
         </p>
         <p className="text-sm text-slate-700">Puedes volver a activarlos cuando quieras en tu perfil.</p>
-        <Link to="/profile" className="w-full py-2 text-lg font-medium bg-purple-950 rounded-lg text-white hover:bg-purple-600 text-center">
+        <Link to="/profile" className="w-full py-2 text-lg font-medium bg-violet-700 rounded-lg text-white hover:bg-violet-800 text-center">
           Ir a mi perfil
         </Link>
       </div>
