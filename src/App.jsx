@@ -11,6 +11,8 @@ import ResetPassword from "./pages/ResetPassword";
 import Activate from "./pages/Activate";
 import Profile from "./pages/Profile";
 import Budgets from "./pages/Budgets";
+import Compare from "./pages/Compare";
+import Goals from "./pages/Goals";
 import Unsubscribe from "./pages/Unsubscribe";
 import { Toaster } from "react-hot-toast";
 import { ProtectedRoute, PublicOnlyRoute } from "./components/ProtectedRoute";
@@ -31,6 +33,8 @@ const App = () => {
             <Route path="/category" element={<Category />} />
             <Route path="/filter" element={<Filter />} />
             <Route path="/budgets" element={<Budgets />} />
+            <Route path="/goals" element={<Goals />} />
+            <Route path="/compare" element={<Compare />} />
             <Route path="/profile" element={<Profile />} />
           </Route>
 
