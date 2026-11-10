@@ -300,6 +300,7 @@ const TransactionsPage = ({ config }) => {
           />
 
           <TransactionList
+            key={month}
             config={config}
             transactions={transactions}
             loading={loading}

@@ -1,4 +1,4 @@
-import { LoaderCircle, Search } from "lucide-react";
+import { ChevronLeft, ChevronRight, LoaderCircle, Search } from "lucide-react";
 import Dashboard from "../components/Dashboard";
 import useUser from "../hooks/useUser";
 import { useState } from "react";
@@ -6,7 +6,9 @@ import axiosConfig from "../util/axiosConfig";
 import { API_ENDPOINTS } from "../util/apiEndpoints";
 import toast from "react-hot-toast";
 import TransactionInfoCard from "../components/TransactionInfoCard";
-import { getErrorMessage, formatDate } from "../util/util";
+import { getErrorMessage, formatDate, formatCurrency } from "../util/util";
+
+const PAGE_SIZE = 20;
 
 const Filter = () => {
     useUser();
@@ -22,29 +24,24 @@ const Filter = () => {
     const [resultType, setResultType] = useState("income");
     const [hasSearched, setHasSearched] = useState(false);
     const [loading, setLoading] = useState(false);
+    // Filters of the results on screen (paging keeps them even if the form was edited afterwards)
+    const [lastQuery, setLastQuery] = useState(null);
+    const [pageInfo, setPageInfo] = useState({ page: 0, totalItems: 0, totalPages: 0, totalAmount: 0 });
 
-    const handleSearch = async (e) => {
-        e.preventDefault();
-
-        if (startDate && endDate && startDate > endDate) {
-            toast.error("La fecha de inicio debe ser anterior a la de fin");
-            return;
-        }
-
+    const runSearch = async (query, page) => {
         setLoading(true);
-
         try {
-            const response = await axiosConfig.post(API_ENDPOINTS.APPLY_FILTER, {
-                type,
-                startDate: startDate || null,
-                endDate: endDate || null,
-                keyword,
-                sortField,
-                sortOrder
+            const response = await axiosConfig.post(API_ENDPOINTS.APPLY_FILTER, { ...query, page, size: PAGE_SIZE });
+            const data = response.data || {};
+            setTransactions(data.items || []);
+            setPageInfo({
+                page: data.page ?? page,
+                totalItems: data.totalItems ?? 0,
+                totalPages: data.totalPages ?? 0,
+                totalAmount: data.totalAmount ?? 0,
             });
-
-            setTransactions(response.data || []);
-            setResultType(type);
+            setResultType(query.type);
+            setLastQuery(query);
             setHasSearched(true);
         } catch (error) {
             console.error("Failed to fetch transactions", error);
@@ -53,6 +50,34 @@ const Filter = () => {
             setLoading(false);
         }
     }
+
+    const handleSearch = (e) => {
+        e.preventDefault();
+
+        if (startDate && endDate && startDate > endDate) {
+            toast.error("La fecha de inicio debe ser anterior a la de fin");
+            return;
+        }
+
+        runSearch({
+            type,
+            startDate: startDate || null,
+            endDate: endDate || null,
+            keyword,
+            sortField,
+            sortOrder
+        }, 0);
+    }
+
+    const goToPage = (page) => {
+        if (!lastQuery || page < 0 || page >= pageInfo.totalPages) return;
+        runSearch(lastQuery, page);
+        document.getElementById("search-results")?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+
+    const firstShown = pageInfo.totalItems === 0 ? 0 : pageInfo.page * PAGE_SIZE + 1;
+    const lastShown = Math.min((pageInfo.page + 1) * PAGE_SIZE, pageInfo.totalItems);
+    const pagerButton = "flex items-center gap-1 px-3 py-1.5 rounded-lg border border-gray-200 text-sm text-gray-700 hover:bg-gray-50 cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed";
 
     return(
         <Dashboard activeMenu="Filters">
@@ -128,10 +153,17 @@ const Filter = () => {
                     </form>
                 </div>
 
-                <div className="p-4 bg-white rounded-xl shadow-sm border border-gray-200">
-                    <h5 className="text-lg font-semibold">
-                        Resultados
-                    </h5>
+                <div id="search-results" className="p-4 bg-white rounded-xl shadow-sm border border-gray-200 scroll-mt-24">
+                    <div className="flex flex-wrap items-baseline justify-between gap-2">
+                        <h5 className="text-lg font-semibold">
+                            Resultados
+                        </h5>
+                        {hasSearched && pageInfo.totalItems > 0 && (
+                            <p className="text-sm text-gray-600" aria-live="polite">
+                                {firstShown}–{lastShown} de {pageInfo.totalItems} · Total: <span className="font-semibold text-gray-800">{formatCurrency(pageInfo.totalAmount)}</span>
+                            </p>
+                        )}
+                    </div>
                     {transactions.length === 0 && !loading ? (
                         <p className="text-gray-500">
                             {hasSearched
@@ -157,8 +189,23 @@ const Filter = () => {
                             amount={transaction.amount}
                             type={resultType}
                             hideDeleteBtn
+                            recurring={transaction.recurringId != null}
                         />
                     ))}
+
+                    {pageInfo.totalPages > 1 && (
+                        <nav aria-label="Páginas de resultados" className="flex items-center justify-between gap-3 mt-4 pt-4 border-t border-gray-100">
+                            <button type="button" className={pagerButton} disabled={loading || pageInfo.page === 0} onClick={() => goToPage(pageInfo.page - 1)}>
+                                <ChevronLeft size={16} /> Anterior
+                            </button>
+                            <span className="text-sm text-gray-600">
+                                Página {pageInfo.page + 1} de {pageInfo.totalPages}
+                            </span>
+                            <button type="button" className={pagerButton} disabled={loading || pageInfo.page >= pageInfo.totalPages - 1} onClick={() => goToPage(pageInfo.page + 1)}>
+                                Siguiente <ChevronRight size={16} />
+                            </button>
+                        </nav>
+                    )}
                 </div>
             </div>    
         </Dashboard>
