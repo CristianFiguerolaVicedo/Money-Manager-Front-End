@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import { buildImportRows, detectDelimiter, guessColumns, parseAmount, parseCsv, parseDate } from "../csv.js";
 
 test("parseCsv handles quotes, escaped quotes, newlines, CRLF and BOM", () => {
-  const text = '﻿Fecha;Concepto;Importe\r\n01/10/2026;"Cena; con ""amigos""";-30,50\r\n02/10/2026;"Línea\nde dos";12\r\n\r\n';
+  const text = '\uFEFFFecha;Concepto;Importe\r\n01/10/2026;"Cena; con ""amigos""";-30,50\r\n02/10/2026;"Línea\nde dos";12\r\n\r\n';
   const { delimiter, rows } = parseCsv(text);
   assert.equal(delimiter, ";");
   assert.deepEqual(rows, [

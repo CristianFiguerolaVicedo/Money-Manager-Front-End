@@ -21,7 +21,7 @@ export const detectDelimiter = (text) => {
 
 // Full parser: quotes, escaped quotes, newlines inside quotes, CRLF and a UTF-8 BOM
 export const parseCsv = (input, delimiter = null) => {
-  const text = (input || "").replace(/^﻿/, "");
+  const text = (input || "").replace(/^\uFEFF/, "");
   const sep = delimiter || detectDelimiter(text);
   const rows = [];
   let row = [];
@@ -63,7 +63,7 @@ export const parseCsv = (input, delimiter = null) => {
 // "1.234,56 €" -> 1234.56 · "-12,30" -> -12.3 · "1,234.56" -> 1234.56 · "(45,00)" -> -45 · null when not a number
 export const parseAmount = (value) => {
   if (value == null) return null;
-  let text = String(value).trim().replace(/[€$£\s ]/g, "").replace(/EUR$/i, "");
+  let text = String(value).trim().replace(/[€$£\s\u00a0]/g, "").replace(/EUR$/i, "");
   if (!text) return null;
   let negative = false;
   if (/^\(.*\)$/.test(text)) {
