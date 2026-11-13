@@ -1,0 +1,6 @@
+# TEMPORARY probe (not to be merged): see which headers Netlify sends to a proxied origin
+[[redirects]]
+  from = "/__echo/*"
+  to = "https://httpbin.org/anything/:splat"
+  status = 200
+  force = true
