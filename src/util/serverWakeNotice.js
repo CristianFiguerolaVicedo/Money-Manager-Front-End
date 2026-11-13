@@ -1,5 +1,5 @@
 import toast from "react-hot-toast";
-import { BASE_URL } from "./apiEndpoints";
+import { BACKEND_URL } from "./apiEndpoints";
 
 // Render's free plan puts the backend to sleep after ~15 min without traffic and the
 // first request then takes up to a minute. Instead of an unexplained spinner, show a
@@ -48,7 +48,7 @@ export const trackRequestEnd = (config) => {
 // while the user is still typing their email and password.
 export const warmUpServer = () => {
   try {
-    fetch(`${BASE_URL}/health`, { method: "GET", mode: "cors" }).catch(() => {});
+    fetch(`${BACKEND_URL}/health`, { method: "GET", mode: "cors", credentials: "omit" }).catch(() => {});
   } catch {
     // ignore: this is only an optimisation
   }

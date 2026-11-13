@@ -5,7 +5,7 @@ import Logo from "./Logo";
 import { useNavigate } from "react-router-dom";
 import Sidebar from "./Sidebar";
 import ThemeSwitcher from "./ThemeSwitcher";
-import { clearToken } from "../util/auth";
+import { endSession } from "../util/session";
 
 const Menubar = ({activeMenu}) => {
   const [openSideMenu, setOpenSideMenu] = useState(false);
@@ -16,7 +16,7 @@ const Menubar = ({activeMenu}) => {
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    clearToken(); // keeps per-browser settings such as the theme
+    endSession({ revoke: true }); // invalidates the session cookie; keeps per-browser settings such as the theme
     clearUser();
     setShowDropdown(false);
     navigate("/login");

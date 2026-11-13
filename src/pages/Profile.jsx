@@ -10,7 +10,7 @@ import AppContext from "../context/AppContext";
 import useUser from "../hooks/useUser";
 import axiosConfig from "../util/axiosConfig";
 import { API_ENDPOINTS } from "../util/apiEndpoints";
-import { clearToken } from "../util/auth";
+import { endSession, startSession } from "../util/session";
 import uploadProfileImage from "../util/uploadProfileImage";
 import { getErrorMessage } from "../util/util";
 import { PASSWORD_HINT, validatePassword } from "../util/validation";
@@ -190,9 +190,11 @@ const PasswordCard = () => {
 
     setSaving(true);
     try {
-      await axiosConfig.put(API_ENDPOINTS.CHANGE_PASSWORD, { currentPassword: form.current, newPassword: form.next });
+      const response = await axiosConfig.put(API_ENDPOINTS.CHANGE_PASSWORD, { currentPassword: form.current, newPassword: form.next });
+      // The other sessions were closed; this browser gets a fresh one
+      if (response.data?.token) startSession(response.data.token);
       setForm(emptyPasswords);
-      toast.success("Contraseña actualizada. Te hemos enviado un email de aviso.");
+      toast.success("Contraseña actualizada. Se ha cerrado la sesión en tus otros dispositivos.", { duration: 6000 });
     } catch (err) {
       toast.error(getErrorMessage(err, "No se ha podido cambiar la contraseña"));
     } finally {
@@ -286,7 +288,7 @@ const Profile = () => {
   const navigate = useNavigate();
 
   const handleDeleted = () => {
-    clearToken();
+    endSession();
     clearUser();
     toast.success("Tu cuenta se ha borrado. ¡Gracias por usar Money Manager!", { duration: 6000 });
     navigate("/signup", { replace: true });

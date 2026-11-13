@@ -79,3 +79,10 @@ GitHub Actions (`.github/workflows/ci.yml`) ejecuta lint, tests y build en cada 
 
 - El backend está en el plan gratuito de Render, que se duerme: la primera carga puede tardar hasta un minuto. La web lo avisa y lo despierta al abrirse.
 - El tema y otros ajustes del navegador se guardan en `localStorage`; cerrar sesión solo borra el token.
+
+## Sesión y proxy de la API
+
+- La web llama siempre a `/api/v1.0` en su propio dominio. En desarrollo lo redirige Vite (`vite.config.js` → `localhost:8080`) y en producción Netlify (`netlify.toml` → Render). Así la cookie de sesión es de primera parte.
+- El JWT de acceso (15 min) vive solo en memoria (`src/util/auth.js`). `src/util/session.js` lo renueva un minuto antes de que caduque, al volver a la pestaña y al recargar, con `POST /refresh-token` y la cookie HttpOnly `mm_session`.
+- Si una petición recibe 401, se renueva la sesión y se repite una vez; si la renovación falla, se vuelve a `/login`.
+- `VITE_API_BASE_URL` ya solo se usa para despertar el servidor de Render al abrir la página.

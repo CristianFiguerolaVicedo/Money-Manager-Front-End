@@ -1,5 +1,10 @@
-// Set VITE_API_BASE_URL in a .env file (e.g. https://money-manager-t0yw.onrender.com/api/v1.0 in production)
-export const BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:8080/api/v1.0";
+// The API is always reached on the web's own domain: Netlify proxies /api/* to Render (netlify.toml) and
+// Vite does the same in development (vite.config.js). Same origin = first-party, HttpOnly session cookie.
+export const BASE_URL = "/api/v1.0";
+
+// Direct backend URL, only used to wake the free Render instance as soon as the page opens
+// (VITE_API_BASE_URL, e.g. https://money-manager-t0yw.onrender.com/api/v1.0)
+export const BACKEND_URL = import.meta.env.VITE_API_BASE_URL || BASE_URL;
 const CLOUDINARY_CLOUD_NAME = "drsuueqhd";
 
 export const API_ENDPOINTS = {

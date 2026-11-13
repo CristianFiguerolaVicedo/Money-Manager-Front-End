@@ -1,6 +1,6 @@
 import { useContext, useState } from "react";
 import AuthLayout from "../components/AuthLayout.jsx";
-import { setToken } from "../util/auth.js";
+import { startSession } from "../util/session";
 import ResendActivationButton from "../components/ResendActivationButton.jsx";
 import Input from "../components/Input.jsx";
 import { Link, useNavigate, useLocation } from "react-router-dom";
@@ -50,7 +50,7 @@ const Login = () => {
       });
       const { token, user } = response.data;
       if (token) {
-        setToken(token);
+        startSession(token);
         setUser(user);
         // Return to the private page the user tried to open before logging in
         const from = location.state?.from;
