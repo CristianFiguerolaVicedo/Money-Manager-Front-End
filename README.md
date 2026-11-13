@@ -86,3 +86,11 @@ GitHub Actions (`.github/workflows/ci.yml`) ejecuta lint, tests y build en cada 
 - El JWT de acceso (15 min) vive solo en memoria (`src/util/auth.js`). `src/util/session.js` lo renueva un minuto antes de que caduque, al volver a la pestaña y al recargar, con `POST /refresh-token` y la cookie HttpOnly `mm_session`.
 - Si una petición recibe 401, se renueva la sesión y se repite una vez; si la renovación falla, se vuelve a `/login`.
 - `VITE_API_BASE_URL` ya solo se usa para despertar el servidor de Render al abrir la página.
+
+## Cabeceras de seguridad y rutas
+
+- `public/_headers` añade a todas las páginas una Content-Security-Policy estricta (solo scripts propios), `X-Frame-Options: DENY`, `nosniff`, `Referrer-Policy` y `Permissions-Policy`. Por eso el script que aplica el tema antes de pintar está en `public/theme-init.js` y no en línea.
+- `netlify.toml` sirve las rutas conocidas con 200 y el resto con un **404 real** (la app muestra "Esta página no existe"). Si añades una ruta en `src/App.jsx`, añádela también ahí.
+- `public/robots.txt` solo deja indexar la entrada, el login y el registro.
+- La foto de perfil se sube al backend (`PUT /profile/photo`); ya no se usa Cloudinary.
+

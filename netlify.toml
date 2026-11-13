@@ -11,8 +11,105 @@
   force = true
   signed = "NETLIFY_PROXY_SECRET"
 
-# Single-page app: every other path is served by index.html
+# Single-page app: the known routes are served by index.html with 200…
+[[redirects]]
+  from = "/"
+  to = "/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/login"
+  to = "/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/signup"
+  to = "/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/forgot-password"
+  to = "/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/reset-password"
+  to = "/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/activate"
+  to = "/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/unsubscribe"
+  to = "/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/dashboard"
+  to = "/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/income"
+  to = "/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/expense"
+  to = "/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/category"
+  to = "/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/filter"
+  to = "/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/budgets"
+  to = "/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/goals"
+  to = "/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/compare"
+  to = "/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/import"
+  to = "/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/profile"
+  to = "/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/privacy"
+  to = "/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/terms"
+  to = "/index.html"
+  status = 200
+
+# …and any other path gets index.html with a real 404 (the app shows its "page not found" screen).
+# Keep this list in sync with the <Route>s in src/App.jsx.
 [[redirects]]
   from = "/*"
   to = "/index.html"
-  status = 200
+  status = 404

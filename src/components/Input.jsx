@@ -17,6 +17,7 @@ const Input = ({
   options,
   disabled = false,
   id,
+  name,
   autoComplete,
 }) => {
   const generatedId = useId();
@@ -31,7 +32,7 @@ const Input = ({
       </label>
       <div className="relative">
         {isSelect ? (
-          <select id={fieldId} value={value} onChange={(e) => onChange(e)} disabled={disabled} className={fieldClass}>
+          <select id={fieldId} name={name} value={value} onChange={(e) => onChange(e)} disabled={disabled} className={fieldClass}>
             {options.map((option) => (
               <option key={option.value} value={option.value}>
                 {option.label}
@@ -41,6 +42,7 @@ const Input = ({
         ) : (
           <input
             id={fieldId}
+            name={name}
             className={`${fieldClass} ${isPassword ? "pr-11" : ""}`}
             type={isPassword ? (showPassword ? "text" : "password") : type}
             placeholder={placeholder}

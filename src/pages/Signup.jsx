@@ -7,8 +7,6 @@ import axiosConfig from "../util/axiosConfig.jsx";
 import { API_ENDPOINTS } from "../util/apiEndpoints.js";
 import { LoaderCircle, MailCheck } from "lucide-react";
 import ResendActivationButton from "../components/ResendActivationButton.jsx";
-import ProfileImageSelector from "../components/ProfileImageSelector.jsx";
-import uploadProfileImage from "../util/uploadProfileImage.js";
 import { getErrorMessage } from "../util/util.js";
 
 const Signup = () => {
@@ -17,13 +15,10 @@ const Signup = () => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [profilePhoto, setProfilePhoto] = useState(null);
   const [registeredEmail, setRegisteredEmail] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    let profileImageUrl = "";
 
     setIsLoading(true);
 
@@ -50,16 +45,10 @@ const Signup = () => {
     setError("");
 
     try {
-      if (profilePhoto) {
-        const imageUrl = await uploadProfileImage(profilePhoto);
-        profileImageUrl = imageUrl || "";
-      }
-
       const response = await axiosConfig.post(API_ENDPOINTS.REGISTER, {
         fullName: fullName.trim(),
         email: email.trim(),
         password,
-        profileImageUrl,
       });
       if (response.status === 201) {
         setRegisteredEmail(email.trim());
@@ -93,9 +82,6 @@ const Signup = () => {
   return (
     <AuthLayout title="Crea tu cuenta" subtitle="Empieza a controlar tus gastos con Money Manager.">
       <form onSubmit={handleSubmit} className="space-y-4">
-        <div className="flex justify-center mb-6">
-          <ProfileImageSelector image={profilePhoto} setImage={setProfilePhoto} />
-        </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4">
           <Input
             value={fullName}
@@ -103,6 +89,8 @@ const Signup = () => {
             label="Nombre completo"
             placeholder="Ana García"
             type="text"
+            name="name"
+            autoComplete="name"
           />
           <Input
             value={email}
@@ -110,6 +98,8 @@ const Signup = () => {
             label="Email"
             placeholder="nombre@ejemplo.com"
             type="email"
+            name="email"
+            autoComplete="email"
           />
           <div className="sm:col-span-2">
             <Input
@@ -118,6 +108,8 @@ const Signup = () => {
               label="Contraseña"
               placeholder="Mínimo 8 caracteres"
               type="password"
+              name="new-password"
+              autoComplete="new-password"
             />
             <p className="text-xs text-slate-500 -mt-3 mb-2">{PASSWORD_HINT}</p>
           </div>

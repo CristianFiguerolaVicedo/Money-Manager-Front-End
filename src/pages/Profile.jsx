@@ -11,7 +11,7 @@ import useUser from "../hooks/useUser";
 import axiosConfig from "../util/axiosConfig";
 import { API_ENDPOINTS } from "../util/apiEndpoints";
 import { endSession, startSession } from "../util/session";
-import uploadProfileImage from "../util/uploadProfileImage";
+import uploadProfileImage, { MAX_PHOTO_BYTES } from "../util/uploadProfileImage";
 import { getErrorMessage } from "../util/util";
 import { PASSWORD_HINT, validatePassword } from "../util/validation";
 
@@ -48,10 +48,14 @@ const PersonalDataCard = ({ user, setUser }) => {
     try {
       let profileImageUrl = currentUrl;
       if (newPhoto) {
+        if (newPhoto.size > MAX_PHOTO_BYTES) {
+          toast.error("La foto no puede ocupar más de 1 MB");
+          return;
+        }
         try {
-          profileImageUrl = await uploadProfileImage(newPhoto);
-        } catch {
-          toast.error("No se ha podido subir la foto. Prueba con otra imagen");
+          profileImageUrl = (await uploadProfileImage(newPhoto)).profileImageUrl;
+        } catch (error) {
+          toast.error(getErrorMessage(error, "No se ha podido subir la foto. Prueba con otra imagen"));
           return;
         }
       }
@@ -205,9 +209,9 @@ const PasswordCard = () => {
   return (
     <section className={cardClass} aria-labelledby="change-password">
       <h2 id="change-password" className="text-lg mb-5">Cambiar contraseña</h2>
-      <Input label="Contraseña actual" value={form.current} onChange={set("current")} placeholder="••••••••" type="password" />
-      <Input label="Nueva contraseña" value={form.next} onChange={set("next")} placeholder="••••••••" type="password" />
-      <Input label="Repite la nueva contraseña" value={form.confirm} onChange={set("confirm")} placeholder="••••••••" type="password" />
+      <Input label="Contraseña actual" value={form.current} onChange={set("current")} placeholder="••••••••" type="password" name="current-password" autoComplete="current-password" />
+      <Input label="Nueva contraseña" value={form.next} onChange={set("next")} placeholder="••••••••" type="password" name="new-password" autoComplete="new-password" />
+      <Input label="Repite la nueva contraseña" value={form.confirm} onChange={set("confirm")} placeholder="••••••••" type="password" name="confirm-password" autoComplete="new-password" />
       <p className="text-xs text-gray-500 -mt-2 mb-4">{PASSWORD_HINT}</p>
       <div className="flex justify-end">
         <button type="button" onClick={handleSave} disabled={saving} className={primaryButton}>
@@ -262,7 +266,7 @@ const DeleteAccountCard = ({ onDeleted }) => {
         <p className="text-sm text-gray-700 mb-4">
           Esta acción borra <strong>todos tus datos</strong> para siempre. Para confirmarla, escribe tu contraseña y la palabra <strong>BORRAR</strong>.
         </p>
-        <Input label="Contraseña" value={password} onChange={({ target }) => setPassword(target.value)} placeholder="••••••••" type="password" />
+        <Input label="Contraseña" value={password} onChange={({ target }) => setPassword(target.value)} placeholder="••••••••" type="password" name="password" autoComplete="current-password" />
         <Input label='Escribe "BORRAR"' value={confirmText} onChange={({ target }) => setConfirmText(target.value)} placeholder="BORRAR" type="text" />
         <div className="flex justify-end gap-3">
           <button type="button" onClick={close} className="px-4 py-2 rounded-lg text-gray-700 hover:bg-gray-100 hover:cursor-pointer">

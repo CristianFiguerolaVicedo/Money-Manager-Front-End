@@ -7,15 +7,16 @@
     <meta name="theme-color" content="#0f1412" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <title>Money Manager</title>
-    <script>
-      // Apply the saved theme before the first paint (same logic as src/util/theme.js)
-      (function () {
-        var pref = "dark";
-        try { pref = localStorage.getItem("theme") || "dark"; } catch (e) {}
-        var dark = pref === "dark" || (pref === "system" && window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches);
-        if (dark) document.documentElement.classList.add("dark");
-      })();
-    </script>
+    <meta name="description" content="Money Manager: apunta tus ingresos y gastos, pon presupuestos por categoría y ahorra para tus objetivos." />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Money Manager" />
+    <meta property="og:title" content="Money Manager" />
+    <meta property="og:description" content="Apunta tus ingresos y gastos, pon presupuestos por categoría y ahorra para tus objetivos." />
+    <meta property="og:url" content="https://money-manager-cristian.netlify.app/" />
+    <meta property="og:locale" content="es_ES" />
+    <meta name="twitter:card" content="summary" />
+    <!-- Applies the saved theme before the first paint (same logic as src/util/theme.js) -->
+    <script src="/theme-init.js"></script>
   </head>
   <body>
     <div id="root"></div>

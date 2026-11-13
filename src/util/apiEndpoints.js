@@ -5,7 +5,6 @@ export const BASE_URL = "/api/v1.0";
 // Direct backend URL, only used to wake the free Render instance as soon as the page opens
 // (VITE_API_BASE_URL, e.g. https://money-manager-t0yw.onrender.com/api/v1.0)
 export const BACKEND_URL = import.meta.env.VITE_API_BASE_URL || BASE_URL;
-const CLOUDINARY_CLOUD_NAME = "drsuueqhd";
 
 export const API_ENDPOINTS = {
     LOGIN: "/login",
@@ -53,5 +52,5 @@ export const API_ENDPOINTS = {
     EMAIL_EXPENSE_DETAILS: "/email/expense-excel",
     APPLY_FILTER: "/filter",
     FETCH_DASHBOARD_DATA: "/dashboard",
-    UPLOAD_IMAGE: `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`
+    PROFILE_PHOTO: "/profile/photo",
 }

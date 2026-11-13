@@ -23,6 +23,11 @@ const isRetryable = (config) => ["get", "head"].includes((config.method || "get"
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 axiosConfig.interceptors.request.use((config) => {
+    // Files: with the default JSON header axios would turn the FormData into '{"file":{}}'.
+    // multipart/form-data keeps it as is and the browser adds the boundary.
+    if (typeof FormData !== "undefined" && config.data instanceof FormData) {
+        config.headers.setContentType("multipart/form-data");
+    }
     if (!isPublic(config.url)) {
         const token = getToken();
         if (token) {
