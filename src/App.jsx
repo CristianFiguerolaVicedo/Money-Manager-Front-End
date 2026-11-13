@@ -16,8 +16,8 @@ import Goals from "./pages/Goals";
 import Import from "./pages/Import";
 import Unsubscribe from "./pages/Unsubscribe";
 import { Toaster } from "react-hot-toast";
-import { ProtectedRoute, PublicOnlyRoute } from "./components/ProtectedRoute";
-import { hasValidSession } from "./util/auth";
+import { ProtectedRoute, PublicOnlyRoute, SessionCheck } from "./components/ProtectedRoute";
+import { useSession } from "./util/session";
 
 const App = () => {
   return (
@@ -60,7 +60,9 @@ const App = () => {
 
 // "/" and unknown paths: send the user wherever makes sense for their session
 const Root = () => {
-  return hasValidSession() ? (
+  const { status } = useSession();
+  if (status === "checking") return <SessionCheck />;
+  return status === "authenticated" ? (
     <Navigate to="/dashboard" replace />
   ) : (
     <Navigate to="/login" replace />

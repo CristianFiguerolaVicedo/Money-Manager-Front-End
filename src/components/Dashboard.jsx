@@ -2,7 +2,6 @@ import { useContext } from "react";
 import Menubar from "./Menubar";
 import Sidebar from "./Sidebar";
 import AppContext from "../context/AppContext";
-import SessionWatcher from "./SessionWatcher";
 
 const Dashboard = ({ children, activeMenu }) => {
   const { user } = useContext(AppContext);
@@ -11,7 +10,6 @@ const Dashboard = ({ children, activeMenu }) => {
     <div>
       <a href="#main-content" className="skip-link">Saltar al contenido</a>
       <Menubar activeMenu={activeMenu} />
-      <SessionWatcher />
 
       {user && (
         <div className="flex">

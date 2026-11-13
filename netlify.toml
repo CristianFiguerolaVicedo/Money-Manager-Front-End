@@ -1,0 +1,17 @@
+# Netlify configuration (rules run in this order)
+
+# The web talks to the API on its own domain: /api/* is proxied to the backend on Render.
+# Same origin means the HttpOnly session cookie is first-party (works in Safari too) and no CORS is needed.
+# Netlify signs each proxied request (x-nf-sign) with NETLIFY_PROXY_SECRET so the backend can trust the
+# client IP header it adds (used for rate limiting).
+[[redirects]]
+  from = "/api/*"
+  to = "https://money-manager-t0yw.onrender.com/api/:splat"
+  status = 200
+  force = true
+
+# Single-page app: every other path is served by index.html
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200

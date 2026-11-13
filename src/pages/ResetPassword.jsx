@@ -7,7 +7,7 @@ import Input from "../components/Input.jsx";
 import axiosConfig from "../util/axiosConfig.jsx";
 import { API_ENDPOINTS } from "../util/apiEndpoints.js";
 import { getErrorMessage } from "../util/util.js";
-import { clearToken } from "../util/auth.js";
+import { endSession } from "../util/session";
 import { PASSWORD_HINT, validatePassword } from "../util/validation.js";
 
 // Opened from the link in the password reset email: /reset-password?token=...
@@ -37,7 +37,7 @@ const ResetPassword = () => {
     setIsLoading(true);
     try {
       await axiosConfig.post(API_ENDPOINTS.RESET_PASSWORD, { token, password });
-      clearToken(); // any old session in this browser belongs to the previous password
+      endSession(); // the backend closed every session of the old password
       toast.success("Contraseña actualizada. Ya puedes iniciar sesión.", { duration: 6000 });
       navigate("/login", { replace: true });
     } catch (err) {

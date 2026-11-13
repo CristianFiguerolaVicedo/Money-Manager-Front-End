@@ -1,21 +1,19 @@
 import { test, beforeEach } from "node:test";
 import assert from "node:assert/strict";
 
-// Minimal localStorage for Node
-const store = new Map();
-globalThis.localStorage = {
-  getItem: (key) => (store.has(key) ? store.get(key) : null),
-  setItem: (key, value) => store.set(key, String(value)),
-  removeItem: (key) => store.delete(key),
-};
-
 const { getToken, setToken, clearToken, hasValidSession, getTokenExpiry } = await import("../auth.js");
 
 const base64url = (value) =>
   btoa(JSON.stringify(value)).replace(/=+$/, "").replace(/\+/g, "-").replace(/\//g, "_");
 const fakeJwt = (payload) => `${base64url({ alg: "HS256" })}.${base64url(payload)}.signature`;
 
-beforeEach(() => store.clear());
+beforeEach(() => clearToken());
+
+test("the token only lives in memory", () => {
+  setToken("abc");
+  assert.equal(getToken(), "abc");
+  assert.equal(typeof globalThis.localStorage, "undefined");
+});
 
 test("no token means no session", () => {
   assert.equal(getToken(), null);

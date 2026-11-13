@@ -1,7 +1,11 @@
 import axios from "axios";
 import { BASE_URL } from "./apiEndpoints";
+import { getToken } from "./auth";
+import { endSession, refreshAccessToken } from "./session";
 import { trackRequestEnd, trackRequestStart } from "./serverWakeNotice";
 
+// The API is reached on the web's own domain (/api/v1.0, proxied by Netlify to Render),
+// so the HttpOnly session cookie is first-party.
 const axiosConfig = axios.create({
     baseURL: BASE_URL,
     headers: {
@@ -10,45 +14,54 @@ const axiosConfig = axios.create({
     }
 });
 
-//List of endpoint that dont require authorization
-const excludeEndpoint = ["/login", "/register", "/status", "/activate", "/health", "/forgot-password", "/reset-password", "/resend-activation", "/unsubscribe"];
+// Endpoints that never need the access token
+const PUBLIC_ENDPOINTS = ["/login", "/register", "/status", "/activate", "/health", "/forgot-password", "/reset-password", "/resend-activation", "/unsubscribe", "/refresh-token", "/logout"];
+const isPublic = (url = "") => PUBLIC_ENDPOINTS.some((endpoint) => url === endpoint || url.startsWith(`${endpoint}?`));
 
-//Request Interceptor
+// Requests that are safe to repeat if the backend was asleep (Netlify gives up after 26 s)
+const isRetryable = (config) => ["get", "head"].includes((config.method || "get").toLowerCase()) || config.url === "/login";
+const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
 axiosConfig.interceptors.request.use((config) => {
-    const shouldSkipToken = excludeEndpoint.some((endpoint) => {
-        return config.url === endpoint || config.url?.startsWith(`${endpoint}?`);
-    });
-
-    if (!shouldSkipToken) {
-        const token = localStorage.getItem("token");
+    if (!isPublic(config.url)) {
+        const token = getToken();
         if (token) {
             config.headers.Authorization = `Bearer ${token}`;
         }
     }
-
     return trackRequestStart(config);
-}, (error) => {
-    return Promise.reject(error);
-});
+}, (error) => Promise.reject(error));
 
-//Response interceptor
 axiosConfig.interceptors.response.use((response) => {
     trackRequestEnd(response.config);
     return response;
-}, (error) => {
-    trackRequestEnd(error.config);
-    if (error.response) {
-        if (error.response.status === 401) {
-            // Expired/invalid session: drop the token so "/" doesn't bounce back to the dashboard
-            localStorage.removeItem("token");
-            if (window.location.pathname !== "/login") {
-                window.location.href = "/login";
-            }
-        } else if (error.response.status === 500) {
-            console.error("Server error. Please try again later.");
+}, async (error) => {
+    const config = error.config;
+    trackRequestEnd(config);
+    if (!config) return Promise.reject(error);
+    const status = error.response?.status;
+
+    // Expired access token: renew it with the cookie and repeat the request once
+    if (status === 401 && !isPublic(config.url) && !config._renewed) {
+        const token = await refreshAccessToken();
+        if (token) {
+            config._renewed = true;
+            config.headers.Authorization = `Bearer ${token}`;
+            return axiosConfig(config);
         }
-    } else if (error.code === "ECONNABORTED") {
-        console.error("Request timeout. Please try again.");
+        await endSession();
+        const publicPages = ["/login", "/signup", "/forgot-password", "/reset-password", "/activate", "/unsubscribe"];
+        if (!publicPages.includes(window.location.pathname)) {
+            window.location.href = "/login";
+        }
+        return Promise.reject(error);
+    }
+
+    // Backend still waking up: retry safe requests a few times
+    if ((status === 502 || status === 503 || status === 504) && isRetryable(config) && (config._attempts || 0) < 3) {
+        config._attempts = (config._attempts || 0) + 1;
+        await sleep(3000);
+        return axiosConfig(config);
     }
     return Promise.reject(error);
 })
