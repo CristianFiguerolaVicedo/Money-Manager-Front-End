@@ -9,6 +9,7 @@
   to = "https://money-manager-t0yw.onrender.com/api/:splat"
   status = 200
   force = true
+  signed = "NETLIFY_PROXY_SECRET"
 
 # Single-page app: every other path is served by index.html
 [[redirects]]
