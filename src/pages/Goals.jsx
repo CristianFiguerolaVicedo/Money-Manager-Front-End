@@ -104,8 +104,8 @@ const GoalCard = ({ goal, onContribute, onWithdraw, onEdit, onDelete, onDeleteCo
           </div>
         </div>
         <div className="flex items-center gap-1 shrink-0">
-          <button type="button" onClick={() => onEdit(goal)} aria-label={`Editar ${goal.name}`} className="p-2 rounded-lg text-gray-500 hover:bg-gray-100 hover:text-gray-800 cursor-pointer"><Pencil size={16} /></button>
-          <button type="button" onClick={() => onDelete(goal)} aria-label={`Borrar ${goal.name}`} className="p-2 rounded-lg text-gray-500 hover:bg-red-50 hover:text-red-800 cursor-pointer"><Trash2 size={16} /></button>
+          <button type="button" onClick={() => onEdit(goal)} aria-label={`Editar ${goal.name}`} className="inline-flex items-center justify-center min-h-11 min-w-11 rounded-lg text-gray-500 hover:bg-gray-100 hover:text-gray-800 cursor-pointer"><Pencil size={16} /></button>
+          <button type="button" onClick={() => onDelete(goal)} aria-label={`Borrar ${goal.name}`} className="inline-flex items-center justify-center min-h-11 min-w-11 rounded-lg text-gray-500 hover:bg-red-50 hover:text-red-800 cursor-pointer"><Trash2 size={16} /></button>
         </div>
       </div>
 
@@ -152,8 +152,8 @@ const GoalCard = ({ goal, onContribute, onWithdraw, onEdit, onDelete, onDeleteCo
                 <span className={Number(c.amount) < 0 ? "text-red-800" : "text-green-800"}>
                   {Number(c.amount) < 0 ? "−" : "+"}{formatCurrency(Math.abs(c.amount))}
                 </span>
-                <button type="button" onClick={() => onDeleteContribution(goal, c)} aria-label={`Borrar movimiento del ${formatDate(c.date)}`} className="p-1 rounded text-gray-400 hover:text-red-800 cursor-pointer">
-                  <Trash2 size={14} />
+                <button type="button" onClick={() => onDeleteContribution(goal, c)} aria-label={`Borrar movimiento del ${formatDate(c.date)}`} className="inline-flex items-center justify-center min-h-11 min-w-11 rounded-lg text-gray-500 hover:bg-red-50 hover:text-red-800 cursor-pointer">
+                  <Trash2 size={16} />
                 </button>
               </span>
             </li>

@@ -3,8 +3,8 @@ import { ChartColumnStacked, Pencil, Trash2 } from "lucide-react";
 const TYPE_LABELS = { income: "Ingreso", expense: "Gasto" };
 
 const CategoryList = ({categories, onEditCategory, onDeleteCategory}) => {
-    // Always visible on touch screens, revealed on hover on desktop
-    const actionClass = "text-gray-400 opacity-100 md:opacity-0 md:group-hover:opacity-100 focus:opacity-100 transition-opacity cursor-pointer";
+    // Always visible (the audit found them invisible on touch screens) with a 44 px touch target
+    const actionClass = "inline-flex items-center justify-center min-h-11 min-w-11 rounded-lg text-gray-500 hover:bg-gray-100 cursor-pointer";
     return(
         <div className="bg-white rounded-2xl border border-gray-200 p-4">
             <div className="flex items-center justify-between mb-4">

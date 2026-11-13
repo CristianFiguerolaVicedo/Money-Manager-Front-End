@@ -14,6 +14,7 @@ const Signup = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
+  const [fieldErrors, setFieldErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const [registeredEmail, setRegisteredEmail] = useState("");
 
@@ -22,23 +23,18 @@ const Signup = () => {
 
     setIsLoading(true);
 
-    if (!fullName.trim()) {
-      setError("Introduce tu nombre completo");
-      setIsLoading(false);
-      return;
-    }
-
-    if (!validateEmail(email)) {
-      setError("Introduce un email válido");
-      setIsLoading(false);
-
-      return;
-    }
-
+    // Problems with a field are shown under that field; server answers go in the box below
+    const errors = {};
+    if (!fullName.trim()) errors.fullName = "Introduce tu nombre completo";
+    if (!validateEmail(email)) errors.email = "Introduce un email válido";
     const passwordError = validatePassword(password);
-    if (passwordError) {
-      setError(passwordError);
+    if (passwordError) errors.password = passwordError;
+    setFieldErrors(errors);
+    const first = ["fullName", "email", "password"].find((field) => errors[field]);
+    if (first) {
+      setError("");
       setIsLoading(false);
+      document.getElementById(`signup-${first}`)?.focus();
       return;
     }
 
@@ -81,7 +77,7 @@ const Signup = () => {
 
   return (
     <AuthLayout title="Crea tu cuenta" subtitle="Empieza a controlar tus gastos con Money Manager.">
-      <form onSubmit={handleSubmit} className="space-y-4">
+      <form onSubmit={handleSubmit} noValidate className="space-y-4">
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4">
           <Input
             value={fullName}
@@ -91,6 +87,8 @@ const Signup = () => {
             type="text"
             name="name"
             autoComplete="name"
+            id="signup-fullName"
+            error={fieldErrors.fullName}
           />
           <Input
             value={email}
@@ -100,6 +98,8 @@ const Signup = () => {
             type="email"
             name="email"
             autoComplete="email"
+            id="signup-email"
+            error={fieldErrors.email}
           />
           <div className="sm:col-span-2">
             <Input
@@ -110,12 +110,14 @@ const Signup = () => {
               type="password"
               name="new-password"
               autoComplete="new-password"
+              id="signup-password"
+              error={fieldErrors.password}
+              hint={PASSWORD_HINT}
             />
-            <p className="text-xs text-slate-500 -mt-3 mb-2">{PASSWORD_HINT}</p>
           </div>
         </div>
         {error && (
-          <p className="text-red-800 text-sm text-center bg-red-50 p-2 rounded">{error}</p>
+          <p role="alert" className="text-red-800 text-sm text-center bg-red-50 p-2 rounded">{error}</p>
         )}
 
         <button
