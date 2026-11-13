@@ -83,3 +83,20 @@
 .dark .bg-violet-700.text-white,
 .dark .bg-red-800.text-white,
 .dark .bg-red-700.text-white { color: #ffffff; }
+
+/* Native dropdowns: the option list is drawn by the browser, so give it the theme's colours explicitly
+   (otherwise it shows light text on a white list in dark mode) */
+.dark select option,
+.dark select optgroup {
+  background-color: var(--surface);
+  color: var(--color-gray-900);
+}
+.dark select option:checked {
+  background-color: #1f4436;
+  color: #ffffff;
+}
+.dark select option:disabled { color: var(--color-gray-400); }
+select option { color: #1c2321; }
+.dark input,
+.dark select,
+.dark textarea { color: var(--color-gray-800); }
