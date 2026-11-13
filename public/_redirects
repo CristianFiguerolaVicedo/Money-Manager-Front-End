@@ -1,1 +1,2 @@
+/__echo/*  https://httpbin.org/anything/:splat  200!
 /*    /index.html    200
