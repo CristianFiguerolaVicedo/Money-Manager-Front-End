@@ -62,6 +62,8 @@ const ForgotPassword = () => {
           label="Email"
           placeholder="nombre@ejemplo.com"
           type="email"
+          name="email"
+          autoComplete="email"
         />
 
         {error && <p className="text-red-800 text-sm text-center bg-red-50 p-2 rounded">{error}</p>}

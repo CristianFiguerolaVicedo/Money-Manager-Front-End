@@ -15,6 +15,8 @@ import Compare from "./pages/Compare";
 import Goals from "./pages/Goals";
 import Import from "./pages/Import";
 import Unsubscribe from "./pages/Unsubscribe";
+import NotFound from "./pages/NotFound";
+import PageTitle from "./components/PageTitle";
 import { Toaster } from "react-hot-toast";
 import { ProtectedRoute, PublicOnlyRoute, SessionCheck } from "./components/ProtectedRoute";
 import { useSession } from "./util/session";
@@ -24,6 +26,7 @@ const App = () => {
     <>
       <Toaster toastOptions={{ style: { background: "var(--toast-bg)", color: "var(--toast-fg)" } }} />
       <BrowserRouter>
+        <PageTitle />
         <Routes>
           <Route path="/" element={<Root />} />
 
@@ -51,14 +54,14 @@ const App = () => {
           <Route path="/activate" element={<Activate />} />
           <Route path="/unsubscribe" element={<Unsubscribe />} />
 
-          <Route path="*" element={<Root />} />
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
     </>
   );
 };
 
-// "/" and unknown paths: send the user wherever makes sense for their session
+// "/": send the user wherever makes sense for their session
 const Root = () => {
   const { status } = useSession();
   if (status === "checking") return <SessionCheck />;

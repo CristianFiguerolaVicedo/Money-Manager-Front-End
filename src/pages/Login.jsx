@@ -78,6 +78,8 @@ const Login = () => {
           label="Email"
           placeholder="nombre@ejemplo.com"
           type="email"
+          name="email"
+          autoComplete="username"
         />
         <Input
           value={password}
@@ -85,6 +87,8 @@ const Login = () => {
           label="Contraseña"
           placeholder="Tu contraseña"
           type="password"
+          name="password"
+          autoComplete="current-password"
         />
 
         <div className="text-right -mt-2">

@@ -71,6 +71,8 @@ const ResetPassword = () => {
           label="Contraseña nueva"
           placeholder="Mínimo 8 caracteres"
           type="password"
+          name="new-password"
+          autoComplete="new-password"
         />
         <Input
           value={confirmPassword}
@@ -78,6 +80,8 @@ const ResetPassword = () => {
           label="Repite la contraseña"
           placeholder="Repite la contraseña"
           type="password"
+          name="confirm-password"
+          autoComplete="new-password"
         />
 
         {error && (

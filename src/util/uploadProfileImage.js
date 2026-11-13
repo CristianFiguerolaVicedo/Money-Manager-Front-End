@@ -1,29 +1,16 @@
+import axiosConfig from "./axiosConfig";
 import { API_ENDPOINTS } from "./apiEndpoints";
 
-const CLODINARY_UPLOAD_PRESET = "moneymanager";
+export const MAX_PHOTO_BYTES = 1024 * 1024;
+export const PHOTO_TYPES = "image/jpeg,image/png,image/webp";
 
+// Uploads the profile photo to the backend, which checks it and stores it (no third-party upload from the browser).
+// Returns the updated profile, whose profileImageUrl points to the new photo.
 const uploadProfileImage = async (image) => {
-    const formData = new FormData();
-    formData.append("file", image);
-    formData.append("upload_preset", CLODINARY_UPLOAD_PRESET);
-
-    try {
-        const response = await fetch(API_ENDPOINTS.UPLOAD_IMAGE, {
-            method: "POST",
-            body: formData
-        });
-        if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(`Cloudinary upload failed: ${errorData.error.message || response.statusText}`);
-        }
-
-        const data = await response.json();
-        console.log('Image uploaded successfully.', data);
-        return data.secure_url;
-    } catch (error) {
-        console.error("Error uploading the image", error);
-        throw error;
-    }
-}
+  const formData = new FormData();
+  formData.append("file", image);
+  const response = await axiosConfig.put(API_ENDPOINTS.PROFILE_PHOTO, formData);
+  return response.data;
+};
 
 export default uploadProfileImage;

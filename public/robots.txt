@@ -1,0 +1,6 @@
+# Money Manager is a private app: only the public entry pages may be indexed
+User-agent: *
+Allow: /$
+Allow: /login
+Allow: /signup
+Disallow: /

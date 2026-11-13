@@ -1,5 +1,6 @@
 import { Trash, Upload, User } from "lucide-react";
 import { useRef, useState } from "react";
+import { PHOTO_TYPES } from "../util/uploadProfileImage";
 
 // `currentUrl`: photo already saved (profile page); `onRemoveCurrent` clears it
 const ProfileImageSelector = ({ image, setImage, currentUrl = null, onRemoveCurrent }) => {
@@ -38,7 +39,7 @@ const ProfileImageSelector = ({ image, setImage, currentUrl = null, onRemoveCurr
     <div className="flex justify-center mb-6">
       <input
         type="file"
-        accept="image/*"
+        accept={PHOTO_TYPES}
         ref={inputRef}
         onChange={handleImageChange}
         className="hidden"
