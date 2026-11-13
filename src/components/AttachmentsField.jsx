@@ -129,8 +129,8 @@ const AttachmentsField = ({ type, transactionId, pending = [], onPendingChange }
               )}
               <span className="flex items-center gap-2 shrink-0 text-xs text-gray-500">
                 {formatSize(item.size)}
-                <button type="button" onClick={() => remove(item.file, index)} aria-label={`Quitar ${item.name}`} className="p-1 rounded text-gray-400 hover:text-red-800 cursor-pointer">
-                  <Trash2 size={14} />
+                <button type="button" onClick={() => remove(item.file, index)} aria-label={`Quitar ${item.name}`} className="inline-flex items-center justify-center min-h-11 min-w-11 rounded-lg text-gray-500 hover:bg-red-50 hover:text-red-800 cursor-pointer">
+                  <Trash2 size={16} />
                 </button>
               </span>
             </li>

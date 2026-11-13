@@ -1,32 +1,42 @@
+import { lazy, Suspense } from "react";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
-import Income from "./pages/Income";
-import Expense from "./pages/Expense";
-import Category from "./pages/Category";
-import Filter from "./pages/Filter";
 import Login from "./pages/Login";
-import Signup from "./pages/Signup";
-import Home from "./pages/Home";
-import ForgotPassword from "./pages/ForgotPassword";
-import ResetPassword from "./pages/ResetPassword";
-import Activate from "./pages/Activate";
-import Profile from "./pages/Profile";
-import Budgets from "./pages/Budgets";
-import Compare from "./pages/Compare";
-import Goals from "./pages/Goals";
-import Import from "./pages/Import";
-import Unsubscribe from "./pages/Unsubscribe";
-import NotFound from "./pages/NotFound";
 import PageTitle from "./components/PageTitle";
 import { Toaster } from "react-hot-toast";
 import { ProtectedRoute, PublicOnlyRoute, SessionCheck } from "./components/ProtectedRoute";
 import { useSession } from "./util/session";
 
+// Each page is downloaded when it is first opened (audit: a single 1 MB bundle). Login stays in the main
+// bundle because it is the first screen for anyone without a session.
+const Income = lazy(() => import("./pages/Income"));
+const Expense = lazy(() => import("./pages/Expense"));
+const Category = lazy(() => import("./pages/Category"));
+const Filter = lazy(() => import("./pages/Filter"));
+const Home = lazy(() => import("./pages/Home"));
+const Profile = lazy(() => import("./pages/Profile"));
+const Budgets = lazy(() => import("./pages/Budgets"));
+const Compare = lazy(() => import("./pages/Compare"));
+const Goals = lazy(() => import("./pages/Goals"));
+const Import = lazy(() => import("./pages/Import"));
+const ResetPassword = lazy(() => import("./pages/ResetPassword"));
+const Activate = lazy(() => import("./pages/Activate"));
+const Unsubscribe = lazy(() => import("./pages/Unsubscribe"));
+const ForgotPassword = lazy(() => import("./pages/ForgotPassword"));
+const Signup = lazy(() => import("./pages/Signup"));
+const NotFound = lazy(() => import("./pages/NotFound"));
+
 const App = () => {
   return (
     <>
-      <Toaster toastOptions={{ style: { background: "var(--toast-bg)", color: "var(--toast-fg)" } }} />
+      {/* Below the 64 px sticky header so messages never cover the logo or the menu (audit) */}
+      <Toaster
+        position="top-right"
+        containerStyle={{ top: 76, right: 16 }}
+        toastOptions={{ style: { background: "var(--toast-bg)", color: "var(--toast-fg)" } }}
+      />
       <BrowserRouter>
         <PageTitle />
+        <Suspense fallback={<SessionCheck />}>
         <Routes>
           <Route path="/" element={<Root />} />
 
@@ -56,6 +66,7 @@ const App = () => {
 
           <Route path="*" element={<NotFound />} />
         </Routes>
+        </Suspense>
       </BrowserRouter>
     </>
   );

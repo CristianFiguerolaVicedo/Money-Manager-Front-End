@@ -64,7 +64,7 @@ const ResetPassword = () => {
 
   return (
     <AuthLayout title="Elige una contraseña nueva" subtitle={`${PASSWORD_HINT}.`}>
-      <form onSubmit={handleSubmit} className="space-y-4">
+      <form onSubmit={handleSubmit} noValidate className="space-y-4">
         <Input
           value={password}
           onChange={(e) => setPassword(e.target.value)}
@@ -85,7 +85,7 @@ const ResetPassword = () => {
         />
 
         {error && (
-          <div className="text-red-800 text-sm text-center bg-red-50 p-2 rounded">
+          <div role="alert" className="text-red-800 text-sm text-center bg-red-50 p-2 rounded">
             <p>{error}</p>
             {/caducado|no es válido/i.test(error) && (
               <Link to="/forgot-password" className="underline font-medium">

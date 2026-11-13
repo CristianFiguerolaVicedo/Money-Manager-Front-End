@@ -121,10 +121,10 @@ const BudgetRow = ({ budget, onSave, onRemove }) => {
           </form>
         ) : hasBudget ? (
           <div className="flex items-center gap-1">
-            <button type="button" onClick={startEditing} aria-label={`Cambiar presupuesto de ${budget.categoryName}`} className="p-2 rounded-lg text-gray-500 hover:bg-purple-50 hover:text-purple-800 cursor-pointer">
+            <button type="button" onClick={startEditing} aria-label={`Cambiar presupuesto de ${budget.categoryName}`} className="inline-flex items-center justify-center min-h-11 min-w-11 rounded-lg text-gray-500 hover:bg-purple-50 hover:text-purple-800 cursor-pointer">
               <Pencil size={16} />
             </button>
-            <button type="button" onClick={() => onRemove(budget)} aria-label={`Quitar presupuesto de ${budget.categoryName}`} className="p-2 rounded-lg text-gray-500 hover:bg-red-50 hover:text-red-800 cursor-pointer">
+            <button type="button" onClick={() => onRemove(budget)} aria-label={`Quitar presupuesto de ${budget.categoryName}`} className="inline-flex items-center justify-center min-h-11 min-w-11 rounded-lg text-gray-500 hover:bg-red-50 hover:text-red-800 cursor-pointer">
               <Trash2 size={16} />
             </button>
           </div>
@@ -221,7 +221,7 @@ const Budgets = () => {
       <div className="my-5 mx-auto max-w-3xl">
         <h1 className="text-2xl font-semibold tracking-tight text-gray-800">Presupuestos</h1>
         <p className="text-sm text-gray-500 mt-1 mb-6">
-          Pon un límite mensual a tus categorías de gastos. Cada mes empieza de cero.
+          Pon un límite mensual a tus categorías de gastos. Se aplica solo todos los meses, sin tener que volver a ponerlo; lo gastado se cuenta desde el día 1 de cada mes.
         </p>
 
         <div className="grid grid-cols-1 gap-6">

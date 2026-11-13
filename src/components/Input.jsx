@@ -6,7 +6,8 @@ const fieldClass =
   "focus:outline-none focus:border-violet-600 focus:ring-2 focus:ring-violet-200 " +
   "disabled:bg-gray-100 disabled:text-gray-500 disabled:cursor-not-allowed";
 
-// Text/number/date/password input or select, with a label that is really tied to the field (A11)
+// Text/number/date/password input or select, with a label that is really tied to the field (A11).
+// `error`: message shown under the field and announced by screen readers (aria-invalid + aria-describedby).
 const Input = ({
   label,
   value,
@@ -19,11 +20,18 @@ const Input = ({
   id,
   name,
   autoComplete,
+  error,
+  hint,
 }) => {
   const generatedId = useId();
   const fieldId = id || generatedId;
   const [showPassword, setShowPassword] = useState(false);
   const isPassword = type === "password";
+  const errorId = `${fieldId}-error`;
+  const hintId = `${fieldId}-hint`;
+  const describedBy = [error ? errorId : null, hint ? hintId : null].filter(Boolean).join(" ") || undefined;
+  const a11y = { "aria-invalid": error ? true : undefined, "aria-describedby": describedBy };
+  const errorClass = error ? " border-red-600 focus:border-red-600 focus:ring-red-200" : "";
 
   return (
     <div className="mb-4">
@@ -32,7 +40,7 @@ const Input = ({
       </label>
       <div className="relative">
         {isSelect ? (
-          <select id={fieldId} name={name} value={value} onChange={(e) => onChange(e)} disabled={disabled} className={fieldClass}>
+          <select id={fieldId} name={name} value={value} onChange={(e) => onChange(e)} disabled={disabled} className={fieldClass + errorClass} {...a11y}>
             {options.map((option) => (
               <option key={option.value} value={option.value}>
                 {option.label}
@@ -43,13 +51,14 @@ const Input = ({
           <input
             id={fieldId}
             name={name}
-            className={`${fieldClass} ${isPassword ? "pr-11" : ""}`}
+            className={`${fieldClass}${errorClass} ${isPassword ? "pr-11" : ""}`}
             type={isPassword ? (showPassword ? "text" : "password") : type}
             placeholder={placeholder}
             value={value}
             onChange={(e) => onChange(e)}
             disabled={disabled}
             autoComplete={autoComplete}
+            {...a11y}
           />
         )}
 
@@ -65,6 +74,16 @@ const Input = ({
           </button>
         )}
       </div>
+      {hint && (
+        <p id={hintId} className="mt-1 text-xs text-gray-500">
+          {hint}
+        </p>
+      )}
+      {error && (
+        <p id={errorId} className="mt-1 text-sm text-red-800">
+          {error}
+        </p>
+      )}
     </div>
   );
 };

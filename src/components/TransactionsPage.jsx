@@ -17,16 +17,18 @@ import { uploadAttachment } from "./AttachmentsField";
 
 const UNDO_SECONDS = 5;
 
-// Returns an error message, or null when the transaction is valid
+// Returns { field: message } with every problem, or null when the transaction is valid
 const validateTransaction = ({ name, amount, date, categoryId, repeat, endDate }) => {
   const recurring = repeat && repeat !== "none";
-  if (!name || !name.trim()) return "Escribe un concepto";
-  if (!amount || isNaN(amount) || Number(amount) <= 0) return "El importe debe ser un número mayor que 0";
-  if (!date) return "Elige una fecha";
-  if (!recurring && date > getTodayLocalDate()) return "La fecha no puede ser futura";
-  if (recurring && endDate && endDate < date) return "La fecha de fin no puede ser anterior a la de inicio";
-  if (!categoryId) return "Elige una categoría";
-  return null;
+  const errors = {};
+  if (!name || !name.trim()) errors.name = "Escribe un concepto";
+  if (!categoryId) errors.categoryId = "Elige una categoría";
+  if (!amount || isNaN(amount) || Number(amount) <= 0) errors.amount = "El importe debe ser un número mayor que 0";
+  else if (Number(amount) > 999999999.99) errors.amount = "El importe es demasiado grande";
+  if (!date) errors.date = "Elige una fecha";
+  else if (!recurring && date > getTodayLocalDate()) errors.date = "La fecha no puede ser futura";
+  if (recurring && endDate && date && endDate < date) errors.endDate = "La fecha de fin no puede ser anterior a la de inicio";
+  return Object.keys(errors).length > 0 ? errors : null;
 };
 
 // Income and expense pages: month selector, chart, list, and add/edit/delete/export
@@ -144,10 +146,10 @@ const TransactionsPage = ({ config }) => {
   };
 
   const handleSave = async (transaction) => {
-    const error = validateTransaction(transaction);
-    if (error) {
-      toast.error(error);
-      return;
+    // The form shows these next to each field (audit: errors as toasts were hard to tie to a field)
+    const errors = validateTransaction(transaction);
+    if (errors) {
+      return { errors };
     }
 
     const payload = {

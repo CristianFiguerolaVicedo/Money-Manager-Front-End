@@ -6,7 +6,7 @@ import { formatCurrency, formatDate } from "../util/util";
 import { frequencyLabel } from "../util/recurring";
 
 const iconButton =
-  "p-2 rounded-lg text-gray-500 hover:bg-gray-100 hover:text-gray-800 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed";
+  "inline-flex items-center justify-center min-h-11 min-w-11 rounded-lg text-gray-500 hover:bg-gray-100 hover:text-gray-800 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed";
 
 const statusText = (rule) => {
   if (!rule.active) return "En pausa";

@@ -55,7 +55,7 @@ const ForgotPassword = () => {
       title="¿Has olvidado tu contraseña?"
       subtitle="Escribe tu email y te enviaremos un enlace para elegir una nueva."
     >
-      <form onSubmit={handleSubmit} className="space-y-4">
+      <form onSubmit={handleSubmit} noValidate className="space-y-4">
         <Input
           value={email}
           onChange={(e) => setEmail(e.target.value)}
@@ -66,7 +66,7 @@ const ForgotPassword = () => {
           autoComplete="email"
         />
 
-        {error && <p className="text-red-800 text-sm text-center bg-red-50 p-2 rounded">{error}</p>}
+        {error && <p role="alert" className="text-red-800 text-sm text-center bg-red-50 p-2 rounded">{error}</p>}
 
         <button
           type="submit"

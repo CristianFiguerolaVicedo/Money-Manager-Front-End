@@ -14,6 +14,7 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
+  const [fieldErrors, setFieldErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const [notActivated, setNotActivated] = useState(false);
 
@@ -27,16 +28,15 @@ const Login = () => {
 
     setIsLoading(true);
 
-    if (!validateEmail(email)) {
-      setError("Introduce un email válido");
+    // Problems with a field are shown under that field; server answers go in the box below
+    const errors = {};
+    if (!validateEmail(email)) errors.email = "Introduce un email válido";
+    if (!password.trim()) errors.password = "Introduce tu contraseña";
+    setFieldErrors(errors);
+    if (Object.keys(errors).length > 0) {
+      setError("");
       setIsLoading(false);
-
-      return;
-    }
-
-    if (!password.trim()) {
-      setError("Introduce tu contraseña");
-      setIsLoading(false);
+      document.getElementById(errors.email ? "login-email" : "login-password")?.focus();
       return;
     }
 
@@ -71,7 +71,7 @@ const Login = () => {
 
   return (
     <AuthLayout title="Bienvenido de nuevo" subtitle="Introduce tus datos para iniciar sesión">
-      <form onSubmit={handleSubmit} className="space-y-4">
+      <form onSubmit={handleSubmit} noValidate className="space-y-4">
         <Input
           value={email}
           onChange={(e) => setEmail(e.target.value)}
@@ -80,6 +80,8 @@ const Login = () => {
           type="email"
           name="email"
           autoComplete="username"
+          id="login-email"
+          error={fieldErrors.email}
         />
         <Input
           value={password}
@@ -89,6 +91,8 @@ const Login = () => {
           type="password"
           name="password"
           autoComplete="current-password"
+          id="login-password"
+          error={fieldErrors.password}
         />
 
         <div className="text-right -mt-2">
@@ -103,7 +107,7 @@ const Login = () => {
           </p>
         )}
         {error && (
-          <p className="text-red-800 text-sm text-center bg-red-50 p-2 rounded">{error}</p>
+          <p role="alert" className="text-red-800 text-sm text-center bg-red-50 p-2 rounded">{error}</p>
         )}
         {notActivated && <ResendActivationButton email={email} />}
 

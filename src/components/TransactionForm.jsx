@@ -36,6 +36,8 @@ const RepeatHint = ({ transaction }) => {
 
 // Add/edit form shared by incomes and expenses.
 // `initialData` switches it to edit mode and pre-fills the fields.
+const FIELD_ORDER = ["name", "categoryId", "amount", "date", "endDate"];
+
 const TransactionForm = ({ config, categories, initialData, onSubmit }) => {
   const isEditing = Boolean(initialData);
 
@@ -52,6 +54,7 @@ const TransactionForm = ({ config, categories, initialData, onSubmit }) => {
       : emptyTransaction()
   );
   const [loading, setLoading] = useState(false);
+  const [errors, setErrors] = useState({});
 
   const categoryOptions = categories.map((category) => ({
     value: category.id,
@@ -60,12 +63,19 @@ const TransactionForm = ({ config, categories, initialData, onSubmit }) => {
 
   const handleChange = (key, value) => {
     setTransaction((prev) => ({ ...prev, [key]: value }));
+    setErrors((prev) => (prev[key] ? { ...prev, [key]: undefined } : prev));
   };
 
   const handleSubmit = async () => {
     setLoading(true);
     try {
-      await onSubmit(transaction);
+      const result = await onSubmit(transaction);
+      if (result?.errors) {
+        setErrors(result.errors);
+        // Move the focus to the first wrong field so keyboard and screen reader users land on it
+        const first = FIELD_ORDER.find((field) => result.errors[field]);
+        if (first) document.getElementById(`transaction-${first}`)?.focus();
+      }
     } finally {
       setLoading(false);
     }
@@ -95,6 +105,8 @@ const TransactionForm = ({ config, categories, initialData, onSubmit }) => {
         label={config.nameLabel}
         placeholder={config.namePlaceholder}
         type="text"
+        id="transaction-name"
+        error={errors.name}
       />
 
       <Input
@@ -103,6 +115,8 @@ const TransactionForm = ({ config, categories, initialData, onSubmit }) => {
         onChange={({ target }) => handleChange("categoryId", target.value)}
         isSelect={true}
         options={categoryOptions}
+        id="transaction-categoryId"
+        error={errors.categoryId}
       />
 
       <Input
@@ -111,6 +125,8 @@ const TransactionForm = ({ config, categories, initialData, onSubmit }) => {
         label="Importe (€)"
         placeholder="p. ej., 500"
         type="number"
+        id="transaction-amount"
+        error={errors.amount}
       />
 
       <Input
@@ -119,6 +135,8 @@ const TransactionForm = ({ config, categories, initialData, onSubmit }) => {
         label="Fecha"
         placeholder=""
         type="date"
+        id="transaction-date"
+        error={errors.date}
       />
 
       <div className="mb-4">
@@ -160,6 +178,8 @@ const TransactionForm = ({ config, categories, initialData, onSubmit }) => {
                 label="Hasta (opcional)"
                 placeholder=""
                 type="date"
+                id="transaction-endDate"
+                error={errors.endDate}
               />
               <RepeatHint transaction={transaction} />
             </>
