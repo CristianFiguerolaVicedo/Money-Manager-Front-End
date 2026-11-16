@@ -73,6 +73,11 @@ export const refreshAccessToken = () => {
     for (let attempt = 0; attempt < 4; attempt++) {
       try {
         const response = await raw.post("/refresh-token");
+        // 204: this browser has no session cookie at all (not an error, just not logged in)
+        if (response.status === 204 || !response.data?.token) {
+          await endSession();
+          return null;
+        }
         startSession(response.data.token);
         return response.data.token;
       } catch (error) {
