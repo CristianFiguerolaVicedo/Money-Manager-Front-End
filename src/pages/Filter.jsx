@@ -1,19 +1,25 @@
 import { ChevronLeft, ChevronRight, LoaderCircle, Search } from "lucide-react";
 import Dashboard from "../components/Dashboard";
 import useUser from "../hooks/useUser";
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import axiosConfig from "../util/axiosConfig";
 import { API_ENDPOINTS } from "../util/apiEndpoints";
 import toast from "react-hot-toast";
 import TransactionInfoCard from "../components/TransactionInfoCard";
 import { getErrorMessage, formatDate, formatCurrency } from "../util/util";
+import { categoryOptions } from "../util/categories";
 
 const PAGE_SIZE = 20;
 
 const Filter = () => {
     useUser();
 
-    const [type, setType] = useState("income");
+    const [type, setType] = useState("all");
+    const [categoryId, setCategoryId] = useState("");
+    const [minAmount, setMinAmount] = useState("");
+    const [maxAmount, setMaxAmount] = useState("");
+    const [categories, setCategories] = useState([]);
+    const [formError, setFormError] = useState(null);
     const [startDate, setStartDate] = useState("");
     const [endDate, setEndDate] = useState("");
     const [keyword, setKeyword] = useState("");
@@ -21,12 +27,30 @@ const Filter = () => {
     const [sortOrder, setSortOrder] = useState("asc");
     const [transactions, setTransactions] = useState([]);
     // Type of the results currently shown (may differ from the select until the next search)
-    const [resultType, setResultType] = useState("income");
+    const [resultType, setResultType] = useState("all");
     const [hasSearched, setHasSearched] = useState(false);
     const [loading, setLoading] = useState(false);
     // Filters of the results on screen (paging keeps them even if the form was edited afterwards)
     const [lastQuery, setLastQuery] = useState(null);
     const [pageInfo, setPageInfo] = useState({ page: 0, totalItems: 0, totalPages: 0, totalAmount: 0 });
+
+    useEffect(() => {
+        axiosConfig.get(API_ENDPOINTS.GET_ALL_CATEGORIES)
+            .then((response) => setCategories(response.data || []))
+            .catch(() => setCategories([]));
+    }, []);
+
+    // With "Todos" every category is offered; otherwise only those of the chosen type (subcategories indented)
+    const categoryChoices = useMemo(() => [
+        { value: "", label: "Todas" },
+        ...categoryOptions(type === "all" ? categories : categories.filter((c) => c.type?.toLowerCase() === type)),
+    ], [categories, type]);
+
+    const changeType = (value) => {
+        setType(value);
+        const selected = categories.find((c) => String(c.id) === String(categoryId));
+        if (value !== "all" && selected && selected.type?.toLowerCase() !== value) setCategoryId("");
+    };
 
     const runSearch = async (query, page) => {
         setLoading(true);
@@ -54,13 +78,22 @@ const Filter = () => {
     const handleSearch = (e) => {
         e.preventDefault();
 
+        // Shown next to the form (audit: inline errors instead of toasts)
         if (startDate && endDate && startDate > endDate) {
-            toast.error("La fecha de inicio debe ser anterior a la de fin");
+            setFormError("La fecha de inicio debe ser anterior a la de fin");
             return;
         }
+        if (minAmount !== "" && maxAmount !== "" && Number(minAmount) > Number(maxAmount)) {
+            setFormError("El importe mínimo no puede ser mayor que el máximo");
+            return;
+        }
+        setFormError(null);
 
         runSearch({
             type,
+            categoryId: categoryId ? Number(categoryId) : null,
+            minAmount: minAmount !== "" ? Number(minAmount) : null,
+            maxAmount: maxAmount !== "" ? Number(maxAmount) : null,
             startDate: startDate || null,
             endDate: endDate || null,
             keyword,
@@ -95,15 +128,40 @@ const Filter = () => {
                         </h2>
                     </div>
 
-                    <form onSubmit={handleSearch} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
+                    <form onSubmit={handleSearch} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                         <div>
                             <label htmlFor="type" className="block text-[13px] font-medium text-gray-700 mb-1">
                                 Tipo
                             </label>
-                            <select value={type} id="type" className="w-full bg-transparent border border-gray-300 rounded-lg py-2 px-3 text-gray-800 focus:outline-none focus:border-violet-600 focus:ring-2 focus:ring-violet-200" onChange={e => setType(e.target.value)}>
+                            <select value={type} id="type" className="w-full bg-transparent border border-gray-300 rounded-lg py-2 px-3 text-gray-800 focus:outline-none focus:border-violet-600 focus:ring-2 focus:ring-violet-200" onChange={e => changeType(e.target.value)}>
+                                <option value="all">Todos</option>
                                 <option value="income">Ingresos</option>
                                 <option value="expense">Gastos</option>
                             </select>
+                        </div>
+
+                        <div>
+                            <label htmlFor="categoryId" className="block text-[13px] font-medium text-gray-700 mb-1">
+                                Categoría
+                            </label>
+                            <select value={categoryId} id="categoryId" className="w-full bg-transparent border border-gray-300 rounded-lg py-2 px-3 text-gray-800 focus:outline-none focus:border-violet-600 focus:ring-2 focus:ring-violet-200" onChange={e => setCategoryId(e.target.value)}>
+                                {categoryChoices.map((option) => (
+                                    <option key={option.value} value={option.value}>{option.label}</option>
+                                ))}
+                            </select>
+                        </div>
+
+                        <div>
+                            <label htmlFor="minAmount" className="block text-[13px] font-medium text-gray-700 mb-1">
+                                Importe mínimo (€)
+                            </label>
+                            <input value={minAmount} id="minAmount" type="number" min="0" step="0.01" inputMode="decimal" placeholder="0" className="w-full bg-transparent border border-gray-300 rounded-lg py-2 px-3 text-gray-800 focus:outline-none focus:border-violet-600 focus:ring-2 focus:ring-violet-200" onChange={e => setMinAmount(e.target.value)} aria-describedby={formError ? "filter-error" : undefined}/>
+                        </div>
+                        <div>
+                            <label htmlFor="maxAmount" className="block text-[13px] font-medium text-gray-700 mb-1">
+                                Importe máximo (€)
+                            </label>
+                            <input value={maxAmount} id="maxAmount" type="number" min="0" step="0.01" inputMode="decimal" placeholder="Sin límite" className="w-full bg-transparent border border-gray-300 rounded-lg py-2 px-3 text-gray-800 focus:outline-none focus:border-violet-600 focus:ring-2 focus:ring-violet-200" onChange={e => setMaxAmount(e.target.value)} aria-describedby={formError ? "filter-error" : undefined}/>
                         </div>
 
                         <div>
@@ -150,6 +208,11 @@ const Filter = () => {
                                 <Search size={20}/>
                             </button>
                         </div>
+                        {formError && (
+                            <p id="filter-error" role="alert" className="sm:col-span-2 lg:col-span-3 text-sm text-red-800">
+                                {formError}
+                            </p>
+                        )}
                     </form>
                 </div>
 
@@ -160,7 +223,7 @@ const Filter = () => {
                         </h2>
                         {hasSearched && pageInfo.totalItems > 0 && (
                             <p className="text-sm text-gray-600" aria-live="polite">
-                                {firstShown}–{lastShown} de {pageInfo.totalItems} · Total: <span className="font-semibold text-gray-800">{formatCurrency(pageInfo.totalAmount)}</span>
+                                {firstShown}–{lastShown} de {pageInfo.totalItems} · {resultType === "all" ? "Balance" : "Total"}: <span className="font-semibold text-gray-800">{formatCurrency(pageInfo.totalAmount)}</span>
                             </p>
                         )}
                     </div>
@@ -182,12 +245,12 @@ const Filter = () => {
                     )}
                     {!loading && transactions.map((transaction) => (
                         <TransactionInfoCard 
-                            key={transaction.id}
+                            key={`${transaction.type || resultType}-${transaction.id}`}
                             title={transaction.name}
                             icon={transaction.icon}
                             date={formatDate(transaction.date)}
                             amount={transaction.amount}
-                            type={resultType}
+                            type={resultType === "all" ? transaction.type : resultType}
                             hideDeleteBtn
                             recurring={transaction.recurringId != null}
                         />

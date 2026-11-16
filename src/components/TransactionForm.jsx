@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { LoaderCircle } from "lucide-react";
 import EmojiPickerPopup from "./EmojiPickerPopup";
+import { categoryOptions } from "../util/categories";
 import Input from "./Input";
 import NoCategoriesNotice from "./NoCategoriesNotice";
 import AttachmentsField from "./AttachmentsField";
@@ -56,10 +57,7 @@ const TransactionForm = ({ config, categories, initialData, onSubmit }) => {
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
 
-  const categoryOptions = categories.map((category) => ({
-    value: category.id,
-    label: category.name,
-  }));
+  const categoryOptionList = categoryOptions(categories);
 
   const handleChange = (key, value) => {
     setTransaction((prev) => ({ ...prev, [key]: value }));
@@ -84,7 +82,7 @@ const TransactionForm = ({ config, categories, initialData, onSubmit }) => {
   // Pre-select the first category for new transactions
   useEffect(() => {
     if (categories.length > 0 && !transaction.categoryId) {
-      setTransaction((prev) => ({ ...prev, categoryId: categories[0].id }));
+      setTransaction((prev) => ({ ...prev, categoryId: categoryOptions(categories)[0].value }));
     }
   }, [categories, transaction.categoryId]);
 
@@ -114,7 +112,7 @@ const TransactionForm = ({ config, categories, initialData, onSubmit }) => {
         value={transaction.categoryId}
         onChange={({ target }) => handleChange("categoryId", target.value)}
         isSelect={true}
-        options={categoryOptions}
+        options={categoryOptionList}
         id="transaction-categoryId"
         error={errors.categoryId}
       />

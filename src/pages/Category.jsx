@@ -46,7 +46,7 @@ const Category = () => {
   }, []);
 
   const handleAddCategory = async (category) => {
-    const {name, type, icon} = category;
+    const {name, type, icon, parentId} = category;
 
     if (!name.trim()) {
       toast.error("El nombre de la categoría es obligatorio")
@@ -63,7 +63,7 @@ const Category = () => {
     }
 
     try {
-      const response = await axiosConfig.post(API_ENDPOINTS.ADD_CATEGORY, {name: name.trim(), type, icon});
+      const response = await axiosConfig.post(API_ENDPOINTS.ADD_CATEGORY, {name: name.trim(), type, icon, parentId: parentId ? Number(parentId) : null});
       if (response.status === 201) {
         toast.success("Categoría creada");
         setOpenAddCategoryModal(false);
@@ -81,7 +81,7 @@ const Category = () => {
   }
 
   const handleUpdateCategory = async (updatedCategory) => {
-    const {id, name, type, icon} = updatedCategory;
+    const {id, name, type, icon, parentId} = updatedCategory;
 
     if (!name.trim()) {
       toast.error("El nombre de la categoría es obligatorio");
@@ -103,7 +103,7 @@ const Category = () => {
     }
 
     try {
-      await axiosConfig.put(API_ENDPOINTS.UPDATE_CATEGORY(id), {name: name.trim(), type, icon});
+      await axiosConfig.put(API_ENDPOINTS.UPDATE_CATEGORY(id), {name: name.trim(), type, icon, parentId: parentId ? Number(parentId) : null});
       setOpenEditCategoryModal(false);
       setSelectedCategory(null);
       toast.success("Categoría actualizada");
@@ -134,6 +134,7 @@ const Category = () => {
         >
             <AddCategoryForm 
               onAddCategory={handleAddCategory}
+              categories={categoryData}
             />
         </Modal>
 
@@ -144,6 +145,7 @@ const Category = () => {
         >
           <AddCategoryForm 
             onAddCategory={handleUpdateCategory}
+            categories={categoryData}
             isEditing={true}
             initialCategoryData={selectedCategory}
           />

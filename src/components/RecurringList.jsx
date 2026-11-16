@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { LoaderCircle, Pause, Pencil, Play, Repeat, Trash2 } from "lucide-react";
 import Modal from "./Modal";
+import { categoryOptions } from "../util/categories";
 import Input from "./Input";
 import { formatCurrency, formatDate } from "../util/util";
 import { frequencyLabel } from "../util/recurring";
@@ -42,7 +43,7 @@ const EditRuleForm = ({ rule, categories, onSave, onCancel }) => {
         {frequencyLabel(rule.frequency)} desde el {formatDate(rule.startDate)}. Para cambiar la fecha o la frecuencia, borra este y crea otro.
       </p>
       <Input label="Concepto" value={form.name} onChange={set("name")} type="text" />
-      <Input label="Categoría" value={form.categoryId} onChange={set("categoryId")} isSelect options={categories.map((c) => ({ value: c.id, label: c.name }))} />
+      <Input label="Categoría" value={form.categoryId} onChange={set("categoryId")} isSelect options={categoryOptions(categories)} />
       <Input label="Importe (€)" value={form.amount} onChange={set("amount")} type="number" />
       <Input label="Hasta (opcional)" value={form.endDate} onChange={set("endDate")} type="date" />
       <div className="flex justify-end gap-3 mt-6">

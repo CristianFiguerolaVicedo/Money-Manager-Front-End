@@ -2,21 +2,23 @@ import { useEffect, useState } from "react"
 import Input from "./Input";
 import EmojiPickerPopup from "./EmojiPickerPopup";
 import { LoaderCircle } from "lucide-react";
+import { hasSubcategories, parentCandidates } from "../util/categories";
 
-const AddCategoryForm = ({onAddCategory, initialCategoryData, isEditing}) => {
+const AddCategoryForm = ({onAddCategory, initialCategoryData, isEditing, categories = []}) => {
     const [category, setCategory] = useState({
         name: "",
         type: "income",
-        icon: ""
+        icon: "",
+        parentId: ""
     });
 
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         if (isEditing && initialCategoryData) {
-            setCategory({...initialCategoryData, type: initialCategoryData.type?.toLowerCase() || "income"});
+            setCategory({...initialCategoryData, type: initialCategoryData.type?.toLowerCase() || "income", parentId: initialCategoryData.parentId ?? ""});
         } else {
-            setCategory({name: "", type: "income", icon: ""});
+            setCategory({name: "", type: "income", icon: "", parentId: ""});
         }
     }, [isEditing, initialCategoryData]);
 
@@ -26,8 +28,16 @@ const AddCategoryForm = ({onAddCategory, initialCategoryData, isEditing}) => {
     ]
 
     const handleChange = (key, value) => {
-        setCategory({...category, [key]: value})
+        // Changing the type clears the parent, which must be of the same type
+        setCategory(key === "type" ? {...category, type: value, parentId: ""} : {...category, [key]: value})
     }
+
+    // Subcategories: one level, so a category that already has subcategories cannot get a parent
+    const isParent = isEditing && hasSubcategories(categories, category.id);
+    const parentOptions = [
+        {value: "", label: "Ninguna (es una categoría principal)"},
+        ...parentCandidates(categories, category).map((c) => ({value: c.id, label: c.name}))
+    ];
 
     const handleSubmit = async () => {
         setLoading(true);
@@ -62,6 +72,19 @@ const AddCategoryForm = ({onAddCategory, initialCategoryData, isEditing}) => {
                 isSelect={true}
                 options={categoryTypeOptions}
                 disabled={isEditing}
+            />
+
+            <Input
+                value={category.parentId}
+                onChange={({target}) => handleChange("parentId", target.value)}
+                label="Dentro de (opcional)"
+                isSelect={true}
+                options={parentOptions}
+                disabled={isParent}
+                id="category-parent"
+                hint={isParent
+                    ? "Tiene subcategorías, así que no puede ir dentro de otra."
+                    : "Elige una categoría principal para que esta sea una subcategoría suya (por ejemplo, Supermercado dentro de Comida)."}
             />
 
             <div className="flex justify-end mt-6">
