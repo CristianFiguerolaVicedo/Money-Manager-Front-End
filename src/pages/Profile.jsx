@@ -1,7 +1,7 @@
 import { useContext, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
-import { LoaderCircle } from "lucide-react";
+import { Download, LoaderCircle } from "lucide-react";
 import Dashboard from "../components/Dashboard";
 import Input from "../components/Input";
 import Modal from "../components/Modal";
@@ -286,6 +286,53 @@ const DeleteAccountCard = ({ onDeleted }) => {
   );
 };
 
+// GDPR rights of access and portability: everything stored about the user, as JSON
+const DataExportCard = () => {
+  const [loading, setLoading] = useState(false);
+
+  const download = async () => {
+    setLoading(true);
+    try {
+      const response = await axiosConfig.get(API_ENDPOINTS.EXPORT_DATA, { responseType: "blob" });
+      const url = URL.createObjectURL(response.data);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `money-manager-mis-datos-${new Date().toISOString().slice(0, 10)}.json`;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+      toast.success("Descarga lista");
+    } catch (error) {
+      toast.error(getErrorMessage(error, "No se han podido descargar tus datos"));
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <section className={cardClass} aria-labelledby="your-data">
+      <h2 id="your-data" className="text-lg">Tus datos</h2>
+      <p className="text-sm text-gray-600 mt-2">
+        Descarga en un archivo JSON todo lo que Money Manager guarda sobre ti: cuenta, categorías, ingresos, gastos,
+        presupuestos, objetivos, recurrentes y la lista de adjuntos. Más detalles en la{" "}
+        <Link to="/privacy" className="text-purple-800 underline">política de privacidad</Link>.
+      </p>
+      <div className="flex justify-end mt-4">
+        <button
+          type="button"
+          onClick={download}
+          disabled={loading}
+          className="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-gray-300 text-gray-800 font-semibold hover:bg-gray-50 hover:cursor-pointer disabled:opacity-60"
+        >
+          {loading ? <LoaderCircle className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4" aria-hidden="true" />}
+          Descargar mis datos
+        </button>
+      </div>
+    </section>
+  );
+};
+
 const Profile = () => {
   useUser();
   const { user, setUser, clearUser } = useContext(AppContext);
@@ -312,6 +359,7 @@ const Profile = () => {
             <PersonalDataCard key={`${user.id}-${user.updatedAt}`} user={user} setUser={setUser} />
             <EmailPreferencesCard user={user} setUser={setUser} />
             <PasswordCard />
+            <DataExportCard />
             <DeleteAccountCard onDeleted={handleDeleted} />
           </div>
         )}

@@ -53,4 +53,5 @@ export const API_ENDPOINTS = {
     APPLY_FILTER: "/filter",
     FETCH_DASHBOARD_DATA: "/dashboard",
     PROFILE_PHOTO: "/profile/photo",
+    EXPORT_DATA: "/profile/export",
 }

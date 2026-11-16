@@ -94,3 +94,10 @@ GitHub Actions (`.github/workflows/ci.yml`) ejecuta lint, tests y build en cada 
 - `public/robots.txt` solo deja indexar la entrada, el login y el registro.
 - La foto de perfil se sube al backend (`PUT /profile/photo`); ya no se usa Cloudinary.
 
+## Privacidad (RGPD)
+
+- `/privacy` y `/terms` son públicas y están enlazadas desde el login, el registro y el menú lateral.
+- Quién es el responsable y el email de contacto están en `src/util/legal.js`. `TERMS_VERSION` debe coincidir con `ProfileService.TERMS_VERSION` del backend.
+- El registro exige marcar la casilla de consentimiento (el backend guarda cuándo y qué versión).
+- En *Mi perfil → Tus datos* se descarga todo en JSON; en *Borrar cuenta* se elimina.
+

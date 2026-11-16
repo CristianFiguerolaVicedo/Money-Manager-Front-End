@@ -63,6 +63,10 @@ const Sidebar = ({ activeMenu, isMobile = false, onNavigate }) => {
           </ul>
         </div>
       ))}
+      <div className="mt-8 px-3 flex gap-4 text-xs text-plum-300">
+        <Link to="/privacy" className="underline hover:text-white">Privacidad</Link>
+        <Link to="/terms" className="underline hover:text-white">Términos</Link>
+      </div>
     </nav>
   );
 };
