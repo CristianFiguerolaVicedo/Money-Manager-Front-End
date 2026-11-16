@@ -26,3 +26,10 @@ jobs:
 
       - name: Build
         run: npm run build
+
+      # Opens the built site in a real browser: catches a blank page before it reaches production
+      - name: Smoke test of the build
+        run: |
+          npm install --no-save playwright@1.49.1
+          npx playwright install --with-deps chromium
+          node scripts/smoke-test.mjs
