@@ -1,4 +1,5 @@
-import { ChartColumnStacked, Pencil, Trash2 } from "lucide-react";
+import { ChartColumnStacked, CornerDownRight, Pencil, Trash2 } from "lucide-react";
+import { categoryTree } from "../util/categories";
 
 const TYPE_LABELS = { income: "Ingreso", expense: "Gasto" };
 
@@ -19,8 +20,8 @@ const CategoryList = ({categories, onEditCategory, onDeleteCategory}) => {
                 </p>
             ) : (
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-                    {categories.map((category) => (
-                        <div key={category.id} className="group relative flex items-center gap-4 p-3 rounded-lg hover:bg-gray-100/60 hover:cursor-pointer">
+                    {categoryTree(categories).map((category) => (
+                        <div key={category.id} className="group relative flex items-center gap-4 p-3 rounded-lg hover:bg-gray-100/60">
                             <div className="w-12 h-12 flex items-center justify-center text-xl text-gray-800 bg-gray-100 rounded-full">
                                 {category.icon ? (
                                     <span className="text-2xl">
@@ -36,8 +37,15 @@ const CategoryList = ({categories, onEditCategory, onDeleteCategory}) => {
                                     <p className="text-sm text-gray-700 font-medium">
                                         {category.name}
                                     </p>
-                                    <p className="text-sm text-gray-400 mt-1">
-                                        {TYPE_LABELS[category.type?.toLowerCase()] || category.type}
+                                    <p className="flex items-center gap-1 text-sm text-gray-400 mt-1">
+                                        {category.depth > 0 ? (
+                                            <>
+                                                <CornerDownRight size={14} aria-hidden="true" />
+                                                Dentro de {category.parentName}
+                                            </>
+                                        ) : (
+                                            TYPE_LABELS[category.type?.toLowerCase()] || category.type
+                                        )}
                                     </p>
                                 </div>
 
