@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import Logo from "./Logo";
 
 // Shared frame for login, signup and password recovery pages: brand mark and one card on the app background.
@@ -12,6 +13,10 @@ const AuthLayout = ({ title, subtitle, children }) => {
         {children}
       </main>
       <p className="mt-6 text-xs text-gray-500">Tus datos solo los ves tú.</p>
+      <nav aria-label="Páginas legales" className="mt-2 flex gap-4 text-xs text-gray-500">
+        <Link to="/privacy" className="underline hover:text-gray-800">Privacidad</Link>
+        <Link to="/terms" className="underline hover:text-gray-800">Términos</Link>
+      </nav>
     </div>
   );
 };

@@ -11,6 +11,7 @@ import { getErrorMessage } from "../util/util.js";
 
 const Signup = () => {
   const [fullName, setFullName] = useState("");
+  const [acceptTerms, setAcceptTerms] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
@@ -29,8 +30,9 @@ const Signup = () => {
     if (!validateEmail(email)) errors.email = "Introduce un email válido";
     const passwordError = validatePassword(password);
     if (passwordError) errors.password = passwordError;
+    if (!acceptTerms) errors.acceptTerms = "Tienes que aceptar la política de privacidad y los términos para crear la cuenta";
     setFieldErrors(errors);
-    const first = ["fullName", "email", "password"].find((field) => errors[field]);
+    const first = ["fullName", "email", "password", "acceptTerms"].find((field) => errors[field]);
     if (first) {
       setError("");
       setIsLoading(false);
@@ -45,6 +47,7 @@ const Signup = () => {
         fullName: fullName.trim(),
         email: email.trim(),
         password,
+        acceptTerms,
       });
       if (response.status === 201) {
         setRegisteredEmail(email.trim());
@@ -116,6 +119,34 @@ const Signup = () => {
             />
           </div>
         </div>
+
+        {/* GDPR: explicit, unticked consent; the backend stores when and which version was accepted */}
+        <div>
+          <div className="flex items-start gap-3">
+            <input
+              id="signup-acceptTerms"
+              type="checkbox"
+              checked={acceptTerms}
+              onChange={(e) => {
+                setAcceptTerms(e.target.checked);
+                setFieldErrors((prev) => ({ ...prev, acceptTerms: undefined }));
+              }}
+              aria-invalid={fieldErrors.acceptTerms ? true : undefined}
+              aria-describedby={fieldErrors.acceptTerms ? "signup-acceptTerms-error" : undefined}
+              className="mt-0.5 h-5 w-5 shrink-0 accent-violet-700 cursor-pointer"
+            />
+            <label htmlFor="signup-acceptTerms" className="text-sm text-slate-700 cursor-pointer">
+              He leído y acepto la{" "}
+              <Link to="/privacy" target="_blank" className="font-medium text-purple-800 underline">política de privacidad</Link>{" "}
+              y los{" "}
+              <Link to="/terms" target="_blank" className="font-medium text-purple-800 underline">términos de uso</Link>.
+            </label>
+          </div>
+          {fieldErrors.acceptTerms && (
+            <p id="signup-acceptTerms-error" className="mt-1 text-sm text-red-800">{fieldErrors.acceptTerms}</p>
+          )}
+        </div>
+
         {error && (
           <p role="alert" className="text-red-800 text-sm text-center bg-red-50 p-2 rounded">{error}</p>
         )}
